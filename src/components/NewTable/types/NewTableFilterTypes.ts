@@ -1,4 +1,4 @@
-import type { INewTableColumnComponent, INewTableFilterComponent } from "../components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableFilterComponent } from "../components/NewTableHeader/types/INewTableHeadTypes";
 import type { INewTableRow } from "../components/NewTableRow/types/NewTableRowTypes";
 
 export interface INewTableFilter {

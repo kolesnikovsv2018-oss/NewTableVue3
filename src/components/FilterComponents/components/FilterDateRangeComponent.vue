@@ -52,12 +52,12 @@ watch(
 
 watch(
   () => date1.value,
-  (v) => emit('input', { date1: date1.value, date2: date2.value }),
+  (v) => emit('input', { date1: v, date2: date2.value }),
 );
 
 watch(
   () => date2.value,
-  (v) => emit('input', { date1: date1.value, date2: date2.value }),
+  (v) => emit('input', { date1: date1.value, date2: v }),
 );
 
 function commit() {

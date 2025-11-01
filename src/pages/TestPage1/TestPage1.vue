@@ -120,7 +120,7 @@ function onSelectContextMenuItem(menuItem: INewMenuItem) {
 }
 
 function onNewReestrSideMenuDateFilterSubmit(
-  { name, value, payload }: { name: string, value?: any, payload?: any }
+  { name, value }: { name: string, value?: any, payload?: any }
 ) {
   filters.value['date'].currentValue = { date1: value, date2: value };
 
@@ -136,7 +136,7 @@ function onNewReestrSideMenuDateFilterSubmit(
 }
 
 function onNewReestrSideMenuSummsSubmit(
-  { name, value, payload }: { name: string, value?: any, payload?: any }
+  { name, value }: { name: string, value?: any, payload?: any }
 ) {
   sideMenuComponents.value[name].isShown = false
   console.log('[onNewReestrSideMenuSummsSubmit]', value);
