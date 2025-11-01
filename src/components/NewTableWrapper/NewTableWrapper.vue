@@ -335,20 +335,34 @@ defineExpose({
 </template>
 
 <style scoped>
+@import '../NewTable/styles/variables.css';
+
 .new-table-wrapper {
   display: flex;
   height: 100%;
   width: 100%;
   align-items: stretch;
   justify-content: flex-start;
+  gap: 1px;
+  background-color: white;
+  border-radius: var(--nt-border-radius);
+  box-shadow: var(--nt-shadow);
 }
 
 .new-table__scroller {
-  flex: 0 0;
-  border-top-left-radius: 0;
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
-  border-bottom-left-radius: 0;
-  background-color: var(--nt-scrollbar-background, #f5f5f5);
+  flex: 0 0 auto;
+  border-radius: 0 var(--nt-border-radius) var(--nt-border-radius) 0;
+  background-color: var(--nt-header-bg);
+  transition: background-color var(--nt-transition-speed);
+}
+
+.new-table__scroller:hover {
+  background-color: var(--nt-hover-bg);
+}
+
+@media (max-width: 768px) {
+  .new-table-wrapper {
+    gap: 0;
+  }
 }
 </style>

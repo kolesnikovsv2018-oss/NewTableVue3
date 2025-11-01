@@ -297,15 +297,16 @@ function onChangeFilters(changedFilters: INewTableFilters) {
 }
 
 :deep() .--stage {
-  background-color: #dfefff;
+  background-color: var(--app-row-stage-bg);
 }
 
 :deep() .--sub-stage {
-  background-color: #f5faff;
+  background-color: var(--app-row-substage-bg);
 }
 
 :deep() .--task {
-  background-color: #ffffff;
+  background-color: var(--app-row-task-bg);
+  box-shadow: inset 0 0 0 1px var(--app-row-border);
 }
 
 /* так можно переопределять стили */

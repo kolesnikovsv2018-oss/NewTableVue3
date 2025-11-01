@@ -102,11 +102,39 @@ function onScroll() {
 </template>
 
 <style scoped>
+@import '../NewTable/styles/variables.css';
+
 .new-scroll-wrapper {
   box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: var(--nt-border-color) transparent;
+}
+
+.new-scroll-wrapper::-webkit-scrollbar {
+  width: var(--nt-icon-size);
+}
+
+.new-scroll-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.new-scroll-wrapper::-webkit-scrollbar-thumb {
+  background-color: var(--nt-border-color);
+  border-radius: var(--nt-border-radius);
+  border: 3px solid var(--nt-header-bg);
+}
+
+.new-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: var(--nt-text-muted);
 }
 
 .new-scroll {
   box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .new-scroll-wrapper::-webkit-scrollbar {
+    width: calc(var(--nt-icon-size) * 0.75);
+  }
 }
 </style>
