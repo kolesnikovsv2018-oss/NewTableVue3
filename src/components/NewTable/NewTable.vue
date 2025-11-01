@@ -229,6 +229,7 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
   height: var(--nt-header-height);
   align-items: center;
   background-color: var(--nt-header-bg);
+  box-sizing: border-box;
 }
 
 .new-table :deep(.new-table__header__cell) {
@@ -239,6 +240,7 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
   user-select: none;
   background-color: var(--nt-header-bg);
   color: var(--nt-text-color);
+  box-sizing: border-box;
 }
 
 .new-table :deep(.new-table__header__cell:hover) {
@@ -314,10 +316,10 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
   display: flex;
   border-bottom: 1px solid var(--nt-border-color);
   color: var(--nt-text-color);
-  height: var(--nt-row-height);
   align-items: center;
   transition: all var(--nt-transition-speed);
   background-color: var(--nt-bg);
+  box-sizing: border-box;
 }
 
 .new-table__body :deep(.new-table__body__row:hover) {
@@ -332,6 +334,10 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
   white-space: nowrap;
   color: var(--nt-text-color);
   background-color: inherit;
+  height: 100%;
+  min-height: 100%;
+  max-height: 100%;
+  box-sizing: border-box;
 }
 
 /* Fixed Columns */
@@ -403,9 +409,7 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
   }
 
   :root {
-    --nt-cell-padding: 0.5rem;
-    --nt-header-height: 40px;
-    --nt-row-height: 36px;
+    --nt-header-height: 30px;
     --nt-number-column-width: 40px;
     --nt-checkbox-column-width: 40px;
     --nt-expand-column-width: 100px;
@@ -419,9 +423,7 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
   }
 
   :root {
-    --nt-cell-padding: 0.25rem;
-    --nt-header-height: 36px;
-    --nt-row-height: 32px;
+    --nt-header-height: 24px;
     --nt-number-column-width: 30px;
     --nt-checkbox-column-width: 30px;
     --nt-expand-column-width: 80px;

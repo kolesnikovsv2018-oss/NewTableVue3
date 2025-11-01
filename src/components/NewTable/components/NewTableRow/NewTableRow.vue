@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { StyleValue} from 'vue';
+import type { StyleValue } from 'vue';
 import { computed, watch } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faFolder, faFolderOpen, faFile } from '@fortawesome/free-solid-svg-icons';
@@ -248,7 +248,7 @@ function onCellAction({ key, value, name }: INewTableCellActionData) {
   >
     <div
       v-if="isNumberColumnShown"
-      class="new-table__number-cell"
+      class="new-table__cell new-table__number-cell"
     >
       <slot
         name="cell[number]"
@@ -266,7 +266,7 @@ function onCellAction({ key, value, name }: INewTableCellActionData) {
 
     <div
       v-if="isCheckboxColumnShown"
-      class="new-table__checkbox-cell"
+      class="new-table__cell new-table__checkbox-cell"
     >
       <slot
         name="cell[checkbox]"
@@ -289,7 +289,7 @@ function onCellAction({ key, value, name }: INewTableCellActionData) {
 
     <div
       v-if="isExpandColumnShown"
-      class="new-table__expand-cell"
+      class="new-table__cell new-table__expand-cell"
       @click="onExpandCellClick"
     >
       <slot
@@ -357,7 +357,7 @@ function onCellAction({ key, value, name }: INewTableCellActionData) {
 
     <div
       v-if="isActionsColumnShown"
-      class="new-table__actions__cell"
+      class="new-table__cell new-table__actions__cell"
     >
       <div style="display: flex; gap: 4px;">
         <div

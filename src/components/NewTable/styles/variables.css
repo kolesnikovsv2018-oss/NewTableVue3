@@ -11,10 +11,9 @@
   --nt-active-color: #2563eb;
 
   /* Base Layout */
-  --nt-cell-padding: 0.75rem;
+  --nt-cell-padding: 0.25rem;
   --nt-border-radius: 0.5rem;
-  --nt-header-height: 48px;
-  --nt-row-height: 40px;
+  --nt-header-height: 36px;
   --nt-icon-size: 16px;
   --nt-checkbox-size: 18px;
 
