@@ -24,9 +24,15 @@ import { calcParentSums, calcTotalOwnSums } from '../../helpers/calacSums';
 import { columnsToCalc } from './testdata/testColumns';
 import { integerToRoman } from '../../helpers/integerToRoman';
 
+interface ITestPage1NewReestrSideMenuSubmitEvent {
+  name: string;
+  value?: unknown;
+  payload?: unknown;
+}
+
 const newReestrRef = ref<typeof NewReestr>();
 
-const sideMenuComponents = ref<Record<string, { isShown: boolean, payload: any }>>({});
+const sideMenuComponents = ref<Record<string, { isShown: boolean, payload: unknown }>>({});
 
 const {
   actions,
@@ -120,7 +126,7 @@ function onSelectContextMenuItem(menuItem: INewMenuItem) {
 }
 
 function onNewReestrSideMenuDateFilterSubmit(
-  { name, value }: { name: string, value?: any, payload?: any }
+  { name, value }: ITestPage1NewReestrSideMenuSubmitEvent,
 ) {
   filters.value['date'].currentValue = { date1: value, date2: value };
 
@@ -136,7 +142,7 @@ function onNewReestrSideMenuDateFilterSubmit(
 }
 
 function onNewReestrSideMenuSummsSubmit(
-  { name, value }: { name: string, value?: any, payload?: any }
+  { name, value }: ITestPage1NewReestrSideMenuSubmitEvent,
 ) {
   sideMenuComponents.value[name].isShown = false
   console.log('[onNewReestrSideMenuSummsSubmit]', value);

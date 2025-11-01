@@ -10,12 +10,12 @@ useOutsideClickHandler(
 );
 
 const props = defineProps<{
-  payload?: any,
+  payload?: unknown,
   date?: string
 }>();
 
 const emit = defineEmits<{
-  (e: 'submit', event: { value: any, payload?: any, }): void;
+  (e: 'submit', event: { value: string, payload?: unknown, }): void;
   (e: 'close'): void;
 }>();
 
