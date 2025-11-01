@@ -1,8 +1,7 @@
-// eslint.config.mjs
 import pluginVue from 'eslint-plugin-vue'
 import { defineConfigWithVueTs, vueTsConfigs, configureVueProject } from '@vue/eslint-config-typescript'
 
-// Minimal ESLint configuration for Vite + Vue 3 + TypeScript
+// Configure Vue project settings
 configureVueProject({
   tsSyntaxInTemplates: true,
   allowComponentTypeUnsafety: true,
@@ -10,21 +9,50 @@ configureVueProject({
 })
 
 export default defineConfigWithVueTs(
-  // use plugin-vue flat config and the recommended type-checked rules for Vue + TS
+  // Vue recommended configuration
   pluginVue.configs['flat/essential'],
-  // use recommended type-checked config for stricter, type-aware linting
+  // TypeScript recommended configuration
   vueTsConfigs.recommendedTypeChecked,
-  // enforce consistent type imports using 'import type'
   {
+    // Language options configuration
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      globals: {
+        window: 'readonly',
+        document: 'readonly',
+        navigator: 'readonly',
+        process: 'readonly',
+      }
+    },
+    // Rules configuration
     rules: {
+      // Type imports configuration
       '@typescript-eslint/consistent-type-imports': ['error', {
         prefer: 'type-imports',
         fixStyle: 'separate-type-imports',
         disallowTypeAnnotations: true
+      }],
+      // Unused expressions configuration
+      '@typescript-eslint/no-unused-expressions': ['error', {
+        allowShortCircuit: true,
+        allowTernary: true,
+        allowTaggedTemplates: true
+      }],
+      // Unused variables configuration
+      '@typescript-eslint/no-unused-vars': ['error', {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_'
+      }],
+      // This alias configuration
+      '@typescript-eslint/no-this-alias': ['error', {
+        allowDestructuring: true,
+        allowedNames: ['self', 'vm']
       }]
     }
   }
 )
 
-// Ignore build/artifact folders (replaces deprecated .eslintignore)
+// Ignore patterns (replaces both ignorePatterns and .eslintignore)
 export const ignores = ['dist/**', 'node_modules/**']
