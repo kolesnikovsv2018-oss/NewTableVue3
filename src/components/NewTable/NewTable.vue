@@ -241,6 +241,9 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
   background-color: var(--nt-header-bg);
   color: var(--nt-text-color);
   box-sizing: border-box;
+  height: 100%;
+  min-height: 100%;
+  max-height: 100%;
 }
 
 .new-table :deep(.new-table__header__cell:hover) {
