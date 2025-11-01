@@ -4,7 +4,7 @@ import { ref, watch } from 'vue';
 import type { INewTableRow, INewTableRowCommonMeta } from '../NewTable/components/NewTableRow/types/NewTableRowTypes';
 import type { INewTableColumn, INewTableHeaderSettings } from '../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
 import type { INewTableCellNativeEvent, INewTableRowActionEvent, INewTableChangeCellValueEvent } from '../NewTable/types/NewTableEventTypes';
-import type { IChangeColumnSettingsEvent } from '../ColumnSettings/types';
+import type { IChangeColumnSettingsEvent } from './components/NewReestrColumnSettings/types';
 import type { TNewTableActionsChangeModesStandart } from '../NewTable/types/NewTableActionsChangeModesTypes';
 import type { INewMenuItem } from '../NewContextMenu/types';
 import type { INewTableActions } from '../NewTable/types/NewTableActionTypes';
@@ -19,7 +19,7 @@ import { NEW_TABLE_DEFAULT_ROW_TYPE } from '../NewTable/constants/defaultRowType
 
 import NewTableWrapper from '../NewTableWrapper/NewTableWrapper.vue';
 import NewContextMenu from '../NewContextMenu/NewContextMenu.vue';
-import ColumnSettings from '../ColumnSettings/ColumnSettings.vue';
+import NewReestrColumnSettings from './components/NewReestrColumnSettings/NewReestrColumnSettings.vue';
 
 const props = defineProps<{
   initialData: INewTableRow[];
@@ -120,7 +120,7 @@ defineExpose({
   <div class="new-reestr">
     <div class="new-reestr__data">
       <div class="new-reestr__column-settings__wrapper">
-        <ColumnSettings
+        <NewReestrColumnSettings
           v-bind="{
             columns: props.initialColumns,
             columnsSettings,

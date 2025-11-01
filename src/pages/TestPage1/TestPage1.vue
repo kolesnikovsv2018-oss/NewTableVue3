@@ -14,15 +14,15 @@ import { useTestPage1NewReestrChangeRowParentId } from './composables/TestPage1N
 import { findParentRowsById } from '../../helpers/finders';
 import { useTestPage1NewReestrActions } from './composables/TestPage1NewReestrActions';
 import { NEW_TABLE_STANDART_ROW_MODES } from '../../components/NewTable/constants/standartRowModes';
+import { calcParentSums, calcTotalOwnSums } from '../../helpers/calacSums';
+import { columnsToCalc } from './testdata/testColumns';
+import { integerToRoman } from '../../helpers/integerToRoman';
 
 import NewReestr from '../../components/NewReestr/NewReestr.vue';
 import NewReestrChangeRowParentDialog from '../../components/NewReestr/components/NewReestrChangeRowParentDialog/NewReestrChangeRowParentDialog.vue';
 import NewSplitter from '../../components/NewSplitter/NewSplitter.vue';
-import NewReestrSideMenuDateFilter from '../../components/NewReestr/components/NewReestrSideMenuDateFilter/NewReestrSideMenuDateFilter.vue';
-import NewReestrSideMenuSumms from '../../components/NewReestr/components/NewReestrSideMenuSumms/NewReestrSideMenuSumms.vue';
-import { calcParentSums, calcTotalOwnSums } from '../../helpers/calacSums';
-import { columnsToCalc } from './testdata/testColumns';
-import { integerToRoman } from '../../helpers/integerToRoman';
+import NewReestrSideMenuDateFilter from './components/NewReestrSideMenuDateFilter/NewReestrSideMenuDateFilter.vue';
+import NewReestrSideMenuSumms from './components/NewReestrSideMenuSumms/NewReestrSideMenuSumms.vue';
 
 interface ITestPage1NewReestrSideMenuSubmitEvent {
   name: string;
