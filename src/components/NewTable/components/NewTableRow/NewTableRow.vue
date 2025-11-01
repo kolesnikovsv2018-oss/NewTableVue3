@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, StyleValue, watch } from 'vue';
+import type { StyleValue} from 'vue';
+import { computed, watch } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faFolder, faFolderOpen, faFile } from '@fortawesome/free-solid-svg-icons';
 

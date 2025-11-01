@@ -1,4 +1,5 @@
-import { computed, onBeforeUnmount, onMounted, Ref, toValue } from "vue";
+import type { Ref} from "vue";
+import { computed, onBeforeUnmount, onMounted, toValue } from "vue";
 
 export function useOutsideClickHandler(
   elRef: Ref<HTMLElement> | HTMLElement | (() => HTMLElement),

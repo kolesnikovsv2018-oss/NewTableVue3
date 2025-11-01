@@ -1,15 +1,17 @@
-import { Ref, toValue } from "vue";
+import type { Ref} from "vue";
+import { toValue } from "vue";
 
 import type { INewTableRow } from "../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
 import type { INewTableCellActionData, INewTableChangeCellValueEvent, INewTableRowActionEvent } from "../../../components/NewTable/types/NewTableEventTypes";
 
 import { findParentRowsById, findParentRowWithChildIndexByChildRowId, findRowById } from "../../../helpers/finders";
-import { ILocalNewTableRow, TEST_DATA_ROW_TYPES } from "../testdata/testData";
+import type { ILocalNewTableRow} from "../testdata/testData";
+import { TEST_DATA_ROW_TYPES } from "../testdata/testData";
 import { calcOwnSums, calcParentSums, calcTotalOwnSums } from "../../../helpers/calacSums";
 import { columnsToCalc, totalColumnsToCalc } from "../testdata/testColumns";
 import { NEW_TABLE_STANDART_CELL_ACTIONS, NEW_TABLE_STANDART_ROW_ACTIONS } from "../../../components/NewTableWrapper/constants/standartActions";
 
-import NewReestr from "../../../components/NewReestr/NewReestr.vue";
+import type NewReestr from "../../../components/NewReestr/NewReestr.vue";
 
 export function useTestPage1NewReestrActions(
   initialData: Ref<INewTableRow[]> | INewTableRow[] | (() => INewTableRow[]),

@@ -13,7 +13,17 @@ export default defineConfigWithVueTs(
   // use plugin-vue flat config and the recommended type-checked rules for Vue + TS
   pluginVue.configs['flat/essential'],
   // use recommended type-checked config for stricter, type-aware linting
-  vueTsConfigs.recommendedTypeChecked
+  vueTsConfigs.recommendedTypeChecked,
+  // enforce consistent type imports using 'import type'
+  {
+    rules: {
+      '@typescript-eslint/consistent-type-imports': ['error', {
+        prefer: 'type-imports',
+        fixStyle: 'separate-type-imports',
+        disallowTypeAnnotations: true
+      }]
+    }
+  }
 )
 
 // Ignore build/artifact folders (replaces deprecated .eslintignore)

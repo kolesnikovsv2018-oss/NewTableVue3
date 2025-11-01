@@ -1,5 +1,6 @@
-import { computed, Ref, toValue } from "vue";
-import { INewTableRow } from "../../NewTable/components/NewTableRow/types/NewTableRowTypes";
+import type { Ref} from "vue";
+import { computed, toValue } from "vue";
+import type { INewTableRow } from "../../NewTable/components/NewTableRow/types/NewTableRowTypes";
 import { NEW_TABLE_STANDART_ROW_MODES } from "../../NewTable/constants/standartRowModes";
 
 export function useNewTableWrapperChecked(

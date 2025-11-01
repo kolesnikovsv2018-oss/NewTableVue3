@@ -1,5 +1,5 @@
 
-import { NEW_TABLE_STANDART_ROW_MODES } from '../../../constants/standartRowModes';
+import type { NEW_TABLE_STANDART_ROW_MODES } from '../../../constants/standartRowModes';
 
 export type TNewTableRowMode = keyof typeof NEW_TABLE_STANDART_ROW_MODES //'edit' | 'view' | 'delete' | 'custom';
 
