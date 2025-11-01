@@ -190,18 +190,20 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
 </template>
 
 <style scoped>
+@import './styles/variables.css';
+
 .new-table {
   display: flex;
   flex-direction: column;
-  border: 1px solid #cbd5e1;
-  border-radius: 0.5rem;
+  border: 1px solid var(--nt-border-color);
+  border-radius: var(--nt-border-radius);
   height: 100%;
   width: 100%;
-  background: white;
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  background: var(--nt-bg);
+  box-shadow: var(--nt-box-shadow);
   box-sizing: border-box;
   position: relative;
-  color: #1e293b;
+  color: var(--nt-text-color);
   overflow-y: hidden;
   overflow-x: auto;
 }
@@ -210,15 +212,15 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
 .new-table :deep(.new-table__header) {
   display: flex;
   flex-direction: column;
-  background-color: #f1f5f9;
-  border-bottom: 1px solid #cbd5e1;
-  color: #1e293b;
+  background-color: var(--nt-header-bg);
+  border-bottom: 1px solid var(--nt-border-color);
+  color: var(--nt-text-color);
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: var(--nt-z-header);
   width: fit-content;
   min-width: 100%;
-  font-weight: 600;
+  font-weight: var(--nt-font-weight-bold);
   flex: 0 0;
 }
 
@@ -230,13 +232,13 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
 }
 
 .new-table :deep(.new-table__header__cell) {
-  padding: 0.75rem;
-  border-right: 1px solid #cbd5e1;
+  padding: var(--nt-cell-padding);
+  border-right: 1px solid var(--nt-border-color);
   position: relative;
-  transition: all 0.2s;
+  transition: all var(--nt-transition-speed);
   user-select: none;
-  background-color: #f1f5f9;
-  color: #1e293b;
+  background-color: var(--nt-header-bg);
+  color: var(--nt-text-color);
 }
 
 .new-table :deep(.new-table__header__cell:hover) {
@@ -303,19 +305,19 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: var(--nt-spacing-8);
   color: var(--nt-text-muted);
-  font-size: 1.125rem;
+  font-size: var(--nt-font-size-lg);
 }
 
 .new-table__body :deep(.new-table__body__row) {
   display: flex;
-  border-bottom: 1px solid #cbd5e1;
-  color: #1e293b;
-  height: 40px;
+  border-bottom: 1px solid var(--nt-border-color);
+  color: var(--nt-text-color);
+  height: var(--nt-row-height);
   align-items: center;
-  transition: all 0.2s;
-  background-color: #ffffff;
+  transition: all var(--nt-transition-speed);
+  background-color: var(--nt-bg);
 }
 
 .new-table__body :deep(.new-table__body__row:hover) {
@@ -346,7 +348,7 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
   left: 0;
   z-index: var(--nt-z-sticky);
   color: var(--nt-text-color);
-  font-weight: 500;
+  font-weight: var(--nt-font-weight-medium);
 }
 
 .new-table :deep(.new-table__checkbox-cell),
