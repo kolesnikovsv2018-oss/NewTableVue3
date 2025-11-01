@@ -306,7 +306,6 @@ function onChangeFilters(changedFilters: INewTableFilters) {
 
 :deep() .--task {
   background-color: var(--app-row-task-bg);
-  box-shadow: inset 0 0 0 1px var(--app-row-border);
 }
 
 /* так можно переопределять стили */
