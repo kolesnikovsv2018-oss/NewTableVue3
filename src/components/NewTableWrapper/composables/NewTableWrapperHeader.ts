@@ -1,4 +1,5 @@
-import { computed, Ref, ref, toValue, watchEffect } from "vue";
+import type { Ref} from "vue";
+import { computed, ref, toValue, watchEffect } from "vue";
 
 import type { INewTableColumn, INewTableHeaderSetting } from "../../NewTable/components/NewTableHeader/types/INewTableHeadTypes";
 

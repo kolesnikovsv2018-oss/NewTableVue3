@@ -1,4 +1,5 @@
-import { computed, ref, Ref, toValue, watch } from "vue";
+import type { Ref} from "vue";
+import { computed, ref, toValue, watch } from "vue";
 
 import type { INewTableRow } from '../../NewTable/components/NewTableRow/types/NewTableRowTypes';
 

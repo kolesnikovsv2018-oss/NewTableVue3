@@ -1,4 +1,4 @@
-import { INewTableColumn } from "../components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableColumn } from "../components/NewTableHeader/types/INewTableHeadTypes";
 import type { INewTableRow } from "../components/NewTableRow/types/NewTableRowTypes";
 
 export interface INewTableRowActionEvent {

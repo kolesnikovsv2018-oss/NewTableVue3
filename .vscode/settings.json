@@ -4,9 +4,8 @@
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "eslint.format.enable": true,
-  "eslint.options": {
-    "ignorePath": ".gitignore"
-  },
+  // VS Code ESLint extension will respect .eslintignore and project settings.
+  // Removed `eslint.options.ignorePath` because newer ESLint versions no longer accept this option.
   // Turn autofix on.
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
@@ -26,6 +25,13 @@
     "json5",
     "jsonc",
     "yaml"
+  ],
+  // Limit the ESLint extension to the project's `src` folder so built assets
+  // under `dist/` are not linted by the editor's language server.
+  "eslint.workingDirectories": [
+    {
+      "directory": "./src"
+    }
   ],
   // Suppress stylistic errors, but still autofix them.
   "eslint.rules.customizations": [

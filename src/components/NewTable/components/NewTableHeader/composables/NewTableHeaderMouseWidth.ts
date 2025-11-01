@@ -1,4 +1,5 @@
-import { Ref, toValue } from "vue";
+import type { Ref} from "vue";
+import { toValue } from "vue";
 
 import type { INewTableChangeColumnWidthEvent } from "../../../types/NewTableEventTypes";
 import type { INewTableHeaderSetting } from "../types/INewTableHeadTypes";

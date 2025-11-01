@@ -13,11 +13,14 @@ useOutsideClickHandler(
 );
 const props = defineProps<{
   data: ILocalNewTableRow[];
-  payload?: any,
+  payload?: unknown,
 }>();
 
 const emit = defineEmits<{
-  (e: 'submit', event: { value: { priceSumms: number, customPriceSumms: number }, payload: any }): void;
+  (e: 'submit', event: {
+    value: { priceSumms: number, customPriceSumms: number },
+    payload: unknown
+  }): void;
   (e: 'close'): void;
 }>();
 

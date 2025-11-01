@@ -1,4 +1,4 @@
-import type { INewTableColumnComponent, INewTableFilterComponent } from "../components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableFilterComponent } from "../components/NewTableHeader/types/INewTableHeadTypes";
 import type { INewTableRow } from "../components/NewTableRow/types/NewTableRowTypes";
 
 export interface INewTableFilter {
@@ -15,9 +15,9 @@ export interface INewTableFilter {
   // принимает текущее и вефолтное значение и сравнивает их
   // просто сравнить currentValue === defaultValue нельзя
   // например, в случае диапазона тут будут разные обеъкты с одинаковым содерижимым
-  isDefault?: (currentValue: any, defaultValue: any) => boolean,
+  isDefault?: (currentValue: unknown, defaultValue: unknown) => boolean,
   // тоже самое для initial
-  isInitial?: (currentValue: any, initialValue: any) => boolean,
+  isInitial?: (currentValue: unknown, initialValue: unknown) => boolean,
   // имя и настройки компонента для фильтрации значений в колонке
   component?: INewTableFilterComponent;
 }
