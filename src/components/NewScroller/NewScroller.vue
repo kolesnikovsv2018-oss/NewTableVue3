@@ -106,12 +106,15 @@ function onScroll() {
 
 .new-scroll-wrapper {
   box-sizing: border-box;
-  scrollbar-width: thin;
-  scrollbar-color: var(--nt-border-color) transparent;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  /* scrollbar-width: thin; */
+  /* scrollbar-color: var(--nt-border-color) transparent; */
 }
 
 .new-scroll-wrapper::-webkit-scrollbar {
-  width: var(--nt-icon-size);
+  width: var(--nt-scroller-size);
 }
 
 .new-scroll-wrapper::-webkit-scrollbar-track {
@@ -130,11 +133,14 @@ function onScroll() {
 
 .new-scroll {
   box-sizing: border-box;
+  border: 0;
+  margin: 0;
+  padding: 0;
 }
 
 @media (max-width: 768px) {
   .new-scroll-wrapper::-webkit-scrollbar {
-    width: calc(var(--nt-icon-size) * 0.75);
+    width: calc(var(--nt-scroller-size) * 0.75);
   }
 }
 </style>
