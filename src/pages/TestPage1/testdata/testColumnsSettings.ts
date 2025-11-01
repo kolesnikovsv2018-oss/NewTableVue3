@@ -13,52 +13,52 @@ export const testColumnsSettings: Record<string, INewTableHeaderSetting> = {
   },
   date: {
     width: 200,
-    order: 2,
+    order: 3,
     visible: true,
   },
   status: {
     width: 150,
-    order: 3,
+    order: 4,
     visible: true,
   },
   pricePNR: {
     width: 120,
-    order: 4,
+    order: 5,
     visible: true,
   },
   pricePIR: {
     width: 120,
-    order: 5,
+    order: 6,
     visible: true,
   },
   priceSMR: {
     width: 120,
-    order: 6,
+    order: 7,
     visible: true,
   },
   priceTotal: {
     width: 130,
-    order: 7,
+    order: 8,
     visible: true,
   },
   customPricePNR: {
     width: 130,
-    order: 8,
+    order: 9,
     visible: true,
   },
   customPricePIR: {
     width: 130,
-    order: 9,
+    order: 10,
     visible: true,
   },
   customPriceSMR: {
     width: 130,
-    order: 10,
+    order: 11,
     visible: true,
   },
   customPriceTotal: {
     width: 140,
-    order: 11,
+    order: 12,
     visible: true,
   },
 };

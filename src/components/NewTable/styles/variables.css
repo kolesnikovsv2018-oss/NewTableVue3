@@ -1,0 +1,34 @@
+/* Base Table Variables */
+:root {
+  /* Colors */
+  --nt-border-color: #cbd5e1;
+  --nt-hover-bg: #e2e8f0;
+  --nt-header-bg: #f1f5f9;
+  --nt-sticky-bg: #ffffff;
+  --nt-text-color: #1e293b;
+  --nt-text-muted: #475569;
+  --nt-icon-color: #3b82f6;
+  --nt-active-color: #2563eb;
+
+  /* Base Layout */
+  --nt-cell-padding: 0.25rem;
+  --nt-border-radius: 0.5rem;
+  --nt-header-height: 36px;
+  --nt-icon-size: 16px;
+  --nt-checkbox-size: 18px;
+  --nt-scroller-size: 16px;
+
+  /* Fixed Column Widths */
+  --nt-number-column-width: 50px;
+  --nt-checkbox-column-width: 50px;
+  --nt-expand-column-width: 120px;
+  --nt-actions-column-width: 100px;
+
+  /* Animation */
+  --nt-transition-speed: 0.2s;
+
+  /* Z-index layers */
+  --nt-z-sticky: 10;
+  --nt-z-header: 20;
+  --nt-z-actions: 30;
+}

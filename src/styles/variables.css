@@ -1,0 +1,45 @@
+/* Application-specific Variables */
+:root {
+  /* Custom Row Types Colors */
+  --app-row-stage-bg: #e2e8f0;
+  --app-row-substage-bg: #f1f5f9;
+  --app-row-task-bg: #ffffff;
+  --app-row-border: #e5e7eb;
+
+  /* Layout & Components */
+  --app-sidebar-width: 250px;
+  --app-header-height: 60px;
+  --app-content-padding: 1rem;
+  --app-gap: 1rem;
+
+  /* UI Elements */
+  --app-button-bg: #3b82f6;
+  --app-button-hover: #2563eb;
+  --app-button-text: #ffffff;
+
+  /* Panel & Dialog */
+  --app-panel-bg: #f8fafc;
+  --app-panel-border: #e2e8f0;
+  --app-dialog-bg: #ffffff;
+  --app-dialog-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+
+  /* Status Colors */
+  --app-success: #10b981;
+  --app-warning: #f59e0b;
+  --app-error: #ef4444;
+  --app-info: #3b82f6;
+
+  /* Text Colors */
+  --app-text-primary: #1e293b;
+  --app-text-secondary: #475569;
+  --app-text-disabled: #94a3b8;
+
+  /* Shadows */
+  --app-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --app-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+
+  /* Z-index Layers */
+  --app-z-dialog: 100;
+  --app-z-modal: 200;
+  --app-z-tooltip: 300;
+}

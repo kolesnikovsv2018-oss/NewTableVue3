@@ -163,28 +163,36 @@ function onClickOnSort(key: string) {
     <div class="new-table__header__row">
       <div
         v-if="isNumberColumnShown"
-        class="new-table__number-cell"
-      />
+        class="new-table__header__cell new-table__number-cell"
+      >
+        <slot name="number-column-header">
+          #
+        </slot>
+      </div>
       <div
         v-if="isCheckboxColumnShown"
-        class="new-table__checkbox-cell"
+        class="new-table__header__cell new-table__checkbox-cell"
       >
-        <input
-          :value="isCheckedAll"
-          :checked="isCheckedAll"
-          type="checkbox"
-          @change="emit('toggle:check-all-row', (($event as InputEvent).target as HTMLInputElement).checked)"
-        >
+        <slot name="checkbox-column-header">
+          <input
+            :value="isCheckedAll"
+            :checked="isCheckedAll"
+            type="checkbox"
+            @change="emit('toggle:check-all-row', (($event as InputEvent).target as HTMLInputElement).checked)"
+          >
+        </slot>
       </div>
       <div
         v-if="isExpandColumnShown"
-        class="new-table__expand-cell"
+        class="new-table__header__cell new-table__expand-cell"
         @click="onExpandHeadClick"
       >
-        <FontAwesomeIcon
-          :icon="iconForExpandHead"
-          class="icon"
-        />
+        <slot name="expand-column-header">
+          <FontAwesomeIcon
+            :icon="iconForExpandHead"
+            class="icon"
+          />
+        </slot>
       </div>
       <div
         v-for="(header, index) in visibleSortedColumns"
@@ -277,10 +285,15 @@ function onClickOnSort(key: string) {
           @click.stop.prevent=""
         />
       </div>
+
       <div
         v-if="isActionsColumnShown"
-        class="new-table__actions__cell"
-      />
+        class="new-table__header__cell new-table__actions__cell"
+      >
+        <slot name="actions-column-header">
+          Actions
+        </slot>
+      </div>
     </div>
 
     <NewTableHeaderFilterTeleport

@@ -190,166 +190,247 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
 </template>
 
 <style scoped>
+@import './styles/variables.css';
+
 .new-table {
   display: flex;
   flex-direction: column;
-  border: 1px solid #ccc;
-  /* border-radius: 4px; */
-  border-top-left-radius: 4px;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 4px;
-  overflow: hidden;
+  border: 1px solid var(--nt-border-color);
+  border-radius: var(--nt-border-radius);
   height: 100%;
   width: 100%;
-  overflow-x: scroll;
+  background: var(--nt-bg);
+  box-shadow: var(--nt-box-shadow);
   box-sizing: border-box;
+  position: relative;
+  color: var(--nt-text-color);
+  overflow-y: hidden;
+  overflow-x: auto;
 }
 
+/* Header Styles */
 .new-table :deep(.new-table__header) {
   display: flex;
   flex-direction: column;
-  background-color: #f5f5f5;
-  border-bottom: 1px solid #ccc;
-  color: #333;
-  flex: 0 0;
+  background-color: var(--nt-header-bg);
+  border-bottom: 1px solid var(--nt-border-color);
+  color: var(--nt-text-color);
+  position: sticky;
+  top: 0;
+  z-index: var(--nt-z-header);
   width: fit-content;
   min-width: 100%;
-  box-sizing: border-box;
+  font-weight: var(--nt-font-weight-bold);
+  flex: 0 0;
 }
 
 .new-table :deep(.new-table__header__row) {
   display: flex;
+  height: var(--nt-header-height);
+  align-items: center;
+  background-color: var(--nt-header-bg);
   box-sizing: border-box;
 }
 
 .new-table :deep(.new-table__header__cell) {
-  padding: 8px;
-  font-weight: bold;
-  border-right: 1px solid #ccc;
-  box-sizing: border-box;
+  padding: var(--nt-cell-padding);
+  border-right: 1px solid var(--nt-border-color);
   position: relative;
+  transition: all var(--nt-transition-speed);
+  user-select: none;
+  background-color: var(--nt-header-bg);
+  color: var(--nt-text-color);
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 100%;
+  max-height: 100%;
+}
+
+.new-table :deep(.new-table__header__cell:hover) {
+  background-color: var(--nt-hover-bg);
 }
 
 .new-table :deep(.new-table__header__cell .new-table__header__cell__filter__icon) {
   cursor: pointer;
+  color: var(--nt-icon-color);
+  transition: all var(--nt-transition-speed);
+  font-size: var(--nt-icon-size);
+  margin-left: 0.5rem;
+}
+
+.new-table :deep(.new-table__header__cell .new-table__header__cell__filter__icon:hover) {
+  color: var(--nt-active-color);
+  transform: scale(1.1);
 }
 
 .new-table :deep(.new-table__header__cell .new-table__header__cell__filter__icon.--active) {
-  color: blue;
+  color: var(--nt-active-color);
+  transform: scale(1.1);
 }
 
 .new-table :deep(.new-table__header__cell .new-table__header__cell__sort__icon) {
   cursor: pointer;
+  color: var(--nt-icon-color);
+  transition: all var(--nt-transition-speed);
+  font-size: var(--nt-icon-size);
+  margin-left: 0.5rem;
+}
+
+.new-table :deep(.new-table__header__cell .new-table__header__cell__sort__icon:hover) {
+  color: var(--nt-active-color);
+  transform: scale(1.1);
 }
 
 .new-table :deep(.new-table__header__cell__separator) {
   top: 0;
-  width: 5px;
-  right: -3px;
+  width: 8px;
+  right: -4px;
   height: 100%;
   cursor: col-resize;
   position: absolute;
-  /* background-color: rgba(0, 0, 0, 0.1); */
-  /* border-left: 2px solid rgba(255, 255, 255, 0.0); */
-  /* border-right: 2px solid rgba(255, 255, 255, 0.0); */
-  z-index: 2;
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+  z-index: var(--nt-z-sticky);
+  transition: background-color var(--nt-transition-speed);
 }
 
+.new-table :deep(.new-table__header__cell__separator:hover) {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Body Styles */
 .new-table__body {
   display: flex;
   flex-direction: column;
-  flex: 1 1;
-  min-height: 0;
+  flex: 1;
   width: fit-content;
   min-width: 100%;
-  box-sizing: border-box;
+  min-height: 0;
 }
 
 .new-table__body__empty {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
-  font-weight: bold;
-  box-sizing: border-box;
+  padding: var(--nt-spacing-8);
+  color: var(--nt-text-muted);
+  font-size: var(--nt-font-size-lg);
 }
 
 .new-table__body :deep(.new-table__body__row) {
   display: flex;
-  border-bottom: 1px solid #eee;
-  color: #555;
+  border-bottom: 1px solid var(--nt-border-color);
+  color: var(--nt-text-color);
+  align-items: center;
+  transition: all var(--nt-transition-speed);
+  background-color: var(--nt-bg);
   box-sizing: border-box;
+}
+
+.new-table__body :deep(.new-table__body__row:hover) {
+  background-color: var(--nt-hover-bg);
 }
 
 .new-table__body :deep(.new-table__cell) {
-  padding: 4px;
-  border-right: 1px solid #eee;
-  box-sizing: border-box;
+  padding: var(--nt-cell-padding);
+  border-right: 1px solid var(--nt-border-color);
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--nt-text-color);
+  background-color: inherit;
+  height: 100%;
+  min-height: 100%;
+  max-height: 100%;
+  box-sizing: border-box;
 }
 
+/* Fixed Columns */
 .new-table :deep(.new-table__number-cell),
 .new-table__body :deep(.new-table__number-cell) {
-  padding: 8px;
-  background-color: #f5f5f5;
-  border-right: 1px solid #ccc;
-  box-sizing: border-box;
-  width: 50px;
-  min-width: 50px;
-  max-width: 50px;
+  padding: var(--nt-cell-padding);
+  background-color: var(--nt-header-bg);
+  border-right: 1px solid var(--nt-border-color);
+  width: var(--nt-number-column-width);
+  min-width: var(--nt-number-column-width);
+  max-width: var(--nt-number-column-width);
   text-align: center;
   position: sticky;
   left: 0;
-  overflow: hidden;
-  z-index: 3;
+  z-index: var(--nt-z-sticky);
+  color: var(--nt-text-color);
+  font-weight: var(--nt-font-weight-medium);
 }
 
 .new-table :deep(.new-table__checkbox-cell),
 .new-table__body :deep(.new-table__checkbox-cell) {
-  padding: 8px;
-  border-right: 1px solid #eee;
-  box-sizing: border-box;
-  width: 50px;
-  min-width: 50px;
-  max-width: 50px;
+  padding: var(--nt-cell-padding);
+  background-color: var(--nt-header-bg);
+  border-right: 1px solid var(--nt-border-color);
+  width: var(--nt-checkbox-column-width);
+  min-width: var(--nt-checkbox-column-width);
+  max-width: var(--nt-checkbox-column-width);
   text-align: center;
   position: sticky;
-  left: 50px;
-  background-color: aliceblue;
-  z-index: 3;
+  left: var(--nt-number-column-width);
+  z-index: var(--nt-z-sticky);
 }
 
 .new-table :deep(.new-table__expand-cell),
 .new-table__body :deep(.new-table__expand-cell) {
-  padding: 8px;
-  border-right: 1px solid #eee;
-  box-sizing: border-box;
-  width: 120px;
-  min-width: 120px;
-  max-width: 120px;
+  padding: var(--nt-cell-padding);
+  background-color: var(--nt-header-bg);
+  border-right: 1px solid var(--nt-border-color);
+  width: var(--nt-expand-column-width);
+  min-width: var(--nt-expand-column-width);
+  max-width: var(--nt-expand-column-width);
   text-align: left;
   cursor: pointer;
   position: sticky;
-  left: 100px;
-  background-color: aliceblue;
-  z-index: 3;
+  left: calc(var(--nt-number-column-width) + var(--nt-checkbox-column-width));
+  z-index: var(--nt-z-sticky);
+  color: var(--nt-text-color);
 }
 
 .new-table :deep(.new-table__actions__cell),
 .new-table__body :deep(.new-table__actions__cell) {
-  padding: 8px;
-  box-sizing: border-box;
-  width: 100px;
-  min-width: 100px;
-  max-width: 100px;
+  padding: var(--nt-cell-padding);
+  background-color: var(--nt-header-bg);
+  border-right: 1px solid var(--nt-border-color);
+  width: var(--nt-actions-column-width);
+  min-width: var(--nt-actions-column-width);
+  max-width: var(--nt-actions-column-width);
   text-align: center;
   position: sticky;
   right: 0;
-  background-color: aliceblue;
-  z-index: 3;
+  z-index: var(--nt-z-actions);
+  color: var(--nt-text-color);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .new-table {
+    font-size: 0.875rem;
+  }
+
+  :root {
+    --nt-header-height: 30px;
+    --nt-number-column-width: 40px;
+    --nt-checkbox-column-width: 40px;
+    --nt-expand-column-width: 100px;
+    --nt-actions-column-width: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .new-table {
+    font-size: 0.75rem;
+  }
+
+  :root {
+    --nt-header-height: 24px;
+    --nt-number-column-width: 30px;
+    --nt-checkbox-column-width: 30px;
+    --nt-expand-column-width: 80px;
+    --nt-actions-column-width: 60px;
+  }
 }
 </style>

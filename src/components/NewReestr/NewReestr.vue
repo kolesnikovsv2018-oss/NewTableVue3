@@ -289,29 +289,37 @@ defineExpose({
   box-sizing: border-box;
 }
 
+.new-reestr__side-menu__item {
+  color: #334155;
+  font-weight: 500;
+}
+
 .new-reestr__side-menu__item:hover {
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: #f1f5f9;
+  color: #0f172a;
 }
 
 .new-reestr-settings {
   display: flex;
   justify-content: center;
   border-radius: 8px;
-  background-color: #eee;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
   width: 100%;
   text-align: center;
   padding: 8px;
   box-sizing: border-box;
   flex: 0 0;
-
-  color: #333;
+  color: #0f172a;
+  font-weight: 500;
 }
 
 .new-reestr-columns-settings__info {
   margin-left: 16px;
   display: flex;
   gap: 8px;
-  display: flex;
   align-items: center;
+  color: #334155;
+  font-weight: 500;
 }
 </style>
