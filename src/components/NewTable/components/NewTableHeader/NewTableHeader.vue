@@ -276,6 +276,7 @@ function onClickOnSort(key: string) {
           :style="{
             position: 'absolute',
             zIndex: 3,
+            top: '100%',
           }"
         />
 

@@ -22,6 +22,7 @@ import NewContextMenu from '../NewContextMenu/NewContextMenu.vue';
 // import NewReestrColumnSettings from './components/NewReestrColumnSettings/NewReestrColumnSettings.vue';
 import NewReestrSettings from './components/NewReestrSettings/NewReestrSettings.vue';
 import NewReestrColumnSettingsModal from './components/NewReestrColumnSettings/NewReestrColumnSettingsModal.vue';
+import NewReestrSideMenu from './components/NewReestrSideMenu/NewReestrSideMenu.vue';
 
 const props = defineProps<{
   initialData: INewTableRow[];
@@ -131,16 +132,6 @@ defineExpose({
 <template>
   <div class="new-reestr">
     <div class="new-reestr__data">
-      <!-- <div class="new-reestr__column-settings__wrapper">
-        <NewReestrColumnSettings
-          v-bind="{
-            columns: props.initialColumns,
-            columnsSettings,
-          }"
-          @change:column-settings="onChangeColumnSettings"
-        />
-      </div> -->
-
       <NewTableWrapper
         ref="newTableWrapperRef"
         class="new-reestr__new-table-wrapper"
@@ -187,23 +178,19 @@ defineExpose({
         </template>
       </NewTableWrapper>
 
-      <div
-        v-if="!!sideMenuItems?.length"
+      <NewReestrSideMenu
+        :sideMenuItems="props.sideMenuItems"
         class="new-reestr__side-menu"
+        @select:side-menu-item="onSideMenuItemClick"
       >
-        <slot name="before-side-menu" />
-        <div class="new-reestr__side-menu__items">
-          <div
-            v-for="(menuItem) in sideMenuItems"
-            :key="menuItem.actionName"
-            class="new-reestr__side-menu__item"
-            @click="onSideMenuItemClick(menuItem)"
-          >
-            {{ menuItem.label }}
-          </div>
-        </div>
-        <slot name="after-side-menu" />
-      </div>
+        <template #before-side-menu>
+          <slot name="before-side-menu" />
+        </template>
+
+        <template #after-side-menu>
+          <slot name="after-side-menu" />
+        </template>
+      </NewReestrSideMenu>
     </div>
 
     <NewReestrSettings
@@ -247,7 +234,7 @@ defineExpose({
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
 
   flex: 1 1;
   max-height: 100%;
@@ -260,16 +247,10 @@ defineExpose({
   align-items: stretch;
   justify-content: space-between;
   flex-wrap: nowrap;
-  gap: 16px;
 
   flex: 1 1;
   min-height: 0;
   width: 100%;
-}
-
-.new-reestr__column-settings__wrapper {
-  flex: 0 0;
-  width: fit-content;
 }
 
 .new-reestr__new-table-wrapper {
@@ -278,34 +259,11 @@ defineExpose({
 }
 
 .new-reestr__side-menu {
-  display: flex;
-  align-items: stretch;
-  padding: 8px;
-  box-sizing: border-box;
+  background-color: var(--color-background-secondary);
 
   flex: 0 0;
   width: fit-content;
   height: 100%;
-
-  position: relative;
-}
-
-.new-reestr__side-menu__item {
-  text-wrap: nowrap;
-  cursor: pointer;
-  width: 100%;
-  padding: 4px;
-  box-sizing: border-box;
-}
-
-.new-reestr__side-menu__item {
-  color: #334155;
-  font-weight: 500;
-}
-
-.new-reestr__side-menu__item:hover {
-  background-color: #f1f5f9;
-  color: #0f172a;
 }
 
 .new-reestr-settings {
@@ -320,15 +278,6 @@ defineExpose({
   box-sizing: border-box;
   flex: 0 0;
   color: #0f172a;
-  font-weight: 500;
-}
-
-.new-reestr-columns-settings__info {
-  margin-left: 16px;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  color: #334155;
   font-weight: 500;
 }
 </style>

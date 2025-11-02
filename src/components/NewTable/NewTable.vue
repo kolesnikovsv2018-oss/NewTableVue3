@@ -226,7 +226,7 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
 
 .new-table :deep(.new-table__header__row) {
   display: flex;
-  height: var(--nt-header-height);
+  /* height: var(--nt-header-height); */
   align-items: center;
   background-color: var(--nt-header-bg);
   box-sizing: border-box;
