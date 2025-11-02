@@ -199,7 +199,7 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
   border-radius: var(--nt-border-radius);
   height: 100%;
   width: 100%;
-  background: var(--nt-bg);
+  /* background: var(--nt-bg); */
   box-shadow: var(--nt-box-shadow);
   box-sizing: border-box;
   position: relative;
@@ -325,12 +325,12 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
   color: var(--nt-text-color);
   align-items: center;
   transition: all var(--nt-transition-speed);
-  background-color: var(--nt-bg);
+  /* background-color: var(--nt-bg); */
   box-sizing: border-box;
 }
 
 .new-table__body :deep(.new-table__body__row:hover) {
-  background-color: var(--nt-hover-bg);
+  background-color: var(--nt-hover-bg) !important;
 }
 
 .new-table__body :deep(.new-table__cell) {
@@ -348,8 +348,7 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
 }
 
 /* Fixed Columns */
-.new-table :deep(.new-table__number-cell),
-.new-table__body :deep(.new-table__number-cell) {
+.new-table :deep(.new-table__header .new-table__number-cell) {
   padding: var(--nt-cell-padding);
   background-color: var(--nt-header-bg);
   border-right: 1px solid var(--nt-border-color);
@@ -364,8 +363,22 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
   font-weight: var(--nt-font-weight-medium);
 }
 
-.new-table :deep(.new-table__checkbox-cell),
-.new-table__body :deep(.new-table__checkbox-cell) {
+.new-table__body :deep(.new-table__number-cell) {
+  padding: var(--nt-cell-padding);
+  background-color: inherit;
+  border-right: 1px solid var(--nt-border-color);
+  width: var(--nt-number-column-width);
+  min-width: var(--nt-number-column-width);
+  max-width: var(--nt-number-column-width);
+  text-align: center;
+  position: sticky;
+  left: 0;
+  z-index: var(--nt-z-sticky);
+  color: var(--nt-text-color);
+  font-weight: var(--nt-font-weight-medium);
+}
+
+.new-table :deep(.new-table__header .new-table__checkbox-cell) {
   padding: var(--nt-cell-padding);
   background-color: var(--nt-header-bg);
   border-right: 1px solid var(--nt-border-color);
@@ -378,8 +391,20 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
   z-index: var(--nt-z-sticky);
 }
 
-.new-table :deep(.new-table__expand-cell),
-.new-table__body :deep(.new-table__expand-cell) {
+.new-table__body :deep(.new-table__checkbox-cell) {
+  padding: var(--nt-cell-padding);
+  background-color: inherit;
+  border-right: 1px solid var(--nt-border-color);
+  width: var(--nt-checkbox-column-width);
+  min-width: var(--nt-checkbox-column-width);
+  max-width: var(--nt-checkbox-column-width);
+  text-align: center;
+  position: sticky;
+  left: var(--nt-number-column-width);
+  z-index: var(--nt-z-sticky);
+}
+
+.new-table :deep(.new-table__header .new-table__expand-cell) {
   padding: var(--nt-cell-padding);
   background-color: var(--nt-header-bg);
   border-right: 1px solid var(--nt-border-color);
@@ -394,10 +419,38 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
   color: var(--nt-text-color);
 }
 
-.new-table :deep(.new-table__actions__cell),
-.new-table__body :deep(.new-table__actions__cell) {
+.new-table__body :deep(.new-table__expand-cell) {
+  padding: var(--nt-cell-padding);
+  background-color: inherit;
+  border-right: 1px solid var(--nt-border-color);
+  width: var(--nt-expand-column-width);
+  min-width: var(--nt-expand-column-width);
+  max-width: var(--nt-expand-column-width);
+  text-align: left;
+  cursor: pointer;
+  position: sticky;
+  left: calc(var(--nt-number-column-width) + var(--nt-checkbox-column-width));
+  z-index: var(--nt-z-sticky);
+  color: var(--nt-text-color);
+}
+
+.new-table :deep(.new-table__header .new-table__actions__cell) {
   padding: var(--nt-cell-padding);
   background-color: var(--nt-header-bg);
+  border-right: 1px solid var(--nt-border-color);
+  width: var(--nt-actions-column-width);
+  min-width: var(--nt-actions-column-width);
+  max-width: var(--nt-actions-column-width);
+  text-align: center;
+  position: sticky;
+  right: 0;
+  z-index: var(--nt-z-actions);
+  color: var(--nt-text-color);
+}
+
+.new-table__body :deep(.new-table__actions__cell) {
+  padding: var(--nt-cell-padding);
+  background-color: inherit;
   border-right: 1px solid var(--nt-border-color);
   width: var(--nt-actions-column-width);
   min-width: var(--nt-actions-column-width);
