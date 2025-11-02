@@ -244,6 +244,8 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
   height: 100%;
   min-height: 100%;
   max-height: 100%;
+  display: flex;
+  flex-wrap: nowrap;
 }
 
 .new-table :deep(.new-table__header__cell:hover) {

@@ -125,6 +125,20 @@ function onSelectContextMenuItem(menuItem: INewMenuItem) {
   }
 }
 
+function onSelectSideMenuItem(menuItem: INewMenuItem) {
+  switch (menuItem.actionName) {
+    case 'date-filter':
+    case 'summs':
+      sideMenuComponents.value = {
+        ...sideMenuComponents.value,
+        [menuItem.actionName]: {
+          isShown: true,
+          payload: menuItem.payload,
+        },
+      };
+  }
+}
+
 function onNewReestrSideMenuDateFilterSubmit(
   { name, value }: ITestPage1NewReestrSideMenuSubmitEvent,
 ) {
@@ -189,7 +203,8 @@ function onChangeFilters(changedFilters: INewTableFilters) {
           }"
           @row-action="onRowAction"
           @change:cell-value="onChangeCellValue"
-          @select:item="onSelectContextMenuItem"
+          @select:context-menu-item="onSelectContextMenuItem"
+          @select:side-menu-item="onSelectSideMenuItem"
           @change:filters="onChangeFilters"
         >
           <template v-slot:cell[number]="idSlotProps">

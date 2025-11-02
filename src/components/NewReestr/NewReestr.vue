@@ -216,39 +216,17 @@ defineExpose({
       @open:column-settings="isColumnSettingsShown = true"
     />
 
-    <NewReestrColumnSettingsModal
+    <Teleport
       v-if="isColumnSettingsShown"
-      :columns="props.initialColumns"
-      :columns-settings="columnsSettings"
-      @change:column-settings="onChangeColumnSettings"
-      @close="isColumnSettingsShown = false"
-    />
-
-    <!-- <div
-      v-if="!!newTableWrapperRef"
-      class="new-reestr-settings"
+      to="body"
     >
-      <div>
-        <label>
-          Row count:
-          <input
-            :value="newTableWrapperRef.rowCount"
-            type="number"
-            @change="newTableWrapperRef.setRowCount(Number(($event.target as HTMLInputElement).value || 5))"
-          >
-        </label>
-      </div>
-
-      <div class="new-reestr-columns-settings__info">
-        <span>Total</span>
-        <span>{{ newTableWrapperRef.fullFlatData.length }}</span>
-      </div>
-
-      <div class="new-reestr-columns-settings__info">
-        <span>Filtered</span>
-        <span>{{ newTableWrapperRef.filteredFlatData.length }}</span>
-      </div>
-    </div> -->
+      <NewReestrColumnSettingsModal
+        :columns="props.initialColumns"
+        :columns-settings="columnsSettings"
+        @change:column-settings="onChangeColumnSettings"
+        @close="isColumnSettingsShown = false"
+      />
+    </Teleport>
 
     <Teleport
       v-if="activeContextMenuMouseEvent"
