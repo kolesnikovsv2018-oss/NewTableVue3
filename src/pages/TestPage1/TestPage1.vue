@@ -312,15 +312,15 @@ function onChangeFilters(changedFilters: INewTableFilters) {
 }
 
 :deep() .--stage {
-  background-color: var(--app-row-stage-bg);
+  background-color: var(--app-row-stage-bg) !important;
 }
 
 :deep() .--sub-stage {
-  background-color: var(--app-row-substage-bg);
+  background-color: var(--app-row-substage-bg) !important;
 }
 
 :deep() .--task {
-  background-color: var(--app-row-task-bg);
+  background-color: var(--app-row-task-bg) !important;
 }
 
 /* так можно переопределять стили */
