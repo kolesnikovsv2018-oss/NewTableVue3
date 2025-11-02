@@ -84,6 +84,7 @@ const computedRowStyle = computed(
     'max-height': `${100 / rowCount.value}% !important`,
     'min-height': `${100 / rowCount.value}% !important`,
     flex: `0 0 ${100 / rowCount.value}% !important`,
+    boxSizing: 'border-box',
   })
 );
 

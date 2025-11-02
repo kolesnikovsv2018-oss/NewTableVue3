@@ -51,6 +51,8 @@ function close() {
         type="date"
       />
 
+      <div style="flex: 1 1;" />
+
       <button
         :disabled="!value"
         type="submit"
@@ -64,5 +66,6 @@ function close() {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  height: 100%;
 }
 </style>

@@ -29,7 +29,7 @@ export interface INewTableChangeFilterValue {
   value: string;
 }
 
-export interface INewTableCellNativeEvent {
+export interface INewTableRowNativeEvent {
   row?: INewTableRow;
   header?: INewTableColumn;
   event?: MouseEvent;

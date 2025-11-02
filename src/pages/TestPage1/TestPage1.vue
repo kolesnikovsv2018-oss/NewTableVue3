@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 import type { INewTableRow } from '../../components/NewTable/components/NewTableRow/types/NewTableRowTypes';
 import type { INewMenuItem } from '../../components/NewContextMenu/types';
-import type { INewTableCellNativeEvent } from '../../components/NewTable/types/NewTableEventTypes';
+import type { INewTableRowNativeEvent } from '../../components/NewTable/types/NewTableEventTypes';
 import type { ILocalNewTableRow } from './testdata/testData';
 import type { INewTableFilters } from '../../components/NewTable/types/NewTableFilterTypes';
 import type { ITestRangeDate } from '../../components/FilterComponents/components/types';
@@ -34,18 +34,9 @@ const newReestrRef = ref<typeof NewReestr>();
 
 const sideMenuComponents = ref<Record<string, { isShown: boolean, payload: unknown }>>({});
 
-const {
-  actions,
-  actionsChangeModes,
-  columns,
-  columnsSettings,
-  data,
-  contextMenuItems,
-  sideMenuItems,
-  filters,
-  sorts,
-  initData,
-} = useTestPage1NewReestrInitData();
+const mainReestr = useTestPage1NewReestrInitData();
+
+const relativeReestr1 = useTestPage1NewReestrInitData(1, 2, 3);
 
 const {
   activeDestinationRowId,
@@ -53,18 +44,29 @@ const {
   activeSourceRow,
   onChangeRowParentId,
 } = useTestPage1NewReestrChangeRowParentId(
-  () => data.value
+  () => mainReestr.data.value
 );
 
 const {
+  selectedRow,
   onSave,
   onDelete,
   onRowAction,
   onChangeCellValue,
 } = useTestPage1NewReestrActions(
-  () => data.value,
+  () => mainReestr.data.value,
   setRow,
   newReestrRef,
+);
+
+watch(
+  () => selectedRow.value,
+  (newSelectedRow) => {
+    relativeReestr1.initData();
+    if (newSelectedRow) {
+      console.log('Selected row changed:', newSelectedRow);
+    }
+  }
 );
 
 /**
@@ -72,7 +74,7 @@ const {
  * @param row строка, которую нужно обновить в данных
  */
 function setRow(row: INewTableRow) {
-  const parenRows = findParentRowsById(row.data.id, data.value);
+  const parenRows = findParentRowsById(row.data.id, mainReestr.data.value);
 
   if (!parenRows) {
     return;
@@ -86,7 +88,7 @@ function setRow(row: INewTableRow) {
 }
 
 function onSelectContextMenuItem(menuItem: INewMenuItem) {
-  const payload: INewTableCellNativeEvent = menuItem.payload as INewTableCellNativeEvent;
+  const payload: INewTableRowNativeEvent = menuItem.payload as INewTableRowNativeEvent;
 
   switch (menuItem.actionName) {
     case 'edit-row':
@@ -95,7 +97,7 @@ function onSelectContextMenuItem(menuItem: INewMenuItem) {
     case 'save-row':
       calcTotalOwnSums(payload.row as ILocalNewTableRow);
       onSave(payload.row);
-      calcParentSums(payload.row, data.value, columnsToCalc);
+      calcParentSums(payload.row, mainReestr.data.value, columnsToCalc);
       // TODO использовать готовую функцию из NewTableWrapper onAction
       // её нужно вынести в хелпер
       newReestrRef.value.switchOffModeForRow(NEW_TABLE_STANDART_ROW_MODES.EDIT, payload.row);
@@ -142,12 +144,12 @@ function onSelectSideMenuItem(menuItem: INewMenuItem) {
 function onNewReestrSideMenuDateFilterSubmit(
   { name, value }: ITestPage1NewReestrSideMenuSubmitEvent,
 ) {
-  filters.value['date'].currentValue = { date1: value, date2: value };
+  mainReestr.filters.value['date'].currentValue = { date1: value, date2: value };
 
-  filters.value = {
-    ...filters.value,
+  mainReestr.filters.value = {
+    ...mainReestr.filters.value,
     ['date']: {
-      ...filters.value['date'],
+      ...mainReestr.filters.value['date'],
       currentValue: { date1: value, date2: value },
     }
   };
@@ -163,14 +165,14 @@ function onNewReestrSideMenuSummsSubmit(
 }
 
 function onChangeFilters(changedFilters: INewTableFilters) {
-  filters.value = changedFilters;
+  mainReestr.filters.value = changedFilters;
 }
 </script>
 
 <template>
   <div class="test-page1">
     <div class="test-page1__actions">
-      <button @click="initData">
+      <button @click="mainReestr.initData">
         Init Data
       </button>
     </div>
@@ -182,15 +184,15 @@ function onChangeFilters(changedFilters: INewTableFilters) {
         <NewReestr
           ref="newReestrRef"
           class="test-page1__new-reestr"
-          :initial-data="data"
-          :initial-columns="columns"
-          :initial-columns-settings="columnsSettings"
-          :initial-filters="filters"
-          :initial-sorts="sorts"
-          :initial-actions-change-modes="actionsChangeModes"
-          :initial-actions="actions"
-          :initial-context-menu-items="contextMenuItems"
-          :side-menu-items="sideMenuItems"
+          :initial-data="mainReestr.data.value"
+          :initial-columns="mainReestr.columns.value"
+          :initial-columns-settings="mainReestr.columnsSettings.value"
+          :initial-filters="mainReestr.filters.value"
+          :initial-sorts="mainReestr.sorts.value"
+          :initial-actions-change-modes="mainReestr.actionsChangeModes.value"
+          :initial-actions="mainReestr.actions.value"
+          :initial-context-menu-items="mainReestr.contextMenuItems.value"
+          :side-menu-items="mainReestr.sideMenuItems.value"
           :isNumberColumnShown="true"
           :isCheckboxColumnShown="true"
           :isExpandColumnShown="true"
@@ -219,7 +221,7 @@ function onChangeFilters(changedFilters: INewTableFilters) {
             <NewReestrSideMenuDateFilter
               v-if="!!sideMenuComponents['date-filter']?.isShown"
               :payload="sideMenuComponents['date-filter'].payload"
-              :date="(filters['date'].currentValue as ITestRangeDate).date1"
+              :date="(mainReestr.filters.value['date'].currentValue as ITestRangeDate).date1"
               @submit="onNewReestrSideMenuDateFilterSubmit({
                 ...$event,
                 name: 'date-filter',
@@ -229,7 +231,7 @@ function onChangeFilters(changedFilters: INewTableFilters) {
 
             <NewReestrSideMenuSumms
               v-if="!!sideMenuComponents['summs']?.isShown"
-              :data="data as ILocalNewTableRow[]"
+              :data="mainReestr.data.value as ILocalNewTableRow[]"
               :payload="sideMenuComponents['summs'].payload"
               @submit="onNewReestrSideMenuSummsSubmit({
                 ...$event,
@@ -242,25 +244,34 @@ function onChangeFilters(changedFilters: INewTableFilters) {
       </template>
 
       <template #div2>
-        <NewSplitter
-          variant="blue"
-          class="test-page1__splitter-wrapper"
+        <NewReestr
+          ref="newReestrRef"
+          class="test-page1__new-reestr"
+          :initial-data="relativeReestr1.data.value"
+          :initial-columns="relativeReestr1.columns.value"
+          :initial-columns-settings="relativeReestr1.columnsSettings.value"
+          :initial-filters="relativeReestr1.filters.value"
+          :initial-sorts="relativeReestr1.sorts.value"
+          :initial-actions-change-modes="relativeReestr1.actionsChangeModes.value"
+          :initial-actions="relativeReestr1.actions.value"
+          :initial-context-menu-items="relativeReestr1.contextMenuItems.value"
+          :isNumberColumnShown="true"
+          :isCheckboxColumnShown="true"
+          :isExpandColumnShown="true"
+          :common-meta="{
+            class: {
+              stage: '--stage',
+              subStage: '--sub-stage',
+              task: '--task',
+            }
+          }"
+          @row-action="onRowAction"
+          @change:cell-value="onChangeCellValue"
+          @select:context-menu-item="onSelectContextMenuItem"
+          @select:side-menu-item="onSelectSideMenuItem"
+          @change:filters="onChangeFilters"
         >
-          <template #div1>
-            <div>
-              SADFGSADRGSADREGAERGASGASDFA
-              SADFGSADRGSADREGAERGASGASDFA
-              SADFGSADRGSADREGAERGASGASDFA
-              SADFGSADRGSADREGAERGASGASDFA
-              SADFGSADRGSADREGAERGASGASDFA
-              SADFGSADRGSADREGAERGASGASDFA
-              SADFGSADRGSADREGAERGASGASDFA
-            </div>
-          </template>
-          <template #div2>
-            aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-          </template>
-        </NewSplitter>
+        </NewReestr>
       </template>
     </NewSplitter>
 

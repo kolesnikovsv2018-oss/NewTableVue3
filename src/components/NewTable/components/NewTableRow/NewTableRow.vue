@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { StyleValue } from 'vue';
-import { computed, watch } from 'vue';
+import { computed, useAttrs, watch } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faFolder, faFolderOpen, faFile } from '@fortawesome/free-solid-svg-icons';
 
@@ -11,7 +11,7 @@ import type {
 import type { INewTableColumn, INewTableHeaderSetting } from '../NewTableHeader/types/INewTableHeadTypes';
 import type {
   INewTableCellActionData,
-  INewTableCellNativeEvent,
+  INewTableRowNativeEvent,
   INewTableRowActionEvent,
   INewTableChangeCellValueEvent,
 } from '../../types/NewTableEventTypes';
@@ -45,8 +45,8 @@ const emit = defineEmits<{
   (e: 'row-action', event: INewTableRowActionEvent): void;
   // (e: 'change:cell-data', event: INewTableUpdateCellDataEvent): void;
   // (e: 'cell-action', event: INewTableCellActionEvent): void;
-  (e: 'dblclick', event: INewTableCellNativeEvent): void;
-  (e: 'contextmenu', event: INewTableCellNativeEvent): void;
+  (e: 'dblclick', event: INewTableRowNativeEvent): void;
+  (e: 'contextmenu', event: INewTableRowNativeEvent): void;
   (e: 'change:cell-value', event: INewTableChangeCellValueEvent): void;
 }>();
 
@@ -238,6 +238,30 @@ function onCellAction({ key, value, name }: INewTableCellActionData) {
     },
   });
 }
+
+function generateListenersFromParentAttrs(header: INewTableColumn) {
+  const attrs = useAttrs();
+
+  const listeners: Record<string, Function> = {};
+
+  Object.keys(attrs || {}).forEach((attrKey: string) => {
+    if (attrKey.startsWith('on') && typeof attrs[attrKey] === 'function') {
+      const eventName = attrKey.replace(/^on/, '').toLowerCase();
+      listeners[eventName] =
+        (event: Event) => {
+          (attrs[attrKey] as Function)({
+            name: eventName,
+            event,
+            row: localRow,
+            header,
+            modes: props.modes,
+          });
+        };
+    }
+  });
+
+  return listeners;
+}
 </script>
 
 <template>
@@ -321,8 +345,10 @@ function onCellAction({ key, value, name }: INewTableCellActionData) {
         width: conputedColumnWidths[header.key],
         'min-width': conputedColumnWidths[header.key],
         'max-width': conputedColumnWidths[header.key],
+        boxSizing: 'border-box',
       }"
-      @dblclick.stop.prevent="$emit('dblclick', { row: localRow, header, event: $event })"
+      v-on="generateListenersFromParentAttrs(header)"
+      @dblclick.stop.prevent="$emit('dblclick', { row: localRow, header, event: $event, modes: props.modes })"
       @contextmenu.stop.prevent="$emit('contextmenu', { row: localRow, header, event: $event, modes: props.modes })"
     >
       <slot

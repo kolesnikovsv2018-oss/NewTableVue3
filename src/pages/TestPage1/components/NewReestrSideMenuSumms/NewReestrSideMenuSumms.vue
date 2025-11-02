@@ -47,13 +47,16 @@ function close() {
 
 <template>
   <NewReestrSideMenuWrapper @close="close">
-    <form @submit="emit(
-      'submit',
-      {
-        value: { priceSumms, customPriceSumms },
-        payload: props.payload,
-      }
-    )">
+    <form
+      class="new-reestr__side-menu__summs"
+      @submit="emit(
+        'submit',
+        {
+          value: { priceSumms, customPriceSumms },
+          payload: props.payload,
+        }
+      )"
+    >
       <div class="new-reestr__side-menu__summs__item">
         <span>price</span> <span class="--value">{{ priceSumms }}</span>
       </div>
@@ -62,17 +65,25 @@ function close() {
         <span>customPrice</span> <span class="--value">{{ customPriceSumms }}</span>
       </div>
 
+      <div style="flex: 1 1;" />
+
       <button type="submit">Close</button>
     </form>
   </NewReestrSideMenuWrapper>
 </template>
 
 <style lang="css" scoped>
+.new-reestr__side-menu__summs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+}
+
 .new-reestr__side-menu__summs__item {
   display: flex;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 8px;
   white-space: nowrap;
   text-wrap: nowrap;
 }

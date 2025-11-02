@@ -1,11 +1,11 @@
-import type { Ref} from "vue";
-import { toValue } from "vue";
+import type { Ref } from "vue";
+import { ref, toValue } from "vue";
 
 import type { INewTableRow } from "../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
 import type { INewTableCellActionData, INewTableChangeCellValueEvent, INewTableRowActionEvent } from "../../../components/NewTable/types/NewTableEventTypes";
 
 import { findParentRowsById, findParentRowWithChildIndexByChildRowId, findRowById } from "../../../helpers/finders";
-import type { ILocalNewTableRow} from "../testdata/testData";
+import type { ILocalNewTableRow } from "../testdata/testData";
 import { TEST_DATA_ROW_TYPES } from "../testdata/testData";
 import { calcOwnSums, calcParentSums, calcTotalOwnSums } from "../../../helpers/calacSums";
 import { columnsToCalc, totalColumnsToCalc } from "../testdata/testColumns";
@@ -18,6 +18,8 @@ export function useTestPage1NewReestrActions(
   setRow: (row: INewTableRow) => void,
   newReestrRef: Ref<typeof NewReestr> | typeof NewReestr | (() => typeof NewReestr)
 ) {
+  const selectedRow = ref<INewTableRow | null>(null);
+
   function onSave(row: INewTableRow) {
     setRow(row);
   }
@@ -75,6 +77,10 @@ export function useTestPage1NewReestrActions(
       case NEW_TABLE_STANDART_ROW_ACTIONS.CELL_ACTION:
         onCellAction(event);
         break;
+      case 'click':
+        selectedRow.value = event.row;
+        console.log('Row clicked:', event.row);
+        break;
       default:
         console.warn('Unknown action:', event.name, 'for row:', event.row);
     }
@@ -109,6 +115,7 @@ export function useTestPage1NewReestrActions(
   }
 
   return {
+    selectedRow,
     onCellAction,
     onChangeCellValue,
     onDelete,

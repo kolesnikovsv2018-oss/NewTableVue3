@@ -3,7 +3,7 @@ import { ref, watch } from 'vue';
 
 import type { INewTableRow, INewTableRowCommonMeta } from '../NewTable/components/NewTableRow/types/NewTableRowTypes';
 import type { INewTableColumn, INewTableHeaderSettings } from '../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
-import type { INewTableCellNativeEvent, INewTableRowActionEvent, INewTableChangeCellValueEvent } from '../NewTable/types/NewTableEventTypes';
+import type { INewTableRowNativeEvent, INewTableRowActionEvent, INewTableChangeCellValueEvent } from '../NewTable/types/NewTableEventTypes';
 import type { IChangeColumnSettingsEvent } from './components/NewReestrColumnSettings/types';
 import type { TNewTableActionsChangeModesStandart } from '../NewTable/types/NewTableActionsChangeModesTypes';
 import type { INewMenuItem } from '../NewContextMenu/types';
@@ -48,6 +48,7 @@ const emit = defineEmits<{
   (e: 'change:cell-value', event: INewTableChangeCellValueEvent): void;
   (e: 'change:filters', event: INewTableFilters): void;
   (e: 'settings-action', event: INewReestrSettingsActionEvent): void;
+  (e: 'row-click', event: INewTableRowNativeEvent): void;
 }>();
 
 const {
@@ -89,7 +90,7 @@ function onChangeColumnSettings(event: IChangeColumnSettingsEvent) {
   emit('change:column-settings', event);
 }
 
-function onContextMenu(event: INewTableCellNativeEvent) {
+function onContextMenu(event: INewTableRowNativeEvent) {
   const rowType = event.row?.meta?.rowType || NEW_TABLE_DEFAULT_ROW_TYPE;
 
   activeContextMenuItems.value = props.initialContextMenuItems[rowType]
@@ -110,8 +111,15 @@ function onSelectContextMenuItem(menuItem: INewMenuItem) {
   emit('select:context-menu-item', menuItem);
 }
 
-function onDblClick(event) {
+function onRowDblClick(event) {
   newTableWrapperRef.value.switchOnModeForRow(NEW_TABLE_STANDART_ROW_MODES.EDIT, event.row);
+}
+
+function onRowClick(event) {
+  emit('row-action', {
+    name: 'click',
+    row: event.row,
+  });
 }
 
 function onSideMenuItemClick(menuItem: INewMenuItem) {
@@ -150,7 +158,8 @@ defineExpose({
         :row-count="rowCount"
         @row-action="$emit('row-action', $event)"
         @change:cell-value="$emit('change:cell-value', $event)"
-        @dblclick.self="onDblClick"
+        @dblclick.self="onRowDblClick"
+        @click.self="onRowClick"
         @contextmenu.self="onContextMenu"
         @change:position="activeContextMenuMouseEvent = null"
         @change:filters="$emit('change:filters', $event)"
