@@ -115,15 +115,6 @@ function onSelectContextMenuItem(menuItem: INewMenuItem) {
       activeDestinationRowId.value = null;
       isChangeRowParentDialogShown.value = true;
       break;
-    case 'date-filter':
-    case 'summs':
-      sideMenuComponents.value = {
-        ...sideMenuComponents.value,
-        [menuItem.actionName]: {
-          isShown: true,
-          payload: menuItem.payload,
-        },
-      };
   }
 }
 
