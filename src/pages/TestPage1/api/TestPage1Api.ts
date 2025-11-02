@@ -2,7 +2,7 @@ import type { INewTableColumn, INewTableHeaderSettings } from "../../../componen
 import type { INewTableRow } from "../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
 import type { INewTableActions } from "../../../components/NewTable/types/NewTableActionTypes";
 import type { TNewTableActionsChangeModesStandart } from "../../../components/NewTable/types/NewTableActionsChangeModesTypes";
-import type { INewReestrContexMenuItems } from "../../../components/NewReestr/types/newReestrContexMenuItems";
+import type { INewReestrContexMenuItems } from "../../../components/NewReestr/types/newReestrTypes";
 import type { INewTableFilters, INewTableSorts } from "../../../components/NewTable/types/NewTableFilterTypes";
 import type { INewMenuItem } from "../../../components/NewContextMenu/types";
 

@@ -8,7 +8,7 @@ import type { IChangeColumnSettingsEvent } from './components/NewReestrColumnSet
 import type { TNewTableActionsChangeModesStandart } from '../NewTable/types/NewTableActionsChangeModesTypes';
 import type { INewMenuItem } from '../NewContextMenu/types';
 import type { INewTableActions } from '../NewTable/types/NewTableActionTypes';
-import type { INewReestrContexMenuItems } from './types/newReestrContexMenuItems';
+import type { INewReestrContexMenuItems, INewReestrSettingsActionEvent } from './types/newReestrTypes';
 import type { INewTableFilters, INewTableSorts } from '../NewTable/types/NewTableFilterTypes';
 
 import { useNewReestrContextMenu } from './composables/NewReestrContextMenu';
@@ -19,7 +19,9 @@ import { NEW_TABLE_DEFAULT_ROW_TYPE } from '../NewTable/constants/defaultRowType
 
 import NewTableWrapper from '../NewTableWrapper/NewTableWrapper.vue';
 import NewContextMenu from '../NewContextMenu/NewContextMenu.vue';
-import NewReestrColumnSettings from './components/NewReestrColumnSettings/NewReestrColumnSettings.vue';
+// import NewReestrColumnSettings from './components/NewReestrColumnSettings/NewReestrColumnSettings.vue';
+import NewReestrSettings from './components/NewReestrSettings/NewReestrSettings.vue';
+import NewReestrColumnSettingsModal from './components/NewReestrColumnSettings/NewReestrColumnSettingsModal.vue';
 
 const props = defineProps<{
   initialData: INewTableRow[];
@@ -40,9 +42,11 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'change:column-settings', event: IChangeColumnSettingsEvent): void;
   (e: 'row-action', event: INewTableRowActionEvent): void;
-  (e: 'select:item', menuIrem: INewMenuItem): void;
+  (e: 'select:context-menu-item', menuIrem: INewMenuItem): void;
+  (e: 'select:side-menu-item', menuIrem: INewMenuItem): void;
   (e: 'change:cell-value', event: INewTableChangeCellValueEvent): void;
   (e: 'change:filters', event: INewTableFilters): void;
+  (e: 'settings-action', event: INewReestrSettingsActionEvent): void;
 }>();
 
 const {
@@ -65,6 +69,10 @@ const columnsSettings = ref<INewTableHeaderSettings>(
 const activeContextMenuItems = ref<INewMenuItem[]>([])
 
 const activeContextMenuMouseEvent = ref<MouseEvent>(null)
+
+const rowCount = ref<number>(10);
+
+const isColumnSettingsShown = ref<boolean>(false);
 
 watch(
   () => props.initialColumnsSettings,
@@ -98,7 +106,7 @@ function onContextMenu(event: INewTableCellNativeEvent) {
 
 function onSelectContextMenuItem(menuItem: INewMenuItem) {
   activeContextMenuMouseEvent.value = null;
-  emit('select:item', menuItem);
+  emit('select:context-menu-item', menuItem);
 }
 
 function onDblClick(event) {
@@ -106,7 +114,11 @@ function onDblClick(event) {
 }
 
 function onSideMenuItemClick(menuItem: INewMenuItem) {
-  emit('select:item', menuItem);
+  emit('select:side-menu-item', menuItem);
+}
+
+function onReestrSettingsAction(event: INewReestrSettingsActionEvent) {
+  emit('settings-action', event);
 }
 
 defineExpose({
@@ -119,7 +131,7 @@ defineExpose({
 <template>
   <div class="new-reestr">
     <div class="new-reestr__data">
-      <div class="new-reestr__column-settings__wrapper">
+      <!-- <div class="new-reestr__column-settings__wrapper">
         <NewReestrColumnSettings
           v-bind="{
             columns: props.initialColumns,
@@ -127,7 +139,7 @@ defineExpose({
           }"
           @change:column-settings="onChangeColumnSettings"
         />
-      </div>
+      </div> -->
 
       <NewTableWrapper
         ref="newTableWrapperRef"
@@ -144,6 +156,7 @@ defineExpose({
         :isCheckboxColumnShown="props.isCheckboxColumnShown"
         :isExpandColumnShown="props.isExpandColumnShown"
         :common-meta="props.commonMeta"
+        :row-count="rowCount"
         @row-action="$emit('row-action', $event)"
         @change:cell-value="$emit('change:cell-value', $event)"
         @dblclick.self="onDblClick"
@@ -193,7 +206,25 @@ defineExpose({
       </div>
     </div>
 
-    <div
+    <NewReestrSettings
+      class="new-reestr-settings"
+      :row-count="rowCount"
+      :full-data-length="newTableWrapperRef?.fullFlatData?.length || 0"
+      :filtered-data-length="newTableWrapperRef?.filteredFlatData?.length || 0"
+      @change:row-count="rowCount = $event"
+      @action="onReestrSettingsAction"
+      @open:column-settings="isColumnSettingsShown = true"
+    />
+
+    <NewReestrColumnSettingsModal
+      v-if="isColumnSettingsShown"
+      :columns="props.initialColumns"
+      :columns-settings="columnsSettings"
+      @change:column-settings="onChangeColumnSettings"
+      @close="isColumnSettingsShown = false"
+    />
+
+    <!-- <div
       v-if="!!newTableWrapperRef"
       class="new-reestr-settings"
     >
@@ -217,7 +248,7 @@ defineExpose({
         <span>Filtered</span>
         <span>{{ newTableWrapperRef.filteredFlatData.length }}</span>
       </div>
-    </div>
+    </div> -->
 
     <Teleport
       v-if="activeContextMenuMouseEvent"

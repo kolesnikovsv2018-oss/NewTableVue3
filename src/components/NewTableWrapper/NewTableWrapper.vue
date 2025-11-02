@@ -44,6 +44,7 @@ const props = defineProps<{
   isNumberColumnShown?: boolean;
   isCheckboxColumnShown?: boolean;
   isExpandColumnShown?: boolean;
+  rowCount: number;
 }>();
 
 const emit = defineEmits<{
@@ -95,14 +96,13 @@ const {
 
 const {
   startIndex,
-  rowCount,
   onlyExpandedFlatDataToView,
-  setRowCount,
   onPrevious,
   onNext
 } = useNewTablePagination(
   () => filteredFlatData.value,
   () => onlyExpandedFlatData.value,
+  () => props.rowCount,
 );
 
 const {
@@ -259,8 +259,6 @@ defineExpose({
   toggleModeForRow,
   toggleModeForRowWithChildren,
 
-  rowCount,
-  setRowCount,
   fullFlatData,
   filteredFlatData,
 
