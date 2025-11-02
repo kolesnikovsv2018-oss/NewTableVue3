@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import './style.css'
+import './styles/style.css'
 import './components/NewTable/styles/variables.css'
 import './styles/variables.css'
 import App from './App.vue'

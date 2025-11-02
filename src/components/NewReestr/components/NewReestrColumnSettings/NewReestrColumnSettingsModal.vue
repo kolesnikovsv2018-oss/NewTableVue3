@@ -11,7 +11,7 @@ import { useOutsideClickHandler } from '../../../../composables/useOutsideClickH
 
 import NewReestrColumnSettings from './NewReestrColumnSettings.vue';
 
-const props = defineProps<{
+defineProps<{
   columns: INewTableColumn[];
   columnsSettings: INewTableHeaderSettings;
 }>();

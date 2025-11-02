@@ -222,6 +222,7 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
   min-width: 100%;
   font-weight: var(--nt-font-weight-bold);
   flex: 0 0;
+  box-sizing: border-box;
 }
 
 .new-table :deep(.new-table__header__row) {
@@ -246,6 +247,7 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
   max-height: 100%;
   display: flex;
   flex-wrap: nowrap;
+  align-items: flex-start;
 }
 
 .new-table :deep(.new-table__header__cell:hover) {

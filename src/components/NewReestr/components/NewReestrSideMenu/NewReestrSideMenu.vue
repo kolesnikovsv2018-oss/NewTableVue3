@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import type { INewMenuItem } from '../../../NewContextMenu/types';
+
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { INewMenuItem } from '../../../NewContextMenu/types';
 
 const props = defineProps<{
   sideMenuItems?: INewMenuItem[];
