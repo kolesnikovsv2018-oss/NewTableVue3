@@ -5,6 +5,8 @@ import type { ILocalNewTableRow } from '../../../../pages/TestPage1/testdata/tes
 
 import { useOutsideClickHandler } from '../../../../composables/useOutsideClickHandler';
 
+import NewReestrSideMenuWrapper from '../NewReestrSideMenuWrapper/NewReestrSideMenuWrapper.vue';
+
 const el = ref();
 
 useOutsideClickHandler(
@@ -44,10 +46,7 @@ function close() {
 </script>
 
 <template>
-  <div
-    ref="el"
-    class="new-reestr-side-menu-summs"
-  >
+  <NewReestrSideMenuWrapper @close="close">
     <form @submit="emit(
       'submit',
       {
@@ -55,34 +54,30 @@ function close() {
         payload: props.payload,
       }
     )">
-      <div class="new-reestr-side-menu-summs__item">
-        <span>price</span>: <span>{{ priceSumms }}</span>
+      <div class="new-reestr__side-menu__summs__item">
+        <span>price</span> <span class="--value">{{ priceSumms }}</span>
       </div>
 
-      <div class="new-reestr-side-menu-summs__item">
-        <span>customPrice</span>: <span>{{ customPriceSumms }}</span>
+      <div class="new-reestr__side-menu__summs__item">
+        <span>customPrice</span> <span class="--value">{{ customPriceSumms }}</span>
       </div>
 
-      <button type="submit">Submit</button>
+      <button type="submit">Close</button>
     </form>
-  </div>
+  </NewReestrSideMenuWrapper>
 </template>
 
 <style lang="css" scoped>
-.new-reestr-side-menu-summs {
-  position: absolute;
-  background-color: antiquewhite;
-  z-index: 1001;
-  right: 100%;
-  height: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-  border-radius: 6px;
-  box-shadow: 0 0 5px 1px #777;
+.new-reestr__side-menu__summs__item {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  text-wrap: nowrap;
 }
 
-.new-reestr-side-menu-summs__item {
-  text-wrap: nowrap;
-  color: #333;
+.new-reestr__side-menu__summs__item .--value {
+  font-weight: 600;
 }
 </style>

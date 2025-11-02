@@ -24,6 +24,9 @@
   --app-button-font-size: 1em;
   --app-button-font-weight: 500;
   --app-button-transition: border-color 0.25s;
+  --app-button-disabled-bg: #e2e8f0; /* slate-200 */
+  --app-button-disabled-text: #475569; /* slate-600 for readability */
+  --app-button-disabled-border: #cbd5e1; /* slate-300 */
 
   /* Cards */
   --app-card-padding: 2em;

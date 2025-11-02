@@ -54,6 +54,19 @@ button:focus-visible {
   outline: 4px auto var(--app-focus-ring-color);
 }
 
+/* Disabled state: better contrast and non-interactive cursor */
+button:disabled,
+button[disabled] {
+  background-color: var(--app-button-disabled-bg);
+  color: var(--app-button-disabled-text);
+  border-color: var(--app-button-disabled-border);
+  cursor: not-allowed;
+}
+button:disabled:hover,
+button[disabled]:hover {
+  border-color: var(--app-button-disabled-border);
+}
+
 .card {
   padding: var(--app-card-padding);
 }
