@@ -253,7 +253,7 @@ function onChangeFilters(changedFilters: INewTableFilters) {
   gap: var(--app-gap);
   box-sizing: border-box;
   padding: var(--app-content-padding);
-  background-color: var(--app-panel-bg);
+  background-color: var(--app-body-bg);
   align-items: stretch;
   justify-content: space-between;
 }
