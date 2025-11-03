@@ -22,7 +22,7 @@ const maxCount = computed<number>(
   () => Math.max(props.count - props.rowCount, 0)
 );
 
-const bodyHeihjtInPercent = computed<number>(
+const bodyHeightInPercent = computed<number>(
   () => Math.ceil((props.count / props.rowCount) * 100),
 );
 
@@ -95,7 +95,7 @@ function onScroll() {
       class="new-scroll"
       :style="{
         width: `${width || 16}px`,
-        height: `${bodyHeihjtInPercent}%`,
+        height: `${bodyHeightInPercent}%`,
       }"
     />
   </div>

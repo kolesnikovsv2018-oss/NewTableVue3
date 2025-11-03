@@ -250,20 +250,21 @@ function onChangeFilters(changedFilters: INewTableFilters) {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  gap: 16px;
+  gap: var(--app-gap);
   box-sizing: border-box;
-  padding: 12px;
-  background-color: #777;
+  padding: var(--app-content-padding);
+  background-color: var(--app-panel-bg);
   align-items: stretch;
   justify-content: space-between;
 }
 
 .test-page1__actions {
-  border-radius: 8px;
-  background-color: #eee;
+  border-radius: var(--app-button-radius);
+  background-color: var(--app-panel-bg);
+  border: 1px solid var(--app-panel-border);
   width: 100%;
   text-align: center;
-  padding: 8px;
+  padding: var(--app-content-padding);
   box-sizing: border-box;
 
   flex: 0 0;
@@ -306,15 +307,15 @@ function onChangeFilters(changedFilters: INewTableFilters) {
 
 dialog {
   top: 50%;
-  z-index: 100;
-  background-color: #eee;
-  border: none;
-  border-radius: 8px;
-  box-shadow: 0 0 5px 1px #777;
-  color: #333;
+  z-index: var(--app-z-dialog);
+  background-color: var(--app-dialog-bg);
+  border: 1px solid var(--app-panel-border);
+  border-radius: var(--app-button-radius);
+  box-shadow: var(--app-dialog-shadow);
+  color: var(--app-text-primary);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--app-gap);
 }
 
 :deep(dialog p) {
@@ -325,7 +326,7 @@ dialog {
 :deep(dialog form) {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--app-gap);
 }
 
 :deep(dialog form .dialog-buttons) {

@@ -340,7 +340,7 @@ function generateListenersFromParentAttrs(
         }"
       >
         <div :style="{
-          paddingLeft: row.__level ? `${row.__level * 16}px` : '',
+          paddingLeft: row.__level ? `calc(var(--nt-indent-step) * ${row.__level})` : '',
         }">
           <FontAwesomeIcon
             :icon="iconForExpandCell"

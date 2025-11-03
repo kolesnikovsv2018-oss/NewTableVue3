@@ -20,6 +20,7 @@
   --nt-icon-size: 16px;
   --nt-checkbox-size: 18px;
   --nt-scroller-size: 16px;
+  --nt-indent-step: 12px;
 
   /* Fixed Column Widths */
   --nt-number-column-width: 50px;
