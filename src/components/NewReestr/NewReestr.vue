@@ -41,6 +41,7 @@ const props = defineProps<{
   isCheckboxColumnShown?: boolean;
   isExpandColumnShown?: boolean;
   commonMeta?: INewTableRowCommonMeta;
+  rowCount?: number;
 }>();
 
 const emit = defineEmits<{
@@ -51,6 +52,7 @@ const emit = defineEmits<{
   (e: 'change:cell-value', event: INewTableChangeCellValueEvent): void;
   (e: 'change:filters', event: INewTableFilters): void;
   (e: 'settings-action', event: INewReestrSettingsActionEvent): void;
+  (e: 'change:row-count', rowCount: number): void;
 }>();
 
 const {
@@ -74,7 +76,7 @@ const activeContextMenuItems = ref<INewMenuItem[]>([])
 
 const activeContextMenuMouseEvent = ref<MouseEvent>(null)
 
-const rowCount = ref<number>(10);
+// const rowCount = ref<number>(10);
 
 const isColumnSettingsShown = ref<boolean>(false);
 
@@ -214,7 +216,7 @@ defineExpose({
       :row-count="rowCount"
       :full-data-length="newTableWrapperRef?.fullFlatData?.length || 0"
       :filtered-data-length="newTableWrapperRef?.filteredFlatData?.length || 0"
-      @change:row-count="rowCount = $event"
+      @change:row-count="emit('change:row-count', $event)"
       @action="onReestrSettingsAction"
       @open:column-settings="isColumnSettingsShown = true"
     />

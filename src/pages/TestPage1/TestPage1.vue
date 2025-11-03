@@ -30,9 +30,9 @@ const newMainReestrRef = ref<typeof NewReestr>();
 
 const sideMenuComponents = ref<Record<string, { isShown: boolean, payload: unknown }>>({});
 
-const mainReestr = useTestPage1NewReestrInitData();
+const mainReestr = useTestPage1NewReestrInitData(10000, 5, 7, 10);
 
-const relativeReestr1 = useTestPage1NewReestrInitData(1, 2, 3);
+const relativeReestr1 = useTestPage1NewReestrInitData(1, 2, 3, 5);
 
 const {
   activeDestinationRowId,
@@ -159,6 +159,8 @@ onMounted(() => {
               task: '--task',
             }
           }"
+          :row-count="mainReestr.rowCount.value"
+          @change:row-count="(event: number) => mainReestr.rowCount.value = event"
           @row-action="onRowAction"
           @change:cell-value="onChangeCellValue"
           @select:context-menu-item="onSelectContextMenuItem"
@@ -222,6 +224,8 @@ onMounted(() => {
               task: '--task',
             }
           }"
+          :row-count="relativeReestr1.rowCount.value"
+          @change:row-count="(event: number) => relativeReestr1.rowCount.value = event"
           @row-action="onRowAction"
           @change:cell-value="onChangeCellValue"
           @select:context-menu-item="onSelectContextMenuItem"

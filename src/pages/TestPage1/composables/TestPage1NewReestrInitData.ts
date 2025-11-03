@@ -28,6 +28,7 @@ export function useTestPage1NewReestrInitData(
   count: (number | Ref<number> | (() => number)) = 10000,
   maxLevel: (number | Ref<number> | (() => number)) = 5,
   extraFieldCount: (number | Ref<number> | (() => number)) = 7,
+  initialRowCount: (number | Ref<number> | (() => number)) = 10,
 ) {
   const data = ref<INewTableRow[]>([]);
 
@@ -46,6 +47,8 @@ export function useTestPage1NewReestrInitData(
   const filters = ref<INewTableFilters>({});
 
   const sorts = ref<INewTableSorts>({});
+
+  const rowCount = ref<number>(toValue(initialRowCount));
 
   async function initData() {
     actions.value = await fetchActions();
@@ -95,6 +98,7 @@ export function useTestPage1NewReestrInitData(
     sideMenuItems,
     filters,
     sorts,
+    rowCount,
     initData,
   }
 }

@@ -76,14 +76,16 @@ function onRowAction(event: Event) {
       </label>
     </div>
 
-    <div class="settings__info-item">
-      <span>Total</span>
-      <span>{{ fullDataLength || 0 }}</span>
-    </div>
+    <div class="settings__info-items">
+      <div class="settings__info-item">
+        <span>Total</span>
+        <span class="settings__info-item__value">{{ fullDataLength || 0 }}</span>
+      </div>
 
-    <div class="settings__info-item">
-      <span>Filtered</span>
-      <span>{{ filteredDataLength || 0 }}</span>
+      <div class="settings__info-item">
+        <span>Filtered</span>
+        <span class="settings__info-item__value">{{ filteredDataLength || 0 }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -126,11 +128,22 @@ function onRowAction(event: Event) {
   appearance: textfield;
 }
 
-.settings__info-item {
+.settings__info-items {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: nowrap;
+  text-wrap: nowrap;
+}
+
+.settings__info-items .settings__info-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   flex: 0 0 auto;
 }
 
-.settings__info-item span:first-child {
-  margin-right: 4px;
+.settings__info-items .settings__info-item .settings__info-item__value {
+  font-weight: 600;
 }
 </style>
