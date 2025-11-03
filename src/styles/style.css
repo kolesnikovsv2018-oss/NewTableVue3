@@ -71,14 +71,6 @@ button[disabled]:hover {
   padding: var(--app-card-padding);
 }
 
-#app {
-  max-width: var(--app-app-max-width);
-  width: var(--app-app-width);
-  height: var(--app-app-height);
-  margin: 0;
-  padding: 0;
-}
-
 @media (prefers-color-scheme: light) {
   :root {
     color: var(--app-body-text);
