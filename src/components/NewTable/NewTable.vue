@@ -422,7 +422,7 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
   position: sticky;
   left: calc(var(--nt-number-column-width) + var(--nt-checkbox-column-width));
   z-index: var(--nt-z-sticky);
-  color: var(--nt-text-color);
+  color: var(--nt-expand-icon-color);
 }
 
 .new-table__body :deep(.new-table__expand-cell) {
@@ -437,7 +437,7 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
   position: sticky;
   left: calc(var(--nt-number-column-width) + var(--nt-checkbox-column-width));
   z-index: var(--nt-z-sticky);
-  color: var(--nt-text-color);
+  color: var(--nt-expand-icon-color);
 }
 
 .new-table :deep(.new-table__header .new-table__actions__cell) {
