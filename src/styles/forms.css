@@ -9,6 +9,7 @@ input[type="password"],
 input[type="search"],
 input[type="url"],
 input[type="tel"],
+input[type="date"],
 select,
 textarea {
   display: inline-flex;
@@ -43,6 +44,7 @@ input[type="password"]:hover,
 input[type="search"]:hover,
 input[type="url"]:hover,
 input[type="tel"]:hover,
+input[type="date"]:hover,
 select:hover,
 textarea:hover {
   border-color: var(--app-input-hover-border);
@@ -56,6 +58,7 @@ input[type="password"]:focus,
 input[type="search"]:focus,
 input[type="url"]:focus,
 input[type="tel"]:focus,
+input[type="date"]:focus,
 select:focus,
 textarea:focus {
   border-color: var(--app-input-focus-border);
@@ -91,6 +94,15 @@ textarea {
 
 /* Select */
 select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: calc(var(--app-input-padding) + 1.25rem);
+  background-clip: padding-box;
+}
+
+/* Date input */
+input[type="date"] {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
