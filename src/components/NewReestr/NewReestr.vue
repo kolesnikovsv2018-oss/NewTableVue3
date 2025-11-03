@@ -148,10 +148,12 @@ defineExpose({
     :class="$attrs.class"
   >
     <div class="new-reestr__data">
+      <!--
+        :key="timeStamp"
+      -->
       <NewTableWrapper
         ref="newTableWrapperRef"
         class="new-reestr__new-table-wrapper"
-        :key="timeStamp"
         :data="props.initialData"
         :columns="props.initialColumns"
         :columns-settings="columnsSettings"

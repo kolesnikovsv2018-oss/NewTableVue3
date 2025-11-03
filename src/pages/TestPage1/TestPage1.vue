@@ -135,11 +135,11 @@ onMounted(() => {
 <template>
   <div class="test-page1">
     <NewSplitter
-      variant="red"
-      :min-height="200"
-      :div1-height="splitterDiv1Height"
+      color="red"
+      :minDivSize="200"
+      :currentDiv1Size="splitterDiv1Height"
       class="test-page1__splitter-wrapper"
-      @update:div1-height="splitterDiv1Height = $event"
+      @update:div1-size="splitterDiv1Height = $event"
     >
       <template #div1>
         <NewReestr
