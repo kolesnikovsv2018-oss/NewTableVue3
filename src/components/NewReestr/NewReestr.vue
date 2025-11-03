@@ -64,8 +64,6 @@ const {
   computedHeadSlots,
 } = useNewTableSlots();
 
-const timeStamp = ref(Date.now());
-
 const newTableWrapperRef = ref<typeof NewTableWrapper>();
 
 const columnsSettings = ref<INewTableHeaderSettings>(
