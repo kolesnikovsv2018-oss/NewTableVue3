@@ -22,7 +22,7 @@ export const columnsToCalc: string[] = [
   'customPriceTotal'
 ];
 
-// колонки, который вычисляются путкм суммирования других
+// колонки, которые вычисляются путкм суммирования других
 export const totalColumnsToCalc: Record<string, string[]> = {
   'priceTotal': ['pricePNR', 'pricePIR', 'priceSMR'],
   'customPriceTotal': ['customPricePNR', 'customPricePIR', 'customPriceSMR'],
