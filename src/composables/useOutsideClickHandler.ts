@@ -23,7 +23,7 @@ export function useOutsideClickHandler(
     if (
       event.type === 'click'
       && event.button === 0
-      && !el?.value.contains(event.target as HTMLElement)
+      && !el.value?.contains(event.target as HTMLElement)
     ) {
       event.stopPropagation();
       event.preventDefault();

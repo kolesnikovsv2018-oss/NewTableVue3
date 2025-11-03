@@ -125,15 +125,12 @@ function onNewReestrSideMenuSummsSubmit(
 function onChangeFilters(changedFilters: INewTableFilters) {
   mainReestr.filters.value = changedFilters;
 }
+
+mainReestr.initData();
 </script>
 
 <template>
   <div class="test-page1">
-    <div class="test-page1__actions">
-      <button @click="mainReestr.initData">
-        Init Data
-      </button>
-    </div>
     <NewSplitter
       variant="red"
       class="test-page1__splitter-wrapper"
@@ -256,18 +253,6 @@ function onChangeFilters(changedFilters: INewTableFilters) {
   background-color: var(--app-body-bg);
   align-items: stretch;
   justify-content: space-between;
-}
-
-.test-page1__actions {
-  border-radius: var(--app-button-radius);
-  background-color: var(--app-panel-bg);
-  border: 1px solid var(--app-panel-border);
-  width: 100%;
-  text-align: center;
-  padding: var(--app-content-padding);
-  box-sizing: border-box;
-
-  flex: 0 0;
 }
 
 .test-page1__splitter-wrapper {
