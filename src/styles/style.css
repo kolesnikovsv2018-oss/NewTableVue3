@@ -7,7 +7,7 @@
 
   color-scheme: light dark;
   color: var(--app-body-text);
-  background-color: var(--app-body-bg-dark);
+  background-color: var(--app-body-bg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

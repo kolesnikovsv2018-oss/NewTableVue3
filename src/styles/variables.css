@@ -43,10 +43,22 @@
   --app-row-border: #e5e7eb;
 
   /* Layout & Components */
-  --app-sidebar-width: 250px;
-  --app-header-height: 60px;
+  --app-sidebar-width: 56px;
+  --app-header-height: 48px;
   --app-content-padding: 1rem;
   --app-gap: 1rem;
+
+  /* Sidebar */
+  --app-sidebar-bg: #f1f5f9; /* slate-100 */
+  --app-sidebar-border: #e2e8f0; /* slate-200 */
+  --app-sidebar-text: var(--app-text-primary);
+  --app-sidebar-hover-bg: #e0e7ff; /* indigo-100 - darker for better hover contrast */
+  --app-sidebar-active-bg: #c7d2fe; /* indigo-200 - darker active state */
+  --app-sidebar-icon: var(--app-text-secondary);
+  --app-sidebar-icon-active: var(--app-info);
+  --app-sidebar-padding: 0.5rem;
+  --app-sidebar-icon-size: 20px;
+  --app-sidebar-item-padding: 0.5rem;
 
   /* UI Elements */
   --app-button-bg: #3b82f6;
