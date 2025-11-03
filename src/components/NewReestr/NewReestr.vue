@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { StyleValue} from 'vue';
+import type { StyleValue } from 'vue';
 import { ref, watch } from 'vue';
 
 import type { INewTableRow, INewTableRowCommonMeta } from '../NewTable/components/NewTableRow/types/NewTableRowTypes';
@@ -283,15 +283,10 @@ defineExpose({
 }
 
 .new-reestr-settings {
-  display: flex;
-  justify-content: center;
   border-radius: 8px;
   background-color: #f8fafc;
   border: 1px solid #e2e8f0;
   width: 100%;
-  text-align: center;
-  padding: 8px;
-  box-sizing: border-box;
   flex: 0 0;
   color: #0f172a;
   font-weight: 500;

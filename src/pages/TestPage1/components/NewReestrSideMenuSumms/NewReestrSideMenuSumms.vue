@@ -7,10 +7,10 @@ import { useOutsideClickHandler } from '../../../../composables/useOutsideClickH
 
 import NewReestrSideMenuWrapper from '../NewReestrSideMenuWrapper/NewReestrSideMenuWrapper.vue';
 
-const el = ref();
+const el = ref<typeof NewReestrSideMenuWrapper>();
 
 useOutsideClickHandler(
-  () => el.value,
+  () => el.value.$el,
   close,
 );
 const props = defineProps<{
@@ -46,7 +46,10 @@ function close() {
 </script>
 
 <template>
-  <NewReestrSideMenuWrapper @close="close">
+  <NewReestrSideMenuWrapper
+    ref="el"
+    @close="close"
+  >
     <form
       class="new-reestr__side-menu__summs"
       @submit="emit(

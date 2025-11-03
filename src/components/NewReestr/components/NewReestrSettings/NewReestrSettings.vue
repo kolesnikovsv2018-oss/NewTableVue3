@@ -36,8 +36,8 @@ function onRowAction(event: Event) {
 </script>
 
 <template>
-  <div>
-    <div class="settings__column-settingd">
+  <div class="settings">
+    <div class="settings__column-settings">
       <FontAwesomeIcon
         :icon="faGear"
         title="Column Settings"
@@ -89,25 +89,45 @@ function onRowAction(event: Event) {
 </template>
 
 <style lang="css" scoped>
-.settings__column-settingd {
-  display: inline-block;
+.settings {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: nowrap;
+  padding: 8px;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.settings__column-settings {
+  flex: 0 0 auto;
   cursor: pointer;
-  margin-right: 12px;
 }
 
 .settings__actions {
-  display: inline-block;
-  margin-right: 12px;
+  flex: 0 0 auto;
 }
 
 .settings__row-count {
-  display: inline-block;
-  margin-right: 12px;
+  flex: 0 0 auto;
+}
+
+.settings__row-count label {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  text-wrap: nowrap;
+}
+
+.settings__row-count input {
+  width: 100px;
+  margin-left: 4px;
+  appearance: textfield;
 }
 
 .settings__info-item {
-  display: inline-block;
-  margin-right: 12px;
+  flex: 0 0 auto;
 }
 
 .settings__info-item span:first-child {

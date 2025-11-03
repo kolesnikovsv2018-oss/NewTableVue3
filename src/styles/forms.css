@@ -1,0 +1,105 @@
+/* Form controls styling aligned with app variables */
+@import "./variables.css";
+
+/* Base inputs */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="url"],
+input[type="tel"],
+select,
+textarea {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  background-color: var(--app-input-bg);
+  color: var(--app-input-text);
+  border: 1px solid var(--app-input-border);
+  border-radius: var(--app-input-radius);
+  padding: var(--app-input-padding);
+  line-height: 1.4;
+  box-sizing: border-box;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+  outline: none;
+}
+
+/* Placeholder */
+input::placeholder,
+textarea::placeholder {
+  color: var(--app-input-placeholder);
+}
+
+/* Hover */
+input[type="text"]:hover,
+input[type="number"]:hover,
+input[type="email"]:hover,
+input[type="password"]:hover,
+input[type="search"]:hover,
+input[type="url"]:hover,
+input[type="tel"]:hover,
+select:hover,
+textarea:hover {
+  border-color: var(--app-input-hover-border);
+}
+
+/* Focus */
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+input[type="url"]:focus,
+input[type="tel"]:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--app-input-focus-border);
+  box-shadow: var(--app-input-focus-shadow);
+}
+
+/* Disabled */
+input:disabled,
+select:disabled,
+textarea:disabled,
+input[disabled],
+select[disabled],
+textarea[disabled] {
+  background-color: var(--app-input-disabled-bg);
+  color: var(--app-input-disabled-text);
+  border-color: var(--app-input-disabled-border);
+  cursor: not-allowed;
+}
+
+/* Invalid */
+input:invalid,
+select:invalid,
+textarea:invalid {
+  border-color: var(--app-input-invalid-border);
+  box-shadow: var(--app-input-invalid-shadow);
+}
+
+/* Textarea */
+textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+/* Select */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: calc(var(--app-input-padding) + 1.25rem);
+  background-clip: padding-box;
+}
+
+/* Checkbox & Radio - modern browsers */
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--app-info);
+}

@@ -29,6 +29,22 @@
   --app-button-disabled-text: #475569; /* slate-600 for readability */
   --app-button-disabled-border: #cbd5e1; /* slate-300 */
 
+  /* Form Controls */
+  --app-input-bg: #ffffff;
+  --app-input-text: var(--app-text-primary);
+  --app-input-placeholder: #94a3b8; /* slate-400 */
+  --app-input-border: #e2e8f0; /* slate-200 */
+  --app-input-hover-border: #cbd5e1; /* slate-300 */
+  --app-input-focus-border: #3b82f6; /* app info */
+  --app-input-focus-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  --app-input-invalid-border: #ef4444;
+  --app-input-invalid-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+  --app-input-disabled-bg: #f1f5f9; /* slate-100 */
+  --app-input-disabled-text: var(--app-text-disabled);
+  --app-input-disabled-border: #e2e8f0; /* slate-200 */
+  --app-input-radius: var(--app-button-radius);
+  --app-input-padding: 0.5rem 0.625rem;
+
   /* Cards */
   --app-card-padding: 2em;
 

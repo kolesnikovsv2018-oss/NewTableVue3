@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 
 import type { INewMenuItem } from '../../components/NewContextMenu/types';
 import type { INewTableRowActionEvent } from '../../components/NewTable/types/NewTableEventTypes';
@@ -125,8 +125,9 @@ function onNewReestrSideMenuSummsSubmit(
 function onChangeFilters(changedFilters: INewTableFilters) {
   mainReestr.filters.value = changedFilters;
 }
-
-mainReestr.initData();
+onMounted(() => {
+  void mainReestr.initData();
+});
 </script>
 
 <template>
