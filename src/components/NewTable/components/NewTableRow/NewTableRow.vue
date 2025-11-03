@@ -11,7 +11,6 @@ import type {
 import type { INewTableColumn, INewTableHeaderSetting } from '../NewTableHeader/types/INewTableHeadTypes';
 import type {
   INewTableCellActionData,
-  INewTableRowNativeEvent,
   INewTableRowActionEvent,
   INewTableChangeCellValueEvent,
 } from '../../types/NewTableEventTypes';
@@ -24,6 +23,8 @@ import {
   NEW_TABLE_STANDART_ROW_ACTIONS
 } from '../../../NewTableWrapper/constants/standartActions';
 import { NEW_TABLE_DEFAULT_ROW_TYPE } from '../../constants/defaultRowType';
+
+type TParentCellListener = (payload: INewTableRowActionEvent) => void;
 
 const props = defineProps<{
   row: INewTableRow;
@@ -45,8 +46,8 @@ const emit = defineEmits<{
   (e: 'row-action', event: INewTableRowActionEvent): void;
   // (e: 'change:cell-data', event: INewTableUpdateCellDataEvent): void;
   // (e: 'cell-action', event: INewTableCellActionEvent): void;
-  (e: 'dblclick', event: INewTableRowNativeEvent): void;
-  (e: 'contextmenu', event: INewTableRowNativeEvent): void;
+  // (e: 'dblclick', event: INewTableRowActionEvent): void;
+  // (e: 'contextmenu', event: INewTableRowActionEvent): void;
   (e: 'change:cell-value', event: INewTableChangeCellValueEvent): void;
 }>();
 
@@ -76,8 +77,6 @@ const iconForExpandCell = computed<string>(() => {
 const conputedColumnWidths = computed<Record<string, string>>(
   () => generateColumnWidths(props.visibleSortedColumns, props.localColumnsSettings),
 );
-
-// const actions = computed(() => props.row?.actions || {});
 
 const computedCssClasses = computed<string>(
   () => {
@@ -242,21 +241,29 @@ function onCellAction({ key, value, name }: INewTableCellActionData) {
 function generateListenersFromParentAttrs(header: INewTableColumn) {
   const attrs = useAttrs();
 
-  const listeners: Record<string, Function> = {};
+  const listeners: Record<string, (event: Event) => void> = {};
 
   Object.keys(attrs || {}).forEach((attrKey: string) => {
     if (attrKey.startsWith('on') && typeof attrs[attrKey] === 'function') {
       const eventName = attrKey.replace(/^on/, '').toLowerCase();
-      listeners[eventName] =
-        (event: Event) => {
-          (attrs[attrKey] as Function)({
-            name: eventName,
-            event,
-            row: localRow,
-            header,
-            modes: props.modes,
-          });
-        };
+      listeners[eventName] = (event: Event) => {
+        if (typeof event?.preventDefault === 'function') {
+          event.preventDefault();
+        }
+
+        if (typeof event?.stopPropagation === 'function') {
+          event.stopPropagation();
+        }
+
+        (attrs[attrKey] as unknown as TParentCellListener)({
+          name: eventName,
+          event,
+          value: event,
+          row: localRow,
+          header,
+          modes: props.modes,
+        });
+      };
     }
   });
 
@@ -337,6 +344,10 @@ function generateListenersFromParentAttrs(header: INewTableColumn) {
       </slot>
     </div>
 
+    <!--
+      @dblclick.stop.prevent="$emit('dblclick', { row: localRow, header, event: $event, modes: props.modes })"
+      @contextmenu.stop.prevent="$emit('contextmenu', { row: localRow, header, event: $event, modes: props.modes })"
+    -->
     <div
       v-for="(header, cellIndex) in visibleSortedColumns"
       :key="cellIndex"
@@ -348,8 +359,6 @@ function generateListenersFromParentAttrs(header: INewTableColumn) {
         boxSizing: 'border-box',
       }"
       v-on="generateListenersFromParentAttrs(header)"
-      @dblclick.stop.prevent="$emit('dblclick', { row: localRow, header, event: $event, modes: props.modes })"
-      @contextmenu.stop.prevent="$emit('contextmenu', { row: localRow, header, event: $event, modes: props.modes })"
     >
       <slot
         :name="`cell[${header.key}]`"

@@ -4,7 +4,12 @@ import type { INewTableRow } from "../components/NewTableRow/types/NewTableRowTy
 export interface INewTableRowActionEvent {
   name: string; // action name
   row: INewTableRow; // row
+  header?: INewTableColumn;
+
   value?: unknown; // INewTableCellActionData // event data from action component
+
+  event?: Event | MouseEvent;
+  modes?: string[];
 }
 
 export interface INewTableCellActionData {
@@ -24,16 +29,9 @@ export interface INewTableChangeColumnWidthEvent {
   currentWidth: number;
 }
 
-export interface INewTableChangeFilterValue {
+export interface INewTableChangeFilterValueEvent {
   key: string;
   value: string;
-}
-
-export interface INewTableRowNativeEvent {
-  row?: INewTableRow;
-  header?: INewTableColumn;
-  event?: MouseEvent;
-  modes?: string[];
 }
 
 export interface INewTableChangeCellValueEvent {

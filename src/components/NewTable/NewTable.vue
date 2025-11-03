@@ -4,7 +4,7 @@ import { computed } from 'vue';
 import type { INewTableRow, INewTableRowCommonMeta } from './components/NewTableRow/types/NewTableRowTypes';
 import type { INewTableColumn, INewTableHeaderSetting } from './components/NewTableHeader/types/INewTableHeadTypes';
 import type {
-  INewTableChangeFilterValue,
+  INewTableChangeFilterValueEvent,
   INewTableChangeColumnsOrderEvent,
   INewTableChangeColumnWidthEvent,
   INewTableRowActionEvent,
@@ -57,7 +57,7 @@ const emit = defineEmits<{
   // (e: 'change:cell-data', event: INewTableUpdateCellDataEvent): void;
   (e: 'change:columns-order', event: INewTableChangeColumnsOrderEvent): void;
   (e: 'change:column-width', event: INewTableChangeColumnWidthEvent): void;
-  (e: 'change:filter-value', event: INewTableChangeFilterValue): void;
+  (e: 'change:filter-value', event: INewTableChangeFilterValueEvent): void;
   (e: 'change:column-sort', event: INewTableSorts): void;
   (e: 'toggle:expand-all-row'): void;
   (e: 'toggle:check-all-row'): void;

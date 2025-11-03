@@ -4,7 +4,7 @@ import { onBeforeUnmount, onMounted, ref } from 'vue';
 import type { INewTableRow, INewTableRowCommonMeta } from '../NewTable/components/NewTableRow/types/NewTableRowTypes';
 import type { INewTableColumn, INewTableHeaderSetting } from '../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
 import type {
-  INewTableChangeFilterValue,
+  INewTableChangeFilterValueEvent,
   INewTableChangeColumnsOrderEvent,
   INewTableChangeColumnWidthEvent,
   INewTableRowActionEvent,
@@ -134,7 +134,7 @@ const {
 const { onWheelEvent } = useWheelEvent(onNext, onPrevious);
 
 const onChangeFilterValueDebounced = useDebounceFn(
-  (event: INewTableChangeFilterValue) => onChangeFilterValue(event),
+  (event: INewTableChangeFilterValueEvent) => onChangeFilterValue(event),
   300
 );
 
@@ -203,7 +203,7 @@ function onChangeColumnWidths(event: INewTableChangeColumnWidthEvent) {
   changeColumnWidths(event.columnName, event.delta, event.currentWidth);
 }
 
-function onChangeFilterValue(event: INewTableChangeFilterValue) {
+function onChangeFilterValue(event: INewTableChangeFilterValueEvent) {
   filters.value = {
     ...(filters.value || {}),
     [event.key]: {

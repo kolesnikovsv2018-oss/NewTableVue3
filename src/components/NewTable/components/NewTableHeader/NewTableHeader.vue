@@ -5,7 +5,7 @@ import { faFolder, faFolderOpen, faSortUp, faSortDown, faSort } from '@fortaweso
 
 import type { INewTableColumn, INewTableHeaderSetting } from './types/INewTableHeadTypes';
 import type {
-  INewTableChangeFilterValue,
+  INewTableChangeFilterValueEvent,
   INewTableChangeColumnsOrderEvent,
   INewTableChangeColumnWidthEvent
 } from '../../types/NewTableEventTypes';
@@ -37,7 +37,7 @@ const emit = defineEmits<{
   (e: 'toggle:check-all-row', event?: boolean): void;
   (e: 'change:columns-order', event: INewTableChangeColumnsOrderEvent): void;
   (e: 'change:column-width', event: INewTableChangeColumnWidthEvent): void;
-  (e: 'change:filter-value', event: INewTableChangeFilterValue): void;
+  (e: 'change:filter-value', event: INewTableChangeFilterValueEvent): void;
   (e: 'change:column-sort', event: INewTableSorts): void;
 }>();
 
@@ -123,7 +123,7 @@ function onDrop(event: DragEvent) {
   });
 }
 
-function onChangeFilterValue({ key, value }: INewTableChangeFilterValue) {
+function onChangeFilterValue({ key, value }: INewTableChangeFilterValueEvent) {
   emit('change:filter-value', { key, value });
 }
 

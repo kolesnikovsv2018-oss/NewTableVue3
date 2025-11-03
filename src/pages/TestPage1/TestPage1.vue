@@ -3,7 +3,7 @@ import { ref, watch } from 'vue';
 
 import type { INewTableRow } from '../../components/NewTable/components/NewTableRow/types/NewTableRowTypes';
 import type { INewMenuItem } from '../../components/NewContextMenu/types';
-import type { INewTableRowNativeEvent } from '../../components/NewTable/types/NewTableEventTypes';
+import type { INewTableRowActionEvent } from '../../components/NewTable/types/NewTableEventTypes';
 import type { ILocalNewTableRow } from './testdata/testData';
 import type { INewTableFilters } from '../../components/NewTable/types/NewTableFilterTypes';
 import type { ITestRangeDate } from '../../components/FilterComponents/components/types';
@@ -88,7 +88,7 @@ function setRow(row: INewTableRow) {
 }
 
 function onSelectContextMenuItem(menuItem: INewMenuItem) {
-  const payload: INewTableRowNativeEvent = menuItem.payload as INewTableRowNativeEvent;
+  const payload: INewTableRowActionEvent = menuItem.payload as INewTableRowActionEvent;
 
   switch (menuItem.actionName) {
     case 'edit-row':
@@ -236,7 +236,7 @@ function onChangeFilters(changedFilters: INewTableFilters) {
 
       <template #div2>
         <NewReestr
-          ref="newReestrRef"
+          ref="newSubReestrRef"
           class="test-page1__new-reestr"
           :initial-data="relativeReestr1.data.value"
           :initial-columns="relativeReestr1.columns.value"

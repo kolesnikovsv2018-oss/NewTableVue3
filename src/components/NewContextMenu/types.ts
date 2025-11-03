@@ -1,8 +1,10 @@
+import { INewTableRowActionEvent } from "../NewTable/types/NewTableEventTypes";
+
 export interface INewMenuItem {
   label: string;
   icon?: string;
   actionName?: string;
-  payload?: unknown;
+  payload?: INewTableRowActionEvent;
   children?: INewMenuItem[];
   modes?: string[];
 };

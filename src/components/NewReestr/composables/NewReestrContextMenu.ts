@@ -1,12 +1,12 @@
 import type { INewMenuItem } from "../../NewContextMenu/types";
-import type { INewTableRowNativeEvent } from "../../NewTable/types/NewTableEventTypes";
+import type { INewTableRowActionEvent } from "../../NewTable/types/NewTableEventTypes";
 
 export function useNewReestrContextMenu(
   // activeContextMenuItems: Ref<INewContexMenuItem[]> | INewContexMenuItem[] | (() => INewContexMenuItem[]),
 ) {
   function generateContextMenuItemsWithPayload(
     activeContextMenuItems: INewMenuItem[],
-    event: INewTableRowNativeEvent,
+    event: INewTableRowActionEvent,
   ): INewMenuItem[] {
     return activeContextMenuItems
       .filter(

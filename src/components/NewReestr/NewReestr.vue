@@ -3,7 +3,7 @@ import { ref, watch } from 'vue';
 
 import type { INewTableRow, INewTableRowCommonMeta } from '../NewTable/components/NewTableRow/types/NewTableRowTypes';
 import type { INewTableColumn, INewTableHeaderSettings } from '../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
-import type { INewTableRowNativeEvent, INewTableRowActionEvent, INewTableChangeCellValueEvent } from '../NewTable/types/NewTableEventTypes';
+import type { INewTableRowActionEvent, INewTableChangeCellValueEvent } from '../NewTable/types/NewTableEventTypes';
 import type { IChangeColumnSettingsEvent } from './components/NewReestrColumnSettings/types';
 import type { TNewTableActionsChangeModesStandart } from '../NewTable/types/NewTableActionsChangeModesTypes';
 import type { INewMenuItem } from '../NewContextMenu/types';
@@ -48,7 +48,6 @@ const emit = defineEmits<{
   (e: 'change:cell-value', event: INewTableChangeCellValueEvent): void;
   (e: 'change:filters', event: INewTableFilters): void;
   (e: 'settings-action', event: INewReestrSettingsActionEvent): void;
-  (e: 'row-click', event: INewTableRowNativeEvent): void;
 }>();
 
 const {
@@ -90,7 +89,7 @@ function onChangeColumnSettings(event: IChangeColumnSettingsEvent) {
   emit('change:column-settings', event);
 }
 
-function onContextMenu(event: INewTableRowNativeEvent) {
+function onContextMenu(event: INewTableRowActionEvent) {
   const rowType = event.row?.meta?.rowType || NEW_TABLE_DEFAULT_ROW_TYPE;
 
   activeContextMenuItems.value = props.initialContextMenuItems[rowType]
@@ -103,7 +102,7 @@ function onContextMenu(event: INewTableRowNativeEvent) {
   activeContextMenuItems.value =
     generateContextMenuItemsWithPayload(activeContextMenuItems.value, event);
 
-  activeContextMenuMouseEvent.value = event.event;
+  activeContextMenuMouseEvent.value = event.event as MouseEvent;
 }
 
 function onSelectContextMenuItem(menuItem: INewMenuItem) {
