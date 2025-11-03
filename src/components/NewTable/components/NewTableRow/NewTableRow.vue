@@ -26,6 +26,14 @@ import { NEW_TABLE_DEFAULT_ROW_TYPE } from '../../constants/defaultRowType';
 
 type TParentCellListener = (payload: INewTableRowActionEvent) => void;
 
+// эта опция отключит передачу таких атрибутов как style и class
+// нужно подумать насколько необходима эта опция
+// стили сейчас применяются через
+// :style="$attrs.style as Partial<StyleValue>"
+defineOptions({
+  inheritAttrs: false,
+});
+
 const props = defineProps<{
   row: INewTableRow;
   changedRow?: INewTableRow;
@@ -42,22 +50,9 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  // (e: 'toggle:expand-row', row: INewTableRow): void;
   (e: 'row-action', event: INewTableRowActionEvent): void;
-  // (e: 'change:cell-data', event: INewTableUpdateCellDataEvent): void;
-  // (e: 'cell-action', event: INewTableCellActionEvent): void;
-  // (e: 'dblclick', event: INewTableRowActionEvent): void;
-  // (e: 'contextmenu', event: INewTableRowActionEvent): void;
   (e: 'change:cell-value', event: INewTableChangeCellValueEvent): void;
 }>();
-
-// эта опция отключит передачу таких атрибутов как style и class
-// нужно подумать насколько необходима эта опция
-// стили сейчас применяются через
-// :style="$attrs.style as Partial<StyleValue>"
-defineOptions({
-  inheritAttrs: false,
-});
 
 const isChecked = computed<boolean>(
   () => props.modes?.includes(NEW_TABLE_STANDART_ROW_MODES.CHECKED) || false,
@@ -238,7 +233,10 @@ function onCellAction({ key, value, name }: INewTableCellActionData) {
   });
 }
 
-function generateListenersFromParentAttrs(header: INewTableColumn) {
+function generateListenersFromParentAttrs(
+  header: INewTableColumn,
+  stopAndPreventFlags?: { stop: boolean; prevent: boolean; },
+) {
   const attrs = useAttrs();
 
   const listeners: Record<string, (event: Event) => void> = {};
@@ -247,15 +245,23 @@ function generateListenersFromParentAttrs(header: INewTableColumn) {
     if (attrKey.startsWith('on') && typeof attrs[attrKey] === 'function') {
       const eventName = attrKey.replace(/^on/, '').toLowerCase();
       listeners[eventName] = (event: Event) => {
-        if (typeof event?.preventDefault === 'function') {
+        // if (!props.modes?.includes('edit')) {
+        if (
+          !!stopAndPreventFlags?.prevent &&
+          typeof event?.preventDefault === 'function'
+        ) {
           event.preventDefault();
         }
 
-        if (typeof event?.stopPropagation === 'function') {
+        if (
+          !!stopAndPreventFlags?.stop &&
+          typeof event?.stopPropagation === 'function'
+        ) {
           event.stopPropagation();
         }
+        // }
 
-        (attrs[attrKey] as unknown as TParentCellListener)({
+        (attrs[attrKey] as TParentCellListener)({
           name: eventName,
           event,
           value: event,
@@ -358,7 +364,7 @@ function generateListenersFromParentAttrs(header: INewTableColumn) {
         'max-width': conputedColumnWidths[header.key],
         boxSizing: 'border-box',
       }"
-      v-on="generateListenersFromParentAttrs(header)"
+      v-on="!props.modes?.includes('edit') ? generateListenersFromParentAttrs(header, { stop: true, prevent: true }) : {}"
     >
       <slot
         :name="`cell[${header.key}]`"
@@ -381,6 +387,7 @@ function generateListenersFromParentAttrs(header: INewTableColumn) {
             : NEW_TABLE_STANDART_ROW_MODES.VIEW
           ) || NEW_TABLE_STANDART_ROW_MODES.VIEW"
           v-bind="getComponentProps(header, computedActiveRow.meta.rowType || props.commonMeta?.rowType)"
+          v-on="!!props.modes?.includes('edit') ? generateListenersFromParentAttrs(header) : {}"
           @update:value="onChangeCellValue({ key: header.key, value: $event })"
           @input="onChangeCellValue({ key: header.key, value: $event })"
           @change="onChangeCellValue({ key: header.key, value: $event })"

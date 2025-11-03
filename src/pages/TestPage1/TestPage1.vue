@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 
-import type { INewTableRow } from '../../components/NewTable/components/NewTableRow/types/NewTableRowTypes';
 import type { INewMenuItem } from '../../components/NewContextMenu/types';
 import type { INewTableRowActionEvent } from '../../components/NewTable/types/NewTableEventTypes';
 import type { ILocalNewTableRow } from './testdata/testData';
@@ -10,12 +9,9 @@ import type { ITestRangeDate } from '../../components/FilterComponents/component
 
 import { useTestPage1NewReestrInitData } from './composables/TestPage1NewReestrInitData';
 import { useTestPage1NewReestrChangeRowParentId } from './composables/TestPage1NewReestrChangeRowParentId';
-
-import { findParentRowsById } from '../../helpers/finders';
 import { useTestPage1NewReestrActions } from './composables/TestPage1NewReestrActions';
+
 import { NEW_TABLE_STANDART_ROW_MODES } from '../../components/NewTable/constants/standartRowModes';
-import { calcParentSums, calcTotalOwnSums } from '../../helpers/calacSums';
-import { columnsToCalc } from './testdata/testColumns';
 import { integerToRoman } from '../../helpers/integerToRoman';
 
 import NewReestr from '../../components/NewReestr/NewReestr.vue';
@@ -30,7 +26,7 @@ interface ITestPage1NewReestrSideMenuSubmitEvent {
   payload?: unknown;
 }
 
-const newReestrRef = ref<typeof NewReestr>();
+const newMainReestrRef = ref<typeof NewReestr>();
 
 const sideMenuComponents = ref<Record<string, { isShown: boolean, payload: unknown }>>({});
 
@@ -55,53 +51,25 @@ const {
   onChangeCellValue,
 } = useTestPage1NewReestrActions(
   () => mainReestr.data.value,
-  setRow,
-  newReestrRef,
+  newMainReestrRef,
 );
 
 watch(
   () => selectedRow.value,
-  (newSelectedRow) => {
-    relativeReestr1.initData();
-    if (newSelectedRow) {
-      console.log('Selected row changed:', newSelectedRow);
-    }
+  async () => {
+    await relativeReestr1.initData();
   }
 );
 
-/**
- * МЕНЯЕТ ДАННЫЕ
- * @param row строка, которую нужно обновить в данных
- */
-function setRow(row: INewTableRow) {
-  const parenRows = findParentRowsById(row.data.id, mainReestr.data.value);
-
-  if (!parenRows) {
-    return;
-  }
-
-  parenRows?.forEach((r, index) => {
-    if (r.data.id === row.data.id) {
-      parenRows[index] = row;
-    }
-  });
-}
-
 function onSelectContextMenuItem(menuItem: INewMenuItem) {
-  const payload: INewTableRowActionEvent = menuItem.payload as INewTableRowActionEvent;
+  const payload: INewTableRowActionEvent = menuItem.payload;
 
   switch (menuItem.actionName) {
     case 'edit-row':
-      newReestrRef.value.switchOnModeForRow(NEW_TABLE_STANDART_ROW_MODES.EDIT, payload.row);
+      newMainReestrRef.value.switchOnModeForRow(NEW_TABLE_STANDART_ROW_MODES.EDIT, payload.row);
       break;
     case 'save-row':
-      calcTotalOwnSums(payload.row as ILocalNewTableRow);
-      onSave(payload.row);
-      calcParentSums(payload.row, mainReestr.data.value, columnsToCalc);
-      // TODO использовать готовую функцию из NewTableWrapper onAction
-      // её нужно вынести в хелпер
-      newReestrRef.value.switchOffModeForRow(NEW_TABLE_STANDART_ROW_MODES.EDIT, payload.row);
-      newReestrRef.value?.deleteChangedRow(payload.row.data.id);
+      onSave({ name: 'save', row: payload.row });
       break;
     case 'delete-row':
       onDelete({ name: 'delete', row: payload.row });
@@ -149,10 +117,9 @@ function onNewReestrSideMenuDateFilterSubmit(
 }
 
 function onNewReestrSideMenuSummsSubmit(
-  { name, value }: ITestPage1NewReestrSideMenuSubmitEvent,
+  { name }: ITestPage1NewReestrSideMenuSubmitEvent,
 ) {
   sideMenuComponents.value[name].isShown = false
-  console.log('[onNewReestrSideMenuSummsSubmit]', value);
 }
 
 function onChangeFilters(changedFilters: INewTableFilters) {
@@ -173,7 +140,7 @@ function onChangeFilters(changedFilters: INewTableFilters) {
     >
       <template #div1>
         <NewReestr
-          ref="newReestrRef"
+          ref="newMainReestrRef"
           class="test-page1__new-reestr"
           :initial-data="mainReestr.data.value"
           :initial-columns="mainReestr.columns.value"
@@ -199,6 +166,7 @@ function onChangeFilters(changedFilters: INewTableFilters) {
           @select:context-menu-item="onSelectContextMenuItem"
           @select:side-menu-item="onSelectSideMenuItem"
           @change:filters="onChangeFilters"
+          @keyup="onRowAction"
         >
           <template v-slot:cell[number]="idSlotProps">
             <span style="color: red;">[{{ integerToRoman(idSlotProps.rowNumber) }}]</span>

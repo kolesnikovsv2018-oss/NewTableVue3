@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { StyleValue } from 'vue';
 import { computed } from 'vue';
 
 import type { INewTableRow, INewTableRowCommonMeta } from './components/NewTableRow/types/NewTableRowTypes';
@@ -18,6 +19,10 @@ import { NEW_TABLE_STANDART_ROW_MODES } from './constants/standartRowModes';
 import NewTableHeader from './components/NewTableHeader/NewTableHeader.vue';
 import NewTableRow from './components/NewTableRow/NewTableRow.vue';
 import { useNewTableSlots } from './composables/NewTableSlots';
+
+defineOptions({
+  inheritAttrs: false,
+});
 
 const props = defineProps<{
   // подготовленные данные, которые полностьб будут отображаться
@@ -64,10 +69,6 @@ const emit = defineEmits<{
   (e: 'change:cell-value', event: INewTableChangeCellValueEvent): void;
 }>();
 
-defineOptions({
-  inheritAttrs: false,
-});
-
 const {
   computedHeadSlots,
   computedCellSlots
@@ -107,7 +108,11 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
 </script>
 
 <template>
-  <div class="new-table">
+  <div
+    class="new-table"
+    :style="$attrs.style as Partial<StyleValue>"
+    :class="$attrs.class"
+  >
     <NewTableHeader
       :visibleSortedColumns="columns"
       :localColumnsSettings="columnsSettings"

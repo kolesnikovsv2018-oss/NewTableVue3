@@ -8,7 +8,7 @@ export interface INewTableRowActionEvent {
 
   value?: unknown; // INewTableCellActionData // event data from action component
 
-  event?: Event | MouseEvent;
+  event?: Event | MouseEvent | KeyboardEvent;
   modes?: string[];
 }
 

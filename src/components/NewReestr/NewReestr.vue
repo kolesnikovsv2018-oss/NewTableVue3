@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { StyleValue} from 'vue';
 import { ref, watch } from 'vue';
 
 import type { INewTableRow, INewTableRowCommonMeta } from '../NewTable/components/NewTableRow/types/NewTableRowTypes';
@@ -23,6 +24,8 @@ import NewContextMenu from '../NewContextMenu/NewContextMenu.vue';
 import NewReestrSettings from './components/NewReestrSettings/NewReestrSettings.vue';
 import NewReestrColumnSettingsModal from './components/NewReestrColumnSettings/NewReestrColumnSettingsModal.vue';
 import NewReestrSideMenu from './components/NewReestrSideMenu/NewReestrSideMenu.vue';
+
+defineOptions({ inheritAttrs: false });
 
 const props = defineProps<{
   initialData: INewTableRow[];
@@ -137,7 +140,11 @@ defineExpose({
 </script>
 
 <template>
-  <div class="new-reestr">
+  <div
+    class="new-reestr"
+    :style="$attrs.style as Partial<StyleValue>"
+    :class="$attrs.class"
+  >
     <div class="new-reestr__data">
       <NewTableWrapper
         ref="newTableWrapperRef"
@@ -155,6 +162,7 @@ defineExpose({
         :isExpandColumnShown="props.isExpandColumnShown"
         :common-meta="props.commonMeta"
         :row-count="rowCount"
+        v-bind="$attrs"
         @row-action="$emit('row-action', $event)"
         @change:cell-value="$emit('change:cell-value', $event)"
         @dblclick.self="onRowDblClick"

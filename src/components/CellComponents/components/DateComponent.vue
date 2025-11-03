@@ -4,6 +4,7 @@
       <input
         v-model="localValue"
         type="date"
+        v-bind="$attrs"
         @change="commit"
         @input="$emit('input', localValue)"
       >

@@ -1,4 +1,4 @@
-import type { Ref} from "vue";
+import type { Ref } from "vue";
 import { computed, ref, toValue, watch } from "vue";
 
 import type { INewTableRow } from "../../NewTable/components/NewTableRow/types/NewTableRowTypes";
@@ -30,8 +30,6 @@ export function useNewTableWrapperFilteredData(
     filtersToGenerateFrom: INewTableFilters,
     currenFilters: INewTableFilters
   ): INewTableFilters {
-    console.log('[generateFilters]', filtersToGenerateFrom);
-
     return Object.keys(filtersToGenerateFrom || {}).reduce(
       (acc: INewTableFilters, filterName: string): INewTableFilters => {
         acc[filterName] = {

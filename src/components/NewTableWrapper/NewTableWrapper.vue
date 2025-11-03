@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { StyleValue } from 'vue';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 
 import type { INewTableRow, INewTableRowCommonMeta } from '../NewTable/components/NewTableRow/types/NewTableRowTypes';
@@ -30,6 +31,8 @@ import { NEW_TABLE_DEFAULT_ROW_TYPE } from '../NewTable/constants/defaultRowType
 
 import NewTable from '../NewTable/NewTable.vue';
 import NewScroller from '../NewScroller/NewScroller.vue';
+
+defineOptions({ inheritAttrs: false });
 
 const props = defineProps<{
   data: INewTableRow[];
@@ -268,7 +271,10 @@ defineExpose({
 </script>
 
 <template>
-  <div>
+  <div
+    :style="$attrs.style as Partial<StyleValue>"
+    :class="$attrs.class"
+  >
     <div class="new-table-wrapper">
       <NewTable
         ref="el"
