@@ -21,12 +21,12 @@ export interface INewTableColumn {
   components: INewTableColumnComponents;
 }
 
-export interface INewTableHeaderSetting {
+export interface INewTableColumnSetting {
   width: number;
   order: number;
   visible: boolean;
 }
 
-export type INewTableHeaderSettings = Record<string, INewTableHeaderSetting>;
+export type INewTableColumnSettings = Record<string, INewTableColumnSetting>;
 
 export type INewTableFilterComponent = INewTableColumnComponent;

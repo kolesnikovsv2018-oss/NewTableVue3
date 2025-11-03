@@ -1,16 +1,16 @@
-import type { Ref} from "vue";
+import type { Ref } from "vue";
 import { computed, ref, toValue, watchEffect } from "vue";
 
-import type { INewTableColumn, INewTableHeaderSetting } from "../../NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableColumn, INewTableColumnSetting } from "../../NewTable/components/NewTableHeader/types/INewTableHeadTypes";
 
 const NEW_TABLE_HEAD_MIN_WIDTH: number = 20;
 const NEW_TABLE_HEAD_MAX_WIDTH: number = 500;
 
-export function useNewTableWrapperHeader(
+export function useNewTableWrapperColumns(
   initialColumns: Ref<INewTableColumn[]> | INewTableColumn[] | (() => INewTableColumn[]),
-  initialColumnsSettings: Ref<Record<string, INewTableHeaderSetting>> | Record<string, INewTableHeaderSetting> | (() => Record<string, INewTableHeaderSetting>),
+  initialColumnsSettings: Ref<Record<string, INewTableColumnSetting>> | Record<string, INewTableColumnSetting> | (() => Record<string, INewTableColumnSetting>),
 ) {
-  const localColumnsSettings = ref<Record<string, INewTableHeaderSetting>>(
+  const localColumnsSettings = ref<Record<string, INewTableColumnSetting>>(
     JSON.parse(JSON.stringify(toValue(initialColumnsSettings))),
   );
 

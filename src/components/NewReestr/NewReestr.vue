@@ -3,9 +3,9 @@ import type { StyleValue } from 'vue';
 import { ref, watch } from 'vue';
 
 import type { INewTableRow, INewTableRowCommonMeta } from '../NewTable/components/NewTableRow/types/NewTableRowTypes';
-import type { INewTableColumn, INewTableHeaderSettings } from '../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
+import type { INewTableColumn, INewTableColumnSettings } from '../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
 import type { INewTableRowActionEvent, INewTableChangeCellValueEvent } from '../NewTable/types/NewTableEventTypes';
-import type { IChangeColumnSettingsEvent } from './components/NewReestrColumnSettings/types';
+import type { IChangeColumnSettingEvent } from './components/NewReestrColumnSettings/types';
 import type { TNewTableActionsChangeModesStandart } from '../NewTable/types/NewTableActionsChangeModesTypes';
 import type { INewMenuItem } from '../NewContextMenu/types';
 import type { INewTableActions } from '../NewTable/types/NewTableActionTypes';
@@ -30,7 +30,7 @@ defineOptions({ inheritAttrs: false });
 const props = defineProps<{
   initialData: INewTableRow[];
   initialColumns: INewTableColumn[];
-  initialColumnsSettings: INewTableHeaderSettings;
+  initialColumnSettings: INewTableColumnSettings;
   initialFilters: INewTableFilters;
   initialSorts: INewTableSorts;
   initialActions: INewTableActions;
@@ -45,14 +45,19 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'change:column-settings', event: IChangeColumnSettingsEvent): void;
   (e: 'row-action', event: INewTableRowActionEvent): void;
-  (e: 'select:context-menu-item', menuIrem: INewMenuItem): void;
-  (e: 'select:side-menu-item', menuIrem: INewMenuItem): void;
   (e: 'change:cell-value', event: INewTableChangeCellValueEvent): void;
+
+  (e: 'change:column-setting', event: INewTableColumnSettings): void;
   (e: 'change:filters', event: INewTableFilters): void;
+  (e: 'change:sorts', event: INewTableSorts): void;
+
+  (e: 'select:context-menu-item', menuItem: INewMenuItem): void;
+  (e: 'select:side-menu-item', menuItem: INewMenuItem): void;
+
   (e: 'settings-action', event: INewReestrSettingsActionEvent): void;
   (e: 'change:row-count', rowCount: number): void;
+  (e: 'change:start-index', startInde: number): void;
 }>();
 
 const {
@@ -66,8 +71,8 @@ const {
 
 const newTableWrapperRef = ref<typeof NewTableWrapper>();
 
-const columnsSettings = ref<INewTableHeaderSettings>(
-  JSON.parse(JSON.stringify(props.initialColumnsSettings))
+const columnSettings = ref<INewTableColumnSettings>(
+  JSON.parse(JSON.stringify(props.initialColumnSettings))
 );
 
 const activeContextMenuItems = ref<INewMenuItem[]>([])
@@ -79,17 +84,25 @@ const activeContextMenuMouseEvent = ref<MouseEvent>(null)
 const isColumnSettingsShown = ref<boolean>(false);
 
 watch(
-  () => props.initialColumnsSettings,
-  () => { columnsSettings.value = JSON.parse(JSON.stringify(props.initialColumnsSettings)); }
+  () => props.initialColumnSettings,
+  () => { columnSettings.value = JSON.parse(JSON.stringify(props.initialColumnSettings)); }
 )
 
-function onChangeColumnSettings(event: IChangeColumnSettingsEvent) {
-  columnsSettings.value = {
-    ...columnsSettings.value,
-    [event.columnName]: event.columnsSettings,
+/**
+ * Обновляет настройки для одной колонки
+ * @param {IChangeColumnSettingEvent} event содержит имя колонки, настройки которой поменялись,
+ * и настройки для всех колонок
+ */
+function onChangeColumnSetting(event: IChangeColumnSettingEvent) {
+  columnSettings.value = {
+    ...columnSettings.value,
+    [event.columnName]: {
+      ...columnSettings.value[event.columnName],
+      ...event.columnSettings[event.columnName],
+    }
   }
 
-  emit('change:column-settings', event);
+  emit('change:column-setting', event.columnSettings);
 }
 
 function onContextMenu(event: INewTableRowActionEvent) {
@@ -132,6 +145,12 @@ function onReestrSettingsAction(event: INewReestrSettingsActionEvent) {
   emit('settings-action', event);
 }
 
+function onChangeStartIndex(newStartIndex: number) {
+  activeContextMenuMouseEvent.value = null;
+
+  emit('change:start-index', newStartIndex);
+}
+
 defineExpose({
   deleteChangedRow: (idRow: number | string) => newTableWrapperRef.value?.deleteChangedRow(idRow),
   switchOnModeForRow: (mode: string, row: INewTableRow) => newTableWrapperRef.value?.switchOnModeForRow(mode, row),
@@ -154,7 +173,7 @@ defineExpose({
         class="new-reestr__new-table-wrapper"
         :data="props.initialData"
         :columns="props.initialColumns"
-        :columns-settings="columnsSettings"
+        :columns-settings="columnSettings"
         :filters="props.initialFilters"
         :sorts="props.initialSorts"
         :actions-change-modes="props.initialActionsChangeModes"
@@ -167,11 +186,13 @@ defineExpose({
         v-bind="$attrs"
         @row-action="$emit('row-action', $event)"
         @change:cell-value="$emit('change:cell-value', $event)"
+        @change:column-settings="$emit('change:column-setting', $event)"
+        @change:filters="$emit('change:filters', $event)"
+        @change:sorts="$emit('change:sorts', $event)"
+        @change:start-index="onChangeStartIndex"
         @dblclick.self="onRowDblClick"
         @click.self="onRowClick"
         @contextmenu.self="onContextMenu"
-        @change:position="activeContextMenuMouseEvent = null"
-        @change:filters="$emit('change:filters', $event)"
       >
         <template
           v-for="slot in computedHeadSlots"
@@ -227,8 +248,8 @@ defineExpose({
     >
       <NewReestrColumnSettingsModal
         :columns="props.initialColumns"
-        :columns-settings="columnsSettings"
-        @change:column-settings="onChangeColumnSettings"
+        :columns-settings="columnSettings"
+        @change:column-setting="onChangeColumnSetting"
         @close="isColumnSettingsShown = false"
       />
     </Teleport>

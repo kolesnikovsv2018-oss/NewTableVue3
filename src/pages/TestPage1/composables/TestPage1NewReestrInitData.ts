@@ -2,7 +2,7 @@ import type { Ref } from "vue";
 import { ref, toValue } from "vue";
 
 import type { INewTableRow } from "../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
-import type { INewTableColumn, INewTableHeaderSettings } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableColumn, INewTableColumnSettings } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
 import type { INewTableActions } from "../../../components/NewTable/types/NewTableActionTypes";
 import type { TNewTableActionsChangeModesStandart } from "../../../components/NewTable/types/NewTableActionsChangeModesTypes";
 import type { INewReestrContexMenuItems } from "../../../components/NewReestr/types/newReestrTypes";
@@ -34,7 +34,7 @@ export function useTestPage1NewReestrInitData(
 
   const columns = ref<INewTableColumn[]>([]);
 
-  const columnsSettings = ref<INewTableHeaderSettings>({});
+  const columnsSettings = ref<INewTableColumnSettings>({});
 
   const actions = ref<INewTableActions>({})
 

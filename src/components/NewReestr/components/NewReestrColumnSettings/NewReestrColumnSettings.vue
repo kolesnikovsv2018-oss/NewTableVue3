@@ -1,23 +1,23 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import type { INewTableColumn, INewTableHeaderSetting } from '../../../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
-import type { IChangeColumnSettingsEvent } from './types';
+import type { INewTableColumn, INewTableColumnSetting } from '../../../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
+import type { IChangeColumnSettingEvent } from './types';
 
-type TListOfColumnSettings = Record<string, Partial<INewTableHeaderSetting & INewTableColumn>>
+type TListOfColumnSettings = Record<string, Partial<INewTableColumnSetting & INewTableColumn>>
 
 const props = defineProps<{
   columns: INewTableColumn[];
-  columnsSettings: Record<string, INewTableHeaderSetting>;
+  columnSettings: Record<string, INewTableColumnSetting>;
 }>();
 
 const emit = defineEmits<{
-  (e: 'change:column-settings', event: IChangeColumnSettingsEvent): void
+  (e: 'change:column-setting', event: IChangeColumnSettingEvent): void
 }>()
 
 const omputedListOfColumnSettings = computed<TListOfColumnSettings>(
   (): TListOfColumnSettings => {
-    return Object.keys(props.columnsSettings || {}).reduce(
+    return Object.keys(props.columnSettings || {}).reduce(
       (
         acc: TListOfColumnSettings,
         currentColumnSetttingName: string,
@@ -27,10 +27,10 @@ const omputedListOfColumnSettings = computed<TListOfColumnSettings>(
         );
 
         if (!currentColumn) {
-          acc[currentColumnSetttingName] = props.columnsSettings[currentColumnSetttingName];
+          acc[currentColumnSetttingName] = props.columnSettings[currentColumnSetttingName];
         } else {
           acc[currentColumnSetttingName] = {
-            ...props.columnsSettings[currentColumnSetttingName],
+            ...props.columnSettings[currentColumnSetttingName],
             key: currentColumn.key,
             name: currentColumn.name,
           };
@@ -45,11 +45,15 @@ const omputedListOfColumnSettings = computed<TListOfColumnSettings>(
 
 function onChangeVisible(columnName: string, event: Event) {
   const value = (event.target as HTMLInputElement).checked;
-  emit('change:column-settings', {
+
+  emit('change:column-setting', {
     columnName,
-    columnsSettings: {
-      ...props.columnsSettings[columnName],
-      visible: value,
+    columnSettings: {
+      ...props.columnSettings,
+      [columnName]: {
+        ...props.columnSettings[columnName],
+        visible: !!value,
+      },
     }
   });
 }

@@ -1,6 +1,6 @@
-import type { INewTableHeaderSetting, INewTableHeaderSettings } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableColumnSetting, INewTableColumnSettings } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
 
-export const testColumnsSettings: Record<string, INewTableHeaderSetting> = {
+export const testColumnsSettings: Record<string, INewTableColumnSetting> = {
   id: {
     width: 100,
     order: 1,
@@ -64,9 +64,9 @@ export const testColumnsSettings: Record<string, INewTableHeaderSetting> = {
 };
 
 export function generateExtraColumnsSettings(
-  columnsToUpdate: Record<string, INewTableHeaderSetting>,
+  columnsToUpdate: Record<string, INewTableColumnSetting>,
   extraFieldCount: number = 3
-): INewTableHeaderSettings {
+): INewTableColumnSettings {
   const resultColumnsSettings = structuredClone(columnsToUpdate);
 
   for (let i = 1; i <= extraFieldCount; i++) {

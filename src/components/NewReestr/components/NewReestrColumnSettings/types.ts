@@ -1,6 +1,6 @@
-import type { INewTableHeaderSetting } from "../../../NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableColumnSettings } from "../../../NewTable/components/NewTableHeader/types/INewTableHeadTypes";
 
-export interface IChangeColumnSettingsEvent {
+export interface IChangeColumnSettingEvent {
   columnName: string;
-  columnsSettings: INewTableHeaderSetting;
+  columnSettings: INewTableColumnSettings;
 }

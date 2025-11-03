@@ -3,9 +3,9 @@ import { ref } from 'vue';
 
 import type {
   INewTableColumn,
-  INewTableHeaderSettings
+  INewTableColumnSettings
 } from '../../../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
-import type { IChangeColumnSettingsEvent } from './types';
+import type { IChangeColumnSettingEvent } from './types';
 
 import { useOutsideClickHandler } from '../../../../composables/useOutsideClickHandler';
 
@@ -13,11 +13,13 @@ import NewReestrColumnSettings from './NewReestrColumnSettings.vue';
 
 defineProps<{
   columns: INewTableColumn[];
-  columnsSettings: INewTableHeaderSettings;
+  columnsSettings: INewTableColumnSettings;
 }>();
 
 const emit = defineEmits<{
-  (e: 'change:column-settings', event: IChangeColumnSettingsEvent): void;
+  // отправляется сразу как поменялось одно значение видимости колонки
+  // настройка именно одной колонки
+  (e: 'change:column-setting', event: IChangeColumnSettingEvent): void;
   (e: 'close'): void;
 }>();
 
@@ -45,9 +47,9 @@ function close() {
     <div class="new-reestr-column-settings-modal__body">
       <NewReestrColumnSettings
         :columns="columns"
-        :columns-settings="columnsSettings"
-        @change:column-settings="(event: IChangeColumnSettingsEvent) => {
-          emit('change:column-settings', event);
+        :columnSettings="columnsSettings"
+        @change:column-setting="(event: IChangeColumnSettingEvent) => {
+          emit('change:column-setting', event);
         }"
       />
     </div>

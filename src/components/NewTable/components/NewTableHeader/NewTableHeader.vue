@@ -3,7 +3,7 @@ import { computed, nextTick, ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faFolder, faFolderOpen, faSortUp, faSortDown, faSort } from '@fortawesome/free-solid-svg-icons';
 
-import type { INewTableColumn, INewTableHeaderSetting } from './types/INewTableHeadTypes';
+import type { INewTableColumn, INewTableColumnSetting } from './types/INewTableHeadTypes';
 import type {
   INewTableChangeFilterValueEvent,
   INewTableChangeColumnsOrderEvent,
@@ -19,7 +19,7 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
 const props = defineProps<{
   visibleSortedColumns: INewTableColumn[];
-  localColumnsSettings: Record<string, INewTableHeaderSetting>;
+  localColumnsSettings: Record<string, INewTableColumnSetting>;
   // фильтры для полей-колонок данных
   filters?: INewTableFilters,
   // объект сортировки, потенциально для нескольких полей

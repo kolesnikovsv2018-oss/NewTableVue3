@@ -1,13 +1,13 @@
-import type { Ref} from "vue";
+import type { Ref } from "vue";
 import { toValue } from "vue";
 
 import type { INewTableChangeColumnWidthEvent } from "../../../types/NewTableEventTypes";
-import type { INewTableHeaderSetting } from "../types/INewTableHeadTypes";
+import type { INewTableColumnSetting } from "../types/INewTableHeadTypes";
 
 type TNewTableHeaderMouseWidthEmit = (e: 'change:column-width', event: INewTableChangeColumnWidthEvent) => void;
 
 export function useNewTableHeaderMouseWidth(
-  localColumnsSettings: Ref<Record<string, INewTableHeaderSetting>> | Record<string, INewTableHeaderSetting> | (() => Record<string, INewTableHeaderSetting>),
+  localColumnsSettings: Ref<Record<string, INewTableColumnSetting>> | Record<string, INewTableColumnSetting> | (() => Record<string, INewTableColumnSetting>),
   emit: TNewTableHeaderMouseWidthEmit,
 ) {
   function onMouseDown(columnName: string, event: MouseEvent) {

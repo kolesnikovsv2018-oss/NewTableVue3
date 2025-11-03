@@ -8,7 +8,7 @@ import type {
   INewTableRow,
   INewTableRowCommonMeta
 } from './types/NewTableRowTypes';
-import type { INewTableColumn, INewTableHeaderSetting } from '../NewTableHeader/types/INewTableHeadTypes';
+import type { INewTableColumn, INewTableColumnSetting } from '../NewTableHeader/types/INewTableHeadTypes';
 import type {
   INewTableCellActionData,
   INewTableRowActionEvent,
@@ -37,7 +37,7 @@ defineOptions({
 const props = defineProps<{
   row: INewTableRow;
   changedRow?: INewTableRow;
-  localColumnsSettings: Record<string, INewTableHeaderSetting>;
+  localColumnsSettings: Record<string, INewTableColumnSetting>;
   visibleSortedColumns: INewTableColumn[];
   isNumberColumnShown?: boolean;
   isCheckboxColumnShown?: boolean;

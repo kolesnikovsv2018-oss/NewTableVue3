@@ -3,7 +3,7 @@ import type { StyleValue } from 'vue';
 import { computed } from 'vue';
 
 import type { INewTableRow, INewTableRowCommonMeta } from './components/NewTableRow/types/NewTableRowTypes';
-import type { INewTableColumn, INewTableHeaderSetting } from './components/NewTableHeader/types/INewTableHeadTypes';
+import type { INewTableColumn, INewTableColumnSetting } from './components/NewTableHeader/types/INewTableHeadTypes';
 import type {
   INewTableChangeFilterValueEvent,
   INewTableChangeColumnsOrderEvent,
@@ -38,7 +38,7 @@ const props = defineProps<{
   // объект сортировки, потенциально для нескольких полей
   sorts?: INewTableSorts,
   // настройки колонок, тут важна установленная ширина
-  columnsSettings: Record<string, INewTableHeaderSetting>;
+  columnsSettings: Record<string, INewTableColumnSetting>;
   // габоры ID-шников в разлиных режимах отображения
   modeIds: Record<string, Set<number | string>>;
   // с какого номера в полном массиве данных начинается текущий набор данных
