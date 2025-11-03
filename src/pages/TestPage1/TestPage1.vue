@@ -30,9 +30,9 @@ const newMainReestrRef = ref<typeof NewReestr>();
 
 const sideMenuComponents = ref<Record<string, { isShown: boolean, payload: unknown }>>({});
 
-const mainReestr = useTestPage1NewReestrInitData(10000, 5, 7, 10);
+const mainReestr = useTestPage1NewReestrInitData(10000, 5, 7, 14);
 
-const relativeReestr1 = useTestPage1NewReestrInitData(1, 2, 3, 5);
+const relativeReestr1 = useTestPage1NewReestrInitData(1, 2, 3, 7);
 
 const {
   activeDestinationRowId,
@@ -53,6 +53,8 @@ const {
   () => mainReestr.data.value,
   newMainReestrRef,
 );
+
+const splitterDiv1Height = ref<number | null>(null);
 
 watch(
   () => selectedRow.value,
@@ -134,7 +136,10 @@ onMounted(() => {
   <div class="test-page1">
     <NewSplitter
       variant="red"
+      :min-height="200"
+      :div1-height="splitterDiv1Height"
       class="test-page1__splitter-wrapper"
+      @update:div1-height="splitterDiv1Height = $event"
     >
       <template #div1>
         <NewReestr

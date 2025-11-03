@@ -6,6 +6,7 @@ const props = withDefaults(
     thickness?: number,
     variant?: string,
     minHeight?: number,
+    div1Height?: number,
   }>(),
   {
     thickness: 5,
@@ -14,8 +15,14 @@ const props = withDefaults(
   }
 );
 
+const emit = defineEmits<{
+  (e: 'update:div1-height', height: number | null): void;
+}>();
+
 const splitDiv1 = ref<HTMLElement>();
 const splitDiv2 = ref<HTMLElement>();
+
+const currentDiv1Height = ref<number | null>(props.div1Height ?? null);
 
 let ticky = false;
 let deltaY = 0;
@@ -49,6 +56,7 @@ function onMouseMove(event: MouseEvent) {
     requestAnimationFrame(() => {
       const computedHeight = splitDiv1.value.getBoundingClientRect().height;
       const computedHeight2 = splitDiv2.value.getBoundingClientRect().height;
+      currentDiv1Height.value = computedHeight;
 
       if (
         (computedHeight + accumulateDeltaY) > props.minHeight
@@ -58,6 +66,8 @@ function onMouseMove(event: MouseEvent) {
         splitDiv1.value.style.minHeight = `${computedHeight + accumulateDeltaY}px`;
         splitDiv1.value.style.maxHeight = `${computedHeight + accumulateDeltaY}px`;
         splitDiv1.value.style.flexBasis = `${computedHeight + accumulateDeltaY}px`;
+
+        currentDiv1Height.value = computedHeight + accumulateDeltaY;
       }
 
       accumulateDeltaY = 0;
@@ -69,6 +79,8 @@ function onMouseMove(event: MouseEvent) {
 function onMouseUp() {
   document.removeEventListener('mousemove', onMouseMove);
   document.removeEventListener('mouseup', onMouseUp);
+
+  emit('update:div1-height', currentDiv1Height.value);
 }
 </script>
 
@@ -77,6 +89,12 @@ function onMouseUp() {
     <div
       ref="splitDiv1"
       class="split-div1"
+      :style="{
+        height: div1Height ? `${div1Height}px` : 'auto',
+        'min-height': div1Height ? `${div1Height}px` : '0px',
+        'max-height': div1Height ? `${div1Height}px` : 'none',
+        flex: div1Height ? `0 0 ${div1Height}px` : '1 1',
+      }"
     >
       <slot name="div1" />
     </div>
