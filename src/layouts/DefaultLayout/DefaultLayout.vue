@@ -40,9 +40,9 @@ import DefaultLayoutSideNavigation from './components/DefaultLayoutSideNavigatio
   top: 0;
   right: 0;
   height: var(--app-header-height);
-  background-color: var(--app-panel-bg);
-  border-bottom: 1px solid var(--app-panel-border);
-  box-shadow: var(--app-shadow-sm);
+  background-color: var(--app-header-bg);
+  border-bottom: 1px solid var(--app-header-border);
+  box-shadow: var(--app-header-shadow);
 }
 
 .default-layout__side-navigation {

@@ -13,7 +13,7 @@ const navItems = [
 </script>
 
 <template>
-  <div>
+  <aside class="side-nav">
     <slot>
       <nav class="side-nav__inner">
         <RouterLink
@@ -33,10 +33,15 @@ const navItems = [
         </RouterLink>
       </nav>
     </slot>
-  </div>
+  </aside>
 </template>
 
 <style scoped>
+.side-nav {
+  width: var(--app-sidebar-width);
+  box-sizing: border-box;
+}
+
 .side-nav__inner {
   display: flex;
   flex-direction: column;

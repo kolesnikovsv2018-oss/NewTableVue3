@@ -64,6 +64,12 @@
   --app-content-padding: 1rem;
   --app-gap: 1rem;
 
+  /* Header */
+  --app-header-bg: #f8fafc; /* slate-50 */
+  --app-header-border: #e2e8f0; /* slate-200 */
+  --app-header-text: var(--app-text-primary);
+  --app-header-shadow: var(--app-shadow-sm);
+
   /* Sidebar */
   --app-sidebar-bg: #f1f5f9; /* slate-100 */
   --app-sidebar-border: #e2e8f0; /* slate-200 */

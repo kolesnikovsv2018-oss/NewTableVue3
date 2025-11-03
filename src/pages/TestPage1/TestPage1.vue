@@ -135,7 +135,7 @@ onMounted(() => {
 <template>
   <div class="test-page1">
     <NewSplitter
-      color="red"
+      color="green"
       :minDivSize="200"
       :currentDiv1Size="splitterDiv1Height"
       class="test-page1__splitter-wrapper"
