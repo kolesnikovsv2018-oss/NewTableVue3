@@ -89,6 +89,32 @@ function getSortIconNameForField(fieldName: string) {
   return faSort;
 }
 
+function isFilterActiveForField(fieldName: string): boolean {
+  if (!props.filters || !props.filters[fieldName]) return false;
+
+  console.log('[isFilterActiveForField]', fieldName, props.filters[fieldName]);
+
+  const filter = props.filters[fieldName];
+
+  if (filter.currentValue === undefined || filter.currentValue === null) return false;
+
+  if ('isDefault' in filter) {
+    return filter.isDefault(filter.currentValue, filter.defaultValue) === false;
+  }
+
+  return filter.currentValue !== filter.defaultValue;
+
+  // props.filters[fieldName]?.currentValue !== undefined
+  //   && props.filters[fieldName]?.currentValue !== null
+  //   && (
+  //     'isDefault' in props.filters[fieldName]
+  //       ? props.filters[fieldName].isDefault(
+  //         props.filters[fieldName].currentValue, props.filters[fieldName].defaultValue
+  //       ) === false
+  //       : props.filters[fieldName].currentValue !== props.filters[fieldName]?.defaultValue
+  //   )
+}
+
 function onExpandHeadClick() {
   emit('toggle:expand-all-row');
 }
@@ -238,15 +264,7 @@ function onClickOnSort(key: string) {
             :icon="faFilter"
             class="icon new-table__header__cell__filter__icon"
             :class="{
-              '--active': props.filters[header.key]?.currentValue !== undefined
-                && props.filters[header.key]?.currentValue !== null
-                && (
-                  'isDefault' in props.filters[header.key]
-                    ? props.filters[header.key].isDefault(
-                      props.filters[header.key].currentValue, props.filters[header.key].defaultValue
-                    ) === false
-                    : props.filters[header.key].currentValue !== props.filters[header.key]?.defaultValue
-                ),
+              '--active': isFilterActiveForField(header.key),
             }"
             @click.stop.prevent="onClickOnFilter(header.key)"
           />

@@ -23,6 +23,7 @@ import {
 } from "../api/TestPage1Api";
 import { NEW_TABLE_DEFAULT_ROW_TYPE } from "../../../components/NewTable/constants/defaultRowType";
 import { useColumnSettings } from "./ColumnSettings";
+import { useFilters } from "./Filters";
 
 export interface IUseTestPage1NewReestrInitData {
   data: Ref<INewTableRow[]>;
@@ -40,10 +41,12 @@ export interface IUseTestPage1NewReestrInitData {
   saveReestrsettingsToLocalStorage: () => void;
   loadColumnSettingsFromLocalStorage: () => void;
   saveColumnSettingsToLocalStorage: () => void;
+  loadFiltersFromLocalStorage: () => void;
+  saveFiltersToLocalStorage: () => void;
 };
 
 export function useTestPage1NewReestrInitData(
-  reestrName: Ref<string> | string | (() => string) = "",
+  reestrName: Ref<string> | string | (() => string),
   count: (number | Ref<number> | (() => number)) = 10000,
   maxLevel: (number | Ref<number> | (() => number)) = 5,
   extraFieldCount: (number | Ref<number> | (() => number)) = 7,
@@ -61,7 +64,14 @@ export function useTestPage1NewReestrInitData(
 
   const sideMenuItems = ref<INewMenuItem[]>();
 
-  const filters = ref<INewTableFilters>({});
+  const {
+    filters,
+    initFilters,
+    saveFiltersToLocalStorage,
+    loadFiltersFromLocalStorage
+  } = useFilters(
+    () => toValue(reestrName),
+  );
 
   const sorts = ref<INewTableSorts>({});
 
@@ -122,7 +132,7 @@ export function useTestPage1NewReestrInitData(
 
     sideMenuItems.value = await fetchSideMenuItems();
 
-    filters.value = await fetchFilters();
+    initFilters();
 
     sorts.value = await fetchSorts();
 
@@ -149,5 +159,7 @@ export function useTestPage1NewReestrInitData(
     saveReestrsettingsToLocalStorage,
     loadColumnSettingsFromLocalStorage,
     saveColumnSettingsToLocalStorage,
+    loadFiltersFromLocalStorage,
+    saveFiltersToLocalStorage,
   }
 }

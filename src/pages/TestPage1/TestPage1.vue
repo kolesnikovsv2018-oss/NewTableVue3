@@ -133,8 +133,12 @@ function onNewReestrSideMenuSummsSubmit(
   sideMenuComponents.value[name].isShown = false
 }
 
-function onChangeFilters(changedFilters: INewTableFilters) {
-  mainReestr.filters.value = changedFilters;
+function onChangeFilters(
+  reestr: IUseTestPage1NewReestrInitData,
+  changedFilters: INewTableFilters
+) {
+  reestr.filters.value = changedFilters;
+  reestr.saveFiltersToLocalStorage();
 }
 
 function onChangeColumnsettings(
@@ -206,7 +210,7 @@ onMounted(() => {
           @change:cell-value="onChangeCellValue"
           @select:context-menu-item="onSelectContextMenuItem"
           @select:side-menu-item="onSelectSideMenuItem"
-          @change:filters="onChangeFilters"
+          @change:filters="onChangeFilters(mainReestr, $event)"
           @change:column-settings="onChangeColumnsettings(mainReestr, $event)"
           @keyup="onRowAction"
         >
@@ -272,7 +276,7 @@ onMounted(() => {
           @change:cell-value="onChangeCellValue"
           @select:context-menu-item="onSelectContextMenuItem"
           @select:side-menu-item="onSelectSideMenuItem"
-          @change:filters="onChangeFilters"
+          @change:filters="onChangeFilters(relativeReestr1, $event)"
           @change:column-settings="onChangeColumnsettings(relativeReestr1, $event)"
         >
         </NewReestr>
