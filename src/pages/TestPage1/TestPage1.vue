@@ -12,6 +12,7 @@ import type { IUseTestPage1NewReestrInitData } from './composables/TestPage1NewR
 import { useTestPage1NewReestrInitData } from './composables/TestPage1NewReestrInitData';
 import { useTestPage1NewReestrChangeRowParentId } from './composables/TestPage1NewReestrChangeRowParentId';
 import { useTestPage1NewReestrActions } from './composables/TestPage1NewReestrActions';
+import { useTestPage1Settings } from './composables/TestPage1Settings';
 
 import { NEW_TABLE_STANDART_ROW_MODES } from '../../components/NewTable/constants/standartRowModes';
 import { integerToRoman } from '../../helpers/integerToRoman';
@@ -34,7 +35,7 @@ const sideMenuComponents = ref<Record<string, { isShown: boolean, payload: unkno
 
 const mainReestr = useTestPage1NewReestrInitData('mainReestr', 10000, 5, 7, 14);
 
-const relativeReestr1 = useTestPage1NewReestrInitData('relativeReestr1', 10000, 5, 7, 14);
+const relativeReestr1 = useTestPage1NewReestrInitData('relativeReestr1', 1, 2, 3, 7);
 
 const {
   activeDestinationRowId,
@@ -56,7 +57,13 @@ const {
   () => newMainReestrRef.value,
 );
 
-const splitterDiv1Height = ref<number | null>(null);
+const {
+  splitterDiv1Height,
+  savePageSettingsToLocalStorage,
+  loadPageSettingsFromLocalStorage
+} = useTestPage1Settings(
+  'TestPage1',
+);
 
 watch(
   () => selectedRow.value,
@@ -138,8 +145,26 @@ function onChangeColumnsettings(
   reestr.saveColumnSettingsToLocalStorage();
 }
 
+function onUpdateDiv1Size(newSize: number) {
+  splitterDiv1Height.value = newSize;
+  savePageSettingsToLocalStorage();
+}
+
+function onChangeRowCount(
+  reestr: IUseTestPage1NewReestrInitData,
+  newRowCount: number,
+) {
+  reestr.rowCount.value = newRowCount;
+  reestr.saveReestrsettingsToLocalStorage();
+}
+
 onMounted(() => {
   void mainReestr.initData();
+
+  loadPageSettingsFromLocalStorage();
+
+  mainReestr.loadReestrSettingsFromLocalStorage();
+  relativeReestr1.loadReestrSettingsFromLocalStorage();
 });
 </script>
 
@@ -150,7 +175,7 @@ onMounted(() => {
       :minDivSize="200"
       :currentDiv1Size="splitterDiv1Height"
       class="test-page1__splitter-wrapper"
-      @update:div1-size="splitterDiv1Height = $event"
+      @update:div1-size="onUpdateDiv1Size"
     >
       <template #div1>
         <NewReestr
@@ -176,7 +201,7 @@ onMounted(() => {
             }
           }"
           :row-count="mainReestr.rowCount.value"
-          @change:row-count="(event: number) => mainReestr.rowCount.value = event"
+          @change:row-count="onChangeRowCount(mainReestr, $event)"
           @row-action="onRowAction"
           @change:cell-value="onChangeCellValue"
           @select:context-menu-item="onSelectContextMenuItem"
@@ -242,7 +267,7 @@ onMounted(() => {
             }
           }"
           :row-count="relativeReestr1.rowCount.value"
-          @change:row-count="(event: number) => relativeReestr1.rowCount.value = event"
+          @change:row-count="onChangeRowCount(relativeReestr1, $event)"
           @row-action="onRowAction"
           @change:cell-value="onChangeCellValue"
           @select:context-menu-item="onSelectContextMenuItem"

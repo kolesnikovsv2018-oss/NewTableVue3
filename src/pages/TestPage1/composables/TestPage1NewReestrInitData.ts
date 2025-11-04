@@ -36,6 +36,8 @@ export interface IUseTestPage1NewReestrInitData {
   sorts: Ref<INewTableSorts>;
   rowCount: Ref<number>;
   initData: () => Promise<void>;
+  loadReestrSettingsFromLocalStorage: () => void;
+  saveReestrsettingsToLocalStorage: () => void;
   loadColumnSettingsFromLocalStorage: () => void;
   saveColumnSettingsToLocalStorage: () => void;
 };
@@ -75,6 +77,23 @@ export function useTestPage1NewReestrInitData(
     () => columns.value,
     () => toValue(extraFieldCount),
   );
+
+  function saveReestrsettingsToLocalStorage() {
+    const reestrSettings = {
+      rowCount: rowCount.value,
+    };
+
+    localStorage.setItem(`${toValue(reestrName)}_settings`, JSON.stringify(reestrSettings));
+  }
+
+  function loadReestrSettingsFromLocalStorage() {
+    const reestrSettingsJSON = localStorage.getItem(`${toValue(reestrName)}_settings`);
+
+    if (reestrSettingsJSON) {
+      const reestrSettings = JSON.parse(reestrSettingsJSON);
+      rowCount.value = reestrSettings.rowCount;
+    }
+  }
 
   async function initData() {
     actions.value = await fetchActions();
@@ -126,6 +145,8 @@ export function useTestPage1NewReestrInitData(
     sorts,
     rowCount,
     initData,
+    loadReestrSettingsFromLocalStorage,
+    saveReestrsettingsToLocalStorage,
     loadColumnSettingsFromLocalStorage,
     saveColumnSettingsToLocalStorage,
   }
