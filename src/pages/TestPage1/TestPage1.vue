@@ -7,9 +7,9 @@ import type { ILocalNewTableRow } from './testdata/testData';
 import type { INewTableFilters } from '../../components/NewTable/types/NewTableFilterTypes';
 import type { ITestRangeDate } from '../../components/FilterComponents/components/types';
 import type { INewTableColumnSettings } from '../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes';
+import type { IUseTestPage1NewReestrInitData } from './composables/Reestr'
 
-import type { IUseTestPage1NewReestrInitData } from './composables/TestPage1NewReestrInitData';
-import { useTestPage1NewReestrInitData } from './composables/TestPage1NewReestrInitData';
+import { useReestr } from './composables/Reestr';
 import { useTestPage1NewReestrChangeRowParentId } from './composables/TestPage1NewReestrChangeRowParentId';
 import { useTestPage1NewReestrActions } from './composables/TestPage1NewReestrActions';
 import { useTestPage1Settings } from './composables/TestPage1Settings';
@@ -33,9 +33,9 @@ const newMainReestrRef = ref<typeof NewReestr>();
 
 const sideMenuComponents = ref<Record<string, { isShown: boolean, payload: unknown }>>({});
 
-const mainReestr = useTestPage1NewReestrInitData('mainReestr', 10000, 5, 7, 14);
+const mainReestr = useReestr('mainReestr', 10000, 5, 7, 14);
 
-const relativeReestr1 = useTestPage1NewReestrInitData('relativeReestr1', 1, 2, 3, 7);
+const relativeReestr1 = useReestr('relativeReestr1', 1, 2, 3, 7);
 
 const {
   activeDestinationRowId,

@@ -44,7 +44,7 @@ export interface IUseTestPage1NewReestrInitData {
   saveFiltersToLocalStorage: () => void;
 };
 
-export function useTestPage1NewReestrInitData(
+export function useReestr(
   reestrName: Ref<string> | string | (() => string),
   count: (number | Ref<number> | (() => number)) = 10000,
   maxLevel: (number | Ref<number> | (() => number)) = 5,
