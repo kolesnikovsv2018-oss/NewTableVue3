@@ -159,7 +159,7 @@ function onChangeRowCount(
   newRowCount: number,
 ) {
   reestr.rowCount.value = newRowCount;
-  reestr.saveReestrsettingsToLocalStorage();
+  reestr.saveReestrSettingsToLocalStorage();
 }
 
 onMounted(() => {

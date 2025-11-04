@@ -37,7 +37,7 @@ export interface IUseTestPage1NewReestrInitData {
   rowCount: Ref<number>;
   initData: () => Promise<void>;
   loadReestrSettingsFromLocalStorage: () => void;
-  saveReestrsettingsToLocalStorage: () => void;
+  saveReestrSettingsToLocalStorage: () => void;
   loadColumnSettingsFromLocalStorage: () => void;
   saveColumnSettingsToLocalStorage: () => void;
   loadFiltersFromLocalStorage: () => void;
@@ -87,7 +87,7 @@ export function useReestr(
     () => toValue(extraFieldCount),
   );
 
-  function saveReestrsettingsToLocalStorage() {
+  function saveReestrSettingsToLocalStorage() {
     const reestrSettings = {
       rowCount: rowCount.value,
     };
@@ -155,7 +155,7 @@ export function useReestr(
     rowCount,
     initData,
     loadReestrSettingsFromLocalStorage,
-    saveReestrsettingsToLocalStorage,
+    saveReestrSettingsToLocalStorage,
     loadColumnSettingsFromLocalStorage,
     saveColumnSettingsToLocalStorage,
     loadFiltersFromLocalStorage,
