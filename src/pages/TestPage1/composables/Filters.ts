@@ -1,7 +1,7 @@
 import type { Ref } from "vue";
 import { ref, toValue } from "vue";
 
-import type { INewTableFilters } from "../../../components/NewTable/types/NewTableFilterTypes";
+import type { INewTableFilter, INewTableFilters } from "../../../components/NewTable/types/NewTableFilterTypes";
 
 import { fetchFilters } from "../api/TestPage1Api";
 
@@ -32,8 +32,8 @@ export function useFilters(
     Object.keys(fetchedFilters).forEach(
       (key: string) => {
         newFilters[key] = {
-          ...fetchedFilters[key],
-          ...filters.value[key],
+          ...(fetchedFilters[key] || {} as INewTableFilter),
+          ...(filters.value[key] || {} as INewTableFilter),
         };
       }
     );
