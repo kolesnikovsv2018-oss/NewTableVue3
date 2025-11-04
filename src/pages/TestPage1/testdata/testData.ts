@@ -99,7 +99,7 @@ export const generateLargeTestData = (
 
     for (let i = 1; i <= extraFieldCount; i++) {
       const fieldName = `extraField${i}`
-      node.data[fieldName.toLowerCase()] = randomString(10);
+      node.data[fieldName] = randomString(10);
     }
 
     if (hasChildren) {

@@ -11,11 +11,13 @@ export function useNewTableWrapperColumns(
   initialColumnsSettings: Ref<Record<string, INewTableColumnSetting>> | Record<string, INewTableColumnSetting> | (() => Record<string, INewTableColumnSetting>),
 ) {
   const localColumnsSettings = ref<Record<string, INewTableColumnSetting>>(
-    JSON.parse(JSON.stringify(toValue(initialColumnsSettings))),
+    { ...(toValue(initialColumnsSettings) || {}) },
   );
 
   watchEffect(() => {
-    localColumnsSettings.value = JSON.parse(JSON.stringify(toValue(initialColumnsSettings)));
+    localColumnsSettings.value = {
+      ...(toValue(initialColumnsSettings) || {}),
+    };
   });
 
   const columnsSortByOrder = computed<INewTableColumn[]>(
@@ -23,9 +25,12 @@ export function useNewTableWrapperColumns(
       // чтобы не вызывать toValue много раз
       const localColumns = toValue(initialColumns);
 
-      return Object.keys(localColumnsSettings.value)
+      // перебираем только колонки из initialColumns
+      return Object.keys(localColumns)
         .sort((keyA, keyB) => {
-          return localColumnsSettings.value[keyA].order - localColumnsSettings.value[keyB].order;
+          const orderA = localColumnsSettings.value[keyA]?.order || localColumns[keyA]?.meta?.order || 0;
+          const orderB = localColumnsSettings.value[keyB]?.order || localColumns[keyB]?.meta?.order || 0;
+          return orderA - orderB;
         })
         .map(
           (key) => localColumns[key],

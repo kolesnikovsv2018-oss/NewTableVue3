@@ -43,15 +43,14 @@ export function useFilters(
 
   async function initFilters() {
     const fetchedFilters = await fetchFilters();
-    console.log('[initFilters] fetchedFilters', fetchedFilters);
 
     // текущие настройки фильтров из localStorage
     loadFiltersFromLocalStorage();
-    console.log('[initFilters] loaded filters.value', filters.value);
+
     // обновляем фильтры, сохраняя текущие настройки
     // только для тех, которые пришли с сервера
     updateFiltersForFetched(fetchedFilters);
-    console.log('[initFilters] updated filters.value', filters.value);
+
     // сохраняем обновленные фильтры в localStorage
     saveFiltersToLocalStorage();
   }

@@ -3,7 +3,7 @@ import { computed, nextTick, ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faFolder, faFolderOpen, faSortUp, faSortDown, faSort } from '@fortawesome/free-solid-svg-icons';
 
-import type { INewTableColumn, INewTableColumnSetting } from './types/INewTableHeadTypes';
+import type { INewTableColumn, INewTableColumnSettings } from './types/INewTableHeadTypes';
 import type {
   INewTableChangeFilterValueEvent,
   INewTableChangeColumnsOrderEvent,
@@ -19,7 +19,7 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
 const props = defineProps<{
   visibleSortedColumns: INewTableColumn[];
-  localColumnsSettings: Record<string, INewTableColumnSetting>;
+  localColumnsSettings: INewTableColumnSettings;
   // фильтры для полей-колонок данных
   filters?: INewTableFilters,
   // объект сортировки, потенциально для нескольких полей
@@ -92,8 +92,6 @@ function getSortIconNameForField(fieldName: string) {
 function isFilterActiveForField(fieldName: string): boolean {
   if (!props.filters || !props.filters[fieldName]) return false;
 
-  console.log('[isFilterActiveForField]', fieldName, props.filters[fieldName]);
-
   const filter = props.filters[fieldName];
 
   if (filter.currentValue === undefined || filter.currentValue === null) return false;
@@ -103,16 +101,6 @@ function isFilterActiveForField(fieldName: string): boolean {
   }
 
   return filter.currentValue !== filter.defaultValue;
-
-  // props.filters[fieldName]?.currentValue !== undefined
-  //   && props.filters[fieldName]?.currentValue !== null
-  //   && (
-  //     'isDefault' in props.filters[fieldName]
-  //       ? props.filters[fieldName].isDefault(
-  //         props.filters[fieldName].currentValue, props.filters[fieldName].defaultValue
-  //       ) === false
-  //       : props.filters[fieldName].currentValue !== props.filters[fieldName]?.defaultValue
-  //   )
 }
 
 function onExpandHeadClick() {

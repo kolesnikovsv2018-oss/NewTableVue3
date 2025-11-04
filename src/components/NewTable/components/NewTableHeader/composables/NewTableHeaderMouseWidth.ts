@@ -39,7 +39,7 @@ export function useNewTableHeaderMouseWidth(
     event.preventDefault();
     event.stopPropagation();
 
-    let currentWidth = toValue(localColumnsSettings)[columnName].width;
+    let currentWidth = toValue(localColumnsSettings)?.[columnName]?.width;
 
     if (!currentWidth) {
       currentWidth = (event.target as HTMLElement)?.getBoundingClientRect().width

@@ -291,7 +291,7 @@ export function generateExtraColumns(
     const fieldName = `extraField${i}`
 
     const newColumn: INewTableColumn = {
-      key: fieldName.toLowerCase(),
+      key: fieldName,
       name: fieldName,
       components: {
         [NEW_TABLE_DEFAULT_ROW_TYPE]: {
