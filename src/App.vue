@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import DefaultLayput from './layouts/DefaultLayput.vue';
-import TestPage1 from './pages/TestPage1/TestPage1.vue';
+import DefaultLayout from './layouts/DefaultLayout/DefaultLayout.vue';
 </script>
 
 <template>
-  <DefaultLayput class="app">
-    <TestPage1 />
-  </DefaultLayput>
+  <DefaultLayout class="app">
+    <router-view />
+  </DefaultLayout>
 </template>
 
 <style scoped>

@@ -1,14 +1,15 @@
 <script setup lang="ts">
+import type { StyleValue } from 'vue';
 import { ref, watch } from 'vue';
 
 import type { INewTableRow, INewTableRowCommonMeta } from '../NewTable/components/NewTableRow/types/NewTableRowTypes';
-import type { INewTableColumn, INewTableHeaderSettings } from '../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
-import type { INewTableCellNativeEvent, INewTableRowActionEvent, INewTableChangeCellValueEvent } from '../NewTable/types/NewTableEventTypes';
-import type { IChangeColumnSettingsEvent } from '../ColumnSettings/types';
+import type { INewTableColumns, INewTableColumnSettings } from '../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
+import type { INewTableRowActionEvent, INewTableChangeCellValueEvent } from '../NewTable/types/NewTableEventTypes';
+import type { IChangeColumnSettingEvent } from './components/NewReestrColumnSettings/types';
 import type { TNewTableActionsChangeModesStandart } from '../NewTable/types/NewTableActionsChangeModesTypes';
 import type { INewMenuItem } from '../NewContextMenu/types';
 import type { INewTableActions } from '../NewTable/types/NewTableActionTypes';
-import type { INewReestrContexMenuItems } from './types/newReestrContexMenuItems';
+import type { INewReestrContexMenuItems, INewReestrSettingsActionEvent } from './types/newReestrTypes';
 import type { INewTableFilters, INewTableSorts } from '../NewTable/types/NewTableFilterTypes';
 
 import { useNewReestrContextMenu } from './composables/NewReestrContextMenu';
@@ -19,12 +20,17 @@ import { NEW_TABLE_DEFAULT_ROW_TYPE } from '../NewTable/constants/defaultRowType
 
 import NewTableWrapper from '../NewTableWrapper/NewTableWrapper.vue';
 import NewContextMenu from '../NewContextMenu/NewContextMenu.vue';
-import ColumnSettings from '../ColumnSettings/ColumnSettings.vue';
+// import NewReestrColumnSettings from './components/NewReestrColumnSettings/NewReestrColumnSettings.vue';
+import NewReestrSettings from './components/NewReestrSettings/NewReestrSettings.vue';
+import NewReestrColumnSettingsModal from './components/NewReestrColumnSettings/NewReestrColumnSettingsModal.vue';
+import NewReestrSideMenu from './components/NewReestrSideMenu/NewReestrSideMenu.vue';
+
+defineOptions({ inheritAttrs: false });
 
 const props = defineProps<{
   initialData: INewTableRow[];
-  initialColumns: INewTableColumn[];
-  initialColumnsSettings: INewTableHeaderSettings;
+  initialColumns: INewTableColumns;
+  initialColumnSettings: INewTableColumnSettings;
   initialFilters: INewTableFilters;
   initialSorts: INewTableSorts;
   initialActions: INewTableActions;
@@ -35,14 +41,23 @@ const props = defineProps<{
   isCheckboxColumnShown?: boolean;
   isExpandColumnShown?: boolean;
   commonMeta?: INewTableRowCommonMeta;
+  rowCount?: number;
 }>();
 
 const emit = defineEmits<{
-  (e: 'change:column-settings', event: IChangeColumnSettingsEvent): void;
   (e: 'row-action', event: INewTableRowActionEvent): void;
-  (e: 'select:item', menuIrem: INewMenuItem): void;
   (e: 'change:cell-value', event: INewTableChangeCellValueEvent): void;
+
+  (e: 'change:column-settings', event: INewTableColumnSettings): void;
   (e: 'change:filters', event: INewTableFilters): void;
+  (e: 'change:sorts', event: INewTableSorts): void;
+
+  (e: 'select:context-menu-item', menuItem: INewMenuItem): void;
+  (e: 'select:side-menu-item', menuItem: INewMenuItem): void;
+
+  (e: 'settings-action', event: INewReestrSettingsActionEvent): void;
+  (e: 'change:row-count', rowCount: number): void;
+  (e: 'change:start-index', startInde: number): void;
 }>();
 
 const {
@@ -54,33 +69,44 @@ const {
   computedHeadSlots,
 } = useNewTableSlots();
 
-const timeStamp = ref(Date.now());
-
 const newTableWrapperRef = ref<typeof NewTableWrapper>();
 
-const columnsSettings = ref<INewTableHeaderSettings>(
-  JSON.parse(JSON.stringify(props.initialColumnsSettings))
+const columnSettings = ref<INewTableColumnSettings>(
+  JSON.parse(JSON.stringify(props.initialColumnSettings))
 );
 
 const activeContextMenuItems = ref<INewMenuItem[]>([])
 
 const activeContextMenuMouseEvent = ref<MouseEvent>(null)
 
+// const rowCount = ref<number>(10);
+
+const isColumnSettingsShown = ref<boolean>(false);
+
 watch(
-  () => props.initialColumnsSettings,
-  () => { columnsSettings.value = JSON.parse(JSON.stringify(props.initialColumnsSettings)); }
+  () => props.initialColumnSettings,
+  () => { columnSettings.value = JSON.parse(JSON.stringify(props.initialColumnSettings)); }
 )
 
-function onChangeColumnSettings(event: IChangeColumnSettingsEvent) {
-  columnsSettings.value = {
-    ...columnsSettings.value,
-    [event.columnName]: event.columnsSettings,
-  }
+/**
+ * Обновляет настройки для одной колонки
+ * @param {IChangeColumnSettingEvent} event содержит имя колонки, настройки которой поменялись,
+ * и настройки для всех колонок
+ */
+function onChangeColumnSetting(event: IChangeColumnSettingEvent) {
+  columnSettings.value = event.columnSettings;
+  // columnSettings.value = {
+  //   ...columnSettings.value,
+  //   [event.columnName]: {
+  //     ...columnSettings.value[event.columnName],
+  //     ...event.columnSettings[event.columnName],
+  //   }
+  // };
 
-  emit('change:column-settings', event);
+  emit('change:column-settings', columnSettings.value);
 }
 
-function onContextMenu(event: INewTableCellNativeEvent) {
+function onContextMenu(event: INewTableRowActionEvent) {
   const rowType = event.row?.meta?.rowType || NEW_TABLE_DEFAULT_ROW_TYPE;
 
   activeContextMenuItems.value = props.initialContextMenuItems[rowType]
@@ -93,20 +119,37 @@ function onContextMenu(event: INewTableCellNativeEvent) {
   activeContextMenuItems.value =
     generateContextMenuItemsWithPayload(activeContextMenuItems.value, event);
 
-  activeContextMenuMouseEvent.value = event.event;
+  activeContextMenuMouseEvent.value = event.event as MouseEvent;
 }
 
 function onSelectContextMenuItem(menuItem: INewMenuItem) {
   activeContextMenuMouseEvent.value = null;
-  emit('select:item', menuItem);
+  emit('select:context-menu-item', menuItem);
 }
 
-function onDblClick(event) {
+function onRowDblClick(event) {
   newTableWrapperRef.value.switchOnModeForRow(NEW_TABLE_STANDART_ROW_MODES.EDIT, event.row);
 }
 
+function onRowClick(event) {
+  emit('row-action', {
+    name: 'click',
+    row: event.row,
+  });
+}
+
 function onSideMenuItemClick(menuItem: INewMenuItem) {
-  emit('select:item', menuItem);
+  emit('select:side-menu-item', menuItem);
+}
+
+function onReestrSettingsAction(event: INewReestrSettingsActionEvent) {
+  emit('settings-action', event);
+}
+
+function onChangeStartIndex(newStartIndex: number) {
+  activeContextMenuMouseEvent.value = null;
+
+  emit('change:start-index', newStartIndex);
 }
 
 defineExpose({
@@ -117,25 +160,21 @@ defineExpose({
 </script>
 
 <template>
-  <div class="new-reestr">
+  <div
+    class="new-reestr"
+    :style="$attrs.style as Partial<StyleValue>"
+    :class="$attrs.class"
+  >
     <div class="new-reestr__data">
-      <div class="new-reestr__column-settings__wrapper">
-        <ColumnSettings
-          v-bind="{
-            columns: props.initialColumns,
-            columnsSettings,
-          }"
-          @change:column-settings="onChangeColumnSettings"
-        />
-      </div>
-
+      <!--
+        :key="timeStamp"
+      -->
       <NewTableWrapper
         ref="newTableWrapperRef"
         class="new-reestr__new-table-wrapper"
-        :key="timeStamp"
         :data="props.initialData"
         :columns="props.initialColumns"
-        :columns-settings="columnsSettings"
+        :columns-settings="columnSettings"
         :filters="props.initialFilters"
         :sorts="props.initialSorts"
         :actions-change-modes="props.initialActionsChangeModes"
@@ -144,12 +183,17 @@ defineExpose({
         :isCheckboxColumnShown="props.isCheckboxColumnShown"
         :isExpandColumnShown="props.isExpandColumnShown"
         :common-meta="props.commonMeta"
+        :row-count="rowCount"
+        v-bind="$attrs"
         @row-action="$emit('row-action', $event)"
         @change:cell-value="$emit('change:cell-value', $event)"
-        @dblclick.self="onDblClick"
-        @contextmenu.self="onContextMenu"
-        @change:position="activeContextMenuMouseEvent = null"
+        @change:column-settings="$emit('change:column-settings', $event)"
         @change:filters="$emit('change:filters', $event)"
+        @change:sorts="$emit('change:sorts', $event)"
+        @change:start-index="onChangeStartIndex"
+        @dblclick.self="onRowDblClick"
+        @click.self="onRowClick"
+        @contextmenu.self="onContextMenu"
       >
         <template
           v-for="slot in computedHeadSlots"
@@ -174,50 +218,42 @@ defineExpose({
         </template>
       </NewTableWrapper>
 
-      <div
-        v-if="!!sideMenuItems?.length"
+      <NewReestrSideMenu
+        :sideMenuItems="props.sideMenuItems"
         class="new-reestr__side-menu"
+        @select:side-menu-item="onSideMenuItemClick"
       >
-        <slot name="before-side-menu" />
-        <div class="new-reestr__side-menu__items">
-          <div
-            v-for="(menuItem) in sideMenuItems"
-            :key="menuItem.actionName"
-            class="new-reestr__side-menu__item"
-            @click="onSideMenuItemClick(menuItem)"
-          >
-            {{ menuItem.label }}
-          </div>
-        </div>
-        <slot name="after-side-menu" />
-      </div>
+        <template #before-side-menu>
+          <slot name="before-side-menu" />
+        </template>
+
+        <template #after-side-menu>
+          <slot name="after-side-menu" />
+        </template>
+      </NewReestrSideMenu>
     </div>
 
-    <div
-      v-if="!!newTableWrapperRef"
+    <NewReestrSettings
       class="new-reestr-settings"
+      :row-count="rowCount"
+      :full-data-length="newTableWrapperRef?.fullFlatData?.length || 0"
+      :filtered-data-length="newTableWrapperRef?.filteredFlatData?.length || 0"
+      @change:row-count="emit('change:row-count', $event)"
+      @action="onReestrSettingsAction"
+      @open:column-settings="isColumnSettingsShown = true"
+    />
+
+    <Teleport
+      v-if="isColumnSettingsShown"
+      to="body"
     >
-      <div>
-        <label>
-          Row count:
-          <input
-            :value="newTableWrapperRef.rowCount"
-            type="number"
-            @change="newTableWrapperRef.setRowCount(Number(($event.target as HTMLInputElement).value || 5))"
-          >
-        </label>
-      </div>
-
-      <div class="new-reestr-columns-settings__info">
-        <span>Total</span>
-        <span>{{ newTableWrapperRef.fullFlatData.length }}</span>
-      </div>
-
-      <div class="new-reestr-columns-settings__info">
-        <span>Filtered</span>
-        <span>{{ newTableWrapperRef.filteredFlatData.length }}</span>
-      </div>
-    </div>
+      <NewReestrColumnSettingsModal
+        :columns="props.initialColumns"
+        :columns-settings="columnSettings"
+        @change:column-setting="onChangeColumnSetting"
+        @close="isColumnSettingsShown = false"
+      />
+    </Teleport>
 
     <Teleport
       v-if="activeContextMenuMouseEvent"
@@ -238,7 +274,7 @@ defineExpose({
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
 
   flex: 1 1;
   max-height: 100%;
@@ -251,16 +287,10 @@ defineExpose({
   align-items: stretch;
   justify-content: space-between;
   flex-wrap: nowrap;
-  gap: 16px;
 
   flex: 1 1;
   min-height: 0;
   width: 100%;
-}
-
-.new-reestr__column-settings__wrapper {
-  flex: 0 0;
-  width: fit-content;
 }
 
 .new-reestr__new-table-wrapper {
@@ -269,57 +299,20 @@ defineExpose({
 }
 
 .new-reestr__side-menu {
-  display: flex;
-  align-items: stretch;
-  padding: 8px;
-  box-sizing: border-box;
+  background-color: var(--color-background-secondary);
 
   flex: 0 0;
   width: fit-content;
   height: 100%;
-
-  position: relative;
-}
-
-.new-reestr__side-menu__item {
-  text-wrap: nowrap;
-  cursor: pointer;
-  width: 100%;
-  padding: 4px;
-  box-sizing: border-box;
-}
-
-.new-reestr__side-menu__item {
-  color: #334155;
-  font-weight: 500;
-}
-
-.new-reestr__side-menu__item:hover {
-  background-color: #f1f5f9;
-  color: #0f172a;
 }
 
 .new-reestr-settings {
-  display: flex;
-  justify-content: center;
   border-radius: 8px;
   background-color: #f8fafc;
   border: 1px solid #e2e8f0;
   width: 100%;
-  text-align: center;
-  padding: 8px;
-  box-sizing: border-box;
   flex: 0 0;
   color: #0f172a;
-  font-weight: 500;
-}
-
-.new-reestr-columns-settings__info {
-  margin-left: 16px;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  color: #334155;
   font-weight: 500;
 }
 </style>

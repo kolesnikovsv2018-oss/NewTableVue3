@@ -3,6 +3,7 @@
     <template v-if="mode === 'edit'">
       <select
         v-model="localValue"
+        v-bind="$attrs"
         @change="commit"
       >
         <option

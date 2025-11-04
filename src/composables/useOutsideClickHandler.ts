@@ -1,4 +1,4 @@
-import type { Ref} from "vue";
+import type { Ref } from "vue";
 import { computed, onBeforeUnmount, onMounted, toValue } from "vue";
 
 export function useOutsideClickHandler(
@@ -20,13 +20,14 @@ export function useOutsideClickHandler(
   });
 
   function outsideClickHandler(event: MouseEvent) {
-    // event.stopPropagation();
-    // event.preventDefault();
-
     if (
       event.type === 'click'
-      && !el?.value.contains(event.target as HTMLElement)
+      && event.button === 0
+      && !el.value?.contains(event.target as HTMLElement)
     ) {
+      event.stopPropagation();
+      event.preventDefault();
+
       onCloseCallback(event);
     }
   }

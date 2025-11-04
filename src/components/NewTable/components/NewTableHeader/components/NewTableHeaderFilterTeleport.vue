@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import type { INewTableChangeFilterValue } from '../../../types/NewTableEventTypes';
+import type { INewTableChangeFilterValueEvent } from '../../../types/NewTableEventTypes';
 import type { INewTableFilters } from '../../../types/NewTableFilterTypes';
 
 import { useOutsideClickHandler } from '../../../../../composables/useOutsideClickHandler';
@@ -13,7 +13,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'change:filter-value', event: INewTableChangeFilterValue): void;
+  (e: 'change:filter-value', event: INewTableChangeFilterValueEvent): void;
   (e: 'close', event: string): void;
 }>();
 

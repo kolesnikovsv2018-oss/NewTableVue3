@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { StyleValue } from 'vue';
-import { computed, watch } from 'vue';
+import { computed, useAttrs, watch } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faFolder, faFolderOpen, faFile } from '@fortawesome/free-solid-svg-icons';
 
@@ -8,10 +8,9 @@ import type {
   INewTableRow,
   INewTableRowCommonMeta
 } from './types/NewTableRowTypes';
-import type { INewTableColumn, INewTableHeaderSetting } from '../NewTableHeader/types/INewTableHeadTypes';
+import type { INewTableColumn, INewTableColumnSetting } from '../NewTableHeader/types/INewTableHeadTypes';
 import type {
   INewTableCellActionData,
-  INewTableCellNativeEvent,
   INewTableRowActionEvent,
   INewTableChangeCellValueEvent,
 } from '../../types/NewTableEventTypes';
@@ -25,10 +24,20 @@ import {
 } from '../../../NewTableWrapper/constants/standartActions';
 import { NEW_TABLE_DEFAULT_ROW_TYPE } from '../../constants/defaultRowType';
 
+type TParentCellListener = (payload: INewTableRowActionEvent) => void;
+
+// эта опция отключит передачу таких атрибутов как style и class
+// нужно подумать насколько необходима эта опция
+// стили сейчас применяются через
+// :style="$attrs.style as Partial<StyleValue>"
+defineOptions({
+  inheritAttrs: false,
+});
+
 const props = defineProps<{
   row: INewTableRow;
   changedRow?: INewTableRow;
-  localColumnsSettings: Record<string, INewTableHeaderSetting>;
+  localColumnsSettings: Record<string, INewTableColumnSetting>;
   visibleSortedColumns: INewTableColumn[];
   isNumberColumnShown?: boolean;
   isCheckboxColumnShown?: boolean;
@@ -41,22 +50,9 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  // (e: 'toggle:expand-row', row: INewTableRow): void;
   (e: 'row-action', event: INewTableRowActionEvent): void;
-  // (e: 'change:cell-data', event: INewTableUpdateCellDataEvent): void;
-  // (e: 'cell-action', event: INewTableCellActionEvent): void;
-  (e: 'dblclick', event: INewTableCellNativeEvent): void;
-  (e: 'contextmenu', event: INewTableCellNativeEvent): void;
   (e: 'change:cell-value', event: INewTableChangeCellValueEvent): void;
 }>();
-
-// эта опция отключит передачу таких атрибутов как style и class
-// нужно подумать насколько необходима эта опция
-// стили сейчас применяются через
-// :style="$attrs.style as Partial<StyleValue>"
-defineOptions({
-  inheritAttrs: false,
-});
 
 const isChecked = computed<boolean>(
   () => props.modes?.includes(NEW_TABLE_STANDART_ROW_MODES.CHECKED) || false,
@@ -76,8 +72,6 @@ const iconForExpandCell = computed<string>(() => {
 const conputedColumnWidths = computed<Record<string, string>>(
   () => generateColumnWidths(props.visibleSortedColumns, props.localColumnsSettings),
 );
-
-// const actions = computed(() => props.row?.actions || {});
 
 const computedCssClasses = computed<string>(
   () => {
@@ -238,6 +232,49 @@ function onCellAction({ key, value, name }: INewTableCellActionData) {
     },
   });
 }
+
+function generateListenersFromParentAttrs(
+  header: INewTableColumn,
+  stopAndPreventFlags?: { stop: boolean; prevent: boolean; },
+) {
+  const attrs = useAttrs();
+
+  const listeners: Record<string, (event: Event) => void> = {};
+
+  Object.keys(attrs || {}).forEach((attrKey: string) => {
+    if (attrKey.startsWith('on') && typeof attrs[attrKey] === 'function') {
+      const eventName = attrKey.replace(/^on/, '').toLowerCase();
+      listeners[eventName] = (event: Event) => {
+        // if (!props.modes?.includes('edit')) {
+        if (
+          !!stopAndPreventFlags?.prevent &&
+          typeof event?.preventDefault === 'function'
+        ) {
+          event.preventDefault();
+        }
+
+        if (
+          !!stopAndPreventFlags?.stop &&
+          typeof event?.stopPropagation === 'function'
+        ) {
+          event.stopPropagation();
+        }
+        // }
+
+        (attrs[attrKey] as TParentCellListener)({
+          name: eventName,
+          event,
+          value: event,
+          row: localRow,
+          header,
+          modes: props.modes,
+        });
+      };
+    }
+  });
+
+  return listeners;
+}
 </script>
 
 <template>
@@ -303,7 +340,7 @@ function onCellAction({ key, value, name }: INewTableCellActionData) {
         }"
       >
         <div :style="{
-          paddingLeft: row.__level ? `${row.__level * 16}px` : '',
+          paddingLeft: row.__level ? `calc(var(--nt-indent-step) * ${row.__level})` : '',
         }">
           <FontAwesomeIcon
             :icon="iconForExpandCell"
@@ -313,6 +350,10 @@ function onCellAction({ key, value, name }: INewTableCellActionData) {
       </slot>
     </div>
 
+    <!--
+      @dblclick.stop.prevent="$emit('dblclick', { row: localRow, header, event: $event, modes: props.modes })"
+      @contextmenu.stop.prevent="$emit('contextmenu', { row: localRow, header, event: $event, modes: props.modes })"
+    -->
     <div
       v-for="(header, cellIndex) in visibleSortedColumns"
       :key="cellIndex"
@@ -321,9 +362,9 @@ function onCellAction({ key, value, name }: INewTableCellActionData) {
         width: conputedColumnWidths[header.key],
         'min-width': conputedColumnWidths[header.key],
         'max-width': conputedColumnWidths[header.key],
+        boxSizing: 'border-box',
       }"
-      @dblclick.stop.prevent="$emit('dblclick', { row: localRow, header, event: $event })"
-      @contextmenu.stop.prevent="$emit('contextmenu', { row: localRow, header, event: $event, modes: props.modes })"
+      v-on="!props.modes?.includes('edit') ? generateListenersFromParentAttrs(header, { stop: true, prevent: true }) : {}"
     >
       <slot
         :name="`cell[${header.key}]`"
@@ -346,6 +387,7 @@ function onCellAction({ key, value, name }: INewTableCellActionData) {
             : NEW_TABLE_STANDART_ROW_MODES.VIEW
           ) || NEW_TABLE_STANDART_ROW_MODES.VIEW"
           v-bind="getComponentProps(header, computedActiveRow.meta.rowType || props.commonMeta?.rowType)"
+          v-on="!!props.modes?.includes('edit') ? generateListenersFromParentAttrs(header) : {}"
           @update:value="onChangeCellValue({ key: header.key, value: $event })"
           @input="onChangeCellValue({ key: header.key, value: $event })"
           @change="onChangeCellValue({ key: header.key, value: $event })"

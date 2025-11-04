@@ -1,4 +1,4 @@
-import type { Ref} from "vue";
+import type { Ref } from "vue";
 import { computed, ref, toValue, watch } from "vue";
 
 import type { INewTableRow } from '../../NewTable/components/NewTableRow/types/NewTableRowTypes';
@@ -8,10 +8,9 @@ const NEW_TABLE_STEP = 3;
 export function useNewTablePagination(
   initialFlatData: INewTableRow[] | Ref<INewTableRow[]> | (() => INewTableRow[]),
   initialOnlyExpandedFlatData: INewTableRow[] | Ref<INewTableRow[]> | (() => INewTableRow[]),
+  rowCount: number | Ref<number> | (() => number),
 ) {
   const startIndex = ref(0);
-
-  const rowCount = ref(10);
 
   const onlyExpandedFlatDataLength = computed<number>(
     () => toValue(initialOnlyExpandedFlatData).length
@@ -38,29 +37,25 @@ export function useNewTablePagination(
     },
   );
 
-  function setRowCount(newRowCount: number) {
-    rowCount.value = newRowCount;
-  }
-
   function onPrevious() {
     startIndex.value = Math.max(0, startIndex.value - NEW_TABLE_STEP);
   }
 
   function onNext() {
-    if (onlyExpandedFlatDataLength.value <= rowCount.value) {
+    if (onlyExpandedFlatDataLength.value <= toValue(rowCount)) {
       startIndex.value = 0;
       return;
     }
 
     startIndex.value = Math.min(
-      onlyExpandedFlatDataLength.value - rowCount.value,
+      onlyExpandedFlatDataLength.value - toValue(rowCount),
       startIndex.value + NEW_TABLE_STEP,
     );
   }
 
   function correctStartValue() {
     startIndex.value = Math.min(
-      onlyExpandedFlatDataLength.value - rowCount.value,
+      onlyExpandedFlatDataLength.value - toValue(rowCount),
       startIndex.value,
     );
 
@@ -72,7 +67,6 @@ export function useNewTablePagination(
     rowCount,
     flatDataToVew: flatDataToVew,
     onlyExpandedFlatDataToView: onlyExpandedFlatDataToView,
-    setRowCount,
     onPrevious,
     onNext,
     correctStartValue,

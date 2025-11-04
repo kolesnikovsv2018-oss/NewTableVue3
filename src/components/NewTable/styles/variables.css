@@ -2,13 +2,17 @@
 :root {
   /* Colors */
   --nt-border-color: #cbd5e1;
-  --nt-hover-bg: #e2e8f0;
+  /* Hover uses a more noticeable blue (blue-100) to stand out */
+  /* на #bfdbfe для чуть ярче или #eff6ff для мягче */
+  --nt-hover-bg: #dbeafe;
   --nt-header-bg: #f1f5f9;
+  /* --nt-bg: #ffffff; */
   --nt-sticky-bg: #ffffff;
   --nt-text-color: #1e293b;
   --nt-text-muted: #475569;
   --nt-icon-color: #3b82f6;
   --nt-active-color: #2563eb;
+  --nt-expand-icon-color: #64748b;
 
   /* Base Layout */
   --nt-cell-padding: 0.25rem;
@@ -17,6 +21,7 @@
   --nt-icon-size: 16px;
   --nt-checkbox-size: 18px;
   --nt-scroller-size: 16px;
+  --nt-indent-step: 12px;
 
   /* Fixed Column Widths */
   --nt-number-column-width: 50px;
@@ -31,4 +36,12 @@
   --nt-z-sticky: 10;
   --nt-z-header: 20;
   --nt-z-actions: 30;
+
+  /* Typography helpers */
+  --nt-font-weight-bold: 600;
+  --nt-font-weight-medium: 500;
+  --nt-font-size-lg: 1.125rem;
+
+  /* Effects */
+  --nt-box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
 }

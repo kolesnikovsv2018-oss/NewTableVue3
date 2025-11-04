@@ -1,40 +1,39 @@
-import type { Ref} from "vue";
+import type { Ref } from "vue";
 import { computed, ref, toValue, watchEffect } from "vue";
 
-import type { INewTableColumn, INewTableHeaderSetting } from "../../NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableColumn, INewTableColumns, INewTableColumnSetting } from "../../NewTable/components/NewTableHeader/types/INewTableHeadTypes";
 
 const NEW_TABLE_HEAD_MIN_WIDTH: number = 20;
 const NEW_TABLE_HEAD_MAX_WIDTH: number = 500;
 
-export function useNewTableWrapperHeader(
-  initialColumns: Ref<INewTableColumn[]> | INewTableColumn[] | (() => INewTableColumn[]),
-  initialColumnsSettings: Ref<Record<string, INewTableHeaderSetting>> | Record<string, INewTableHeaderSetting> | (() => Record<string, INewTableHeaderSetting>),
+export function useNewTableWrapperColumns(
+  initialColumns: Ref<INewTableColumns> | INewTableColumns | (() => INewTableColumns),
+  initialColumnsSettings: Ref<Record<string, INewTableColumnSetting>> | Record<string, INewTableColumnSetting> | (() => Record<string, INewTableColumnSetting>),
 ) {
-  const localColumnsSettings = ref<Record<string, INewTableHeaderSetting>>(
-    JSON.parse(JSON.stringify(toValue(initialColumnsSettings))),
+  const localColumnsSettings = ref<Record<string, INewTableColumnSetting>>(
+    { ...(toValue(initialColumnsSettings) || {}) },
   );
 
   watchEffect(() => {
-    localColumnsSettings.value = JSON.parse(JSON.stringify(toValue(initialColumnsSettings)));
+    localColumnsSettings.value = {
+      ...(toValue(initialColumnsSettings) || {}),
+    };
   });
-
-  const localColumns = computed<Record<string, INewTableColumn>>(
-    () => {
-      return toValue(initialColumns).reduce((acc, col) => {
-        acc[col.key] = col;
-        return acc;
-      }, {} as Record<string, INewTableColumn>);
-    }
-  );
 
   const columnsSortByOrder = computed<INewTableColumn[]>(
     () => {
-      return Object.keys(localColumnsSettings.value)
+      // чтобы не вызывать toValue много раз
+      const localColumns = toValue(initialColumns);
+
+      // перебираем только колонки из initialColumns
+      return Object.keys(localColumns)
         .sort((keyA, keyB) => {
-          return localColumnsSettings.value[keyA].order - localColumnsSettings.value[keyB].order;
+          const orderA = localColumnsSettings.value[keyA]?.order || localColumns[keyA]?.meta?.order || 0;
+          const orderB = localColumnsSettings.value[keyB]?.order || localColumns[keyB]?.meta?.order || 0;
+          return orderA - orderB;
         })
         .map(
-          (key) => localColumns.value[key]
+          (key) => localColumns[key],
         );
     }
   );

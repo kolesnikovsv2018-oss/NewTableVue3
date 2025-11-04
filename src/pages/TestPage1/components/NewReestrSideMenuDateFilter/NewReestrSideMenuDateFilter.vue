@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
+
 import { useOutsideClickHandler } from '../../../../composables/useOutsideClickHandler';
 
-const el = ref();
+import NewReestrSideMenuWrapper from '../NewReestrSideMenuWrapper/NewReestrSideMenuWrapper.vue';
+
+const el = ref<typeof NewReestrSideMenuWrapper>();
 
 useOutsideClickHandler(
-  () => el.value,
+  () => el.value.$el,
   close,
 );
 
@@ -32,40 +35,40 @@ function close() {
 </script>
 
 <template>
-  <div
+  <NewReestrSideMenuWrapper
     ref="el"
-    class="new-reestr-side-menu-date-filter"
+    @close="close"
   >
-    <form @submit="emit(
-      'submit',
-      {
-        value: value, // ($event.target as HTMLInputElement).value,
-        payload: props.payload,
-      }
-    )">
+    <form
+      class="new-reestr__side-menu__wrapper__form"
+      @submit="emit(
+        'submit',
+        {
+          value: value, // ($event.target as HTMLInputElement).value,
+          payload: props.payload,
+        }
+      )"
+    >
       <input
         v-model="value"
         type="date"
       />
+
+      <div style="flex: 1 1;" />
 
       <button
         :disabled="!value"
         type="submit"
       >Submit</button>
     </form>
-  </div>
+  </NewReestrSideMenuWrapper>
 </template>
 
 <style lang="css" scoped>
-.new-reestr-side-menu-date-filter {
-  position: absolute;
-  background-color: antiquewhite;
-  z-index: 1001;
-  right: 100%;
+.new-reestr__side-menu__wrapper__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   height: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-  border-radius: 6px;
-  box-shadow: 0 0 5px 1px #777;
 }
 </style>

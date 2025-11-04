@@ -1,8 +1,8 @@
-import type { INewTableColumn, INewTableHeaderSettings } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableColumns, INewTableColumnSettings } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
 import type { INewTableRow } from "../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
 import type { INewTableActions } from "../../../components/NewTable/types/NewTableActionTypes";
 import type { TNewTableActionsChangeModesStandart } from "../../../components/NewTable/types/NewTableActionsChangeModesTypes";
-import type { INewReestrContexMenuItems } from "../../../components/NewReestr/types/newReestrContexMenuItems";
+import type { INewReestrContexMenuItems } from "../../../components/NewReestr/types/newReestrTypes";
 import type { INewTableFilters, INewTableSorts } from "../../../components/NewTable/types/NewTableFilterTypes";
 import type { INewMenuItem } from "../../../components/NewContextMenu/types";
 
@@ -30,7 +30,7 @@ export function fetchActionsChangeModes(): Promise<TNewTableActionsChangeModesSt
 
 export function fetchColumns(
   payload: { extraFieldCount: number },
-): Promise<INewTableColumn[]> {
+): Promise<INewTableColumns> {
   return new Promise((resolve) => {
     const { extraFieldCount } = payload;
 
@@ -45,7 +45,7 @@ export function fetchColumns(
 
 export function fetchColumnsSettings(
   payload: { extraFieldCount: number },
-): Promise<INewTableHeaderSettings> {
+): Promise<INewTableColumnSettings> {
   return new Promise((resolve) => {
     const { extraFieldCount } = payload;
 

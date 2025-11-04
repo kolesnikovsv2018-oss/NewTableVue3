@@ -1,0 +1,86 @@
+@import "./variables.css";
+@import "./forms.css";
+
+:root {
+  font-family: var(--app-font-family);
+  line-height: var(--app-base-line-height);
+  font-weight: var(--app-base-font-weight);
+
+  color-scheme: light dark;
+  color: var(--app-body-text);
+  background-color: var(--app-body-bg);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  overflow: auto;
+}
+
+a {
+  font-weight: var(--app-button-font-weight);
+  color: var(--app-link-color);
+  text-decoration: inherit;
+}
+a:hover {
+  color: var(--app-link-hover-color);
+}
+
+body {
+  margin: 0;
+  display: flex;
+  min-width: var(--app-app-max-width);
+  min-height: var(--app-app-height);
+}
+
+h1 {
+  font-size: var(--app-h1-font-size);
+  line-height: var(--app-h1-line-height);
+}
+
+button {
+  border-radius: var(--app-button-radius);
+  border: 1px solid var(--app-button-border-color);
+  padding: var(--app-button-padding);
+  font-size: var(--app-button-font-size);
+  font-weight: var(--app-button-font-weight);
+  font-family: inherit;
+  background-color: var(--app-button-bg);
+  cursor: pointer;
+  transition: var(--app-button-transition);
+}
+button:hover {
+  border-color: var(--app-link-color);
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto var(--app-focus-ring-color);
+}
+
+/* Disabled state: better contrast and non-interactive cursor */
+button:disabled,
+button[disabled] {
+  background-color: var(--app-button-disabled-bg);
+  color: var(--app-button-disabled-text);
+  border-color: var(--app-button-disabled-border);
+  cursor: not-allowed;
+}
+button:disabled:hover,
+button[disabled]:hover {
+  border-color: var(--app-button-disabled-border);
+}
+
+.card {
+  padding: var(--app-card-padding);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: var(--app-body-text);
+    background-color: var(--app-body-bg);
+  }
+  a:hover {
+    color: var(--app-link-hover-color);
+  }
+  button {
+    background-color: var(--app-panel-bg);
+  }
+}

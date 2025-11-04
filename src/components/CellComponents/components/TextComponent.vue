@@ -3,6 +3,7 @@
     <template v-if="mode === 'edit'">
       <input
         v-model="localValue"
+        v-bind="$attrs"
         @change="commit"
         @input="$emit('input', localValue)"
       >

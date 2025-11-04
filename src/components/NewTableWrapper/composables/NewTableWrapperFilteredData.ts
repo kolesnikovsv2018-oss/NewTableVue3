@@ -1,4 +1,4 @@
-import type { Ref} from "vue";
+import type { Ref } from "vue";
 import { computed, ref, toValue, watch } from "vue";
 
 import type { INewTableRow } from "../../NewTable/components/NewTableRow/types/NewTableRowTypes";
@@ -30,14 +30,36 @@ export function useNewTableWrapperFilteredData(
     filtersToGenerateFrom: INewTableFilters,
     currenFilters: INewTableFilters
   ): INewTableFilters {
-    console.log('[generateFilters]', filtersToGenerateFrom);
-
     return Object.keys(filtersToGenerateFrom || {}).reduce(
       (acc: INewTableFilters, filterName: string): INewTableFilters => {
+        const currentValue = filtersToGenerateFrom[filterName]?.currentValue !== undefined
+          && filtersToGenerateFrom[filterName]?.currentValue !== null
+          && (
+            'isDefault' in filtersToGenerateFrom[filterName]
+              ? !filtersToGenerateFrom[filterName].isDefault(
+                filtersToGenerateFrom[filterName]?.currentValue,
+                filtersToGenerateFrom[filterName]?.defaultValue
+              )
+              : filtersToGenerateFrom[filterName]?.currentValue !== filtersToGenerateFrom[filterName]?.defaultValue
+          )
+          ? filtersToGenerateFrom[filterName]?.currentValue
+          : currenFilters?.[filterName]?.currentValue !== undefined
+            && currenFilters?.[filterName]?.currentValue !== null
+            && (
+              'isDefault' in currenFilters[filterName]
+                ? !currenFilters[filterName].isDefault(
+                  currenFilters?.[filterName]?.currentValue,
+                  filtersToGenerateFrom[filterName]?.defaultValue
+                )
+                : currenFilters?.[filterName]?.currentValue !== filtersToGenerateFrom[filterName]?.defaultValue
+            )
+            ? currenFilters?.[filterName]?.currentValue
+            : filtersToGenerateFrom[filterName]?.defaultValue;
+
         acc[filterName] = {
           ...(filtersToGenerateFrom?.[filterName] || {}),
           // currentValue: filtersToGenerateFrom?.[filterName].currentValue,
-          currentValue: currenFilters?.[filterName]?.currentValue ?? filtersToGenerateFrom?.[filterName].currentValue,
+          currentValue: currentValue,
         };
 
         return acc;

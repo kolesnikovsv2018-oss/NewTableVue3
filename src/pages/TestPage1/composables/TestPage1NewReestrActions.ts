@@ -1,38 +1,60 @@
-import type { Ref} from "vue";
-import { toValue } from "vue";
+import type { Ref } from "vue";
+import { ref, toValue } from "vue";
 
 import type { INewTableRow } from "../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
-import type { INewTableCellActionData, INewTableChangeCellValueEvent, INewTableRowActionEvent } from "../../../components/NewTable/types/NewTableEventTypes";
+import type {
+  INewTableCellActionData,
+  INewTableChangeCellValueEvent,
+  INewTableRowActionEvent
+} from "../../../components/NewTable/types/NewTableEventTypes";
 
 import { findParentRowsById, findParentRowWithChildIndexByChildRowId, findRowById } from "../../../helpers/finders";
-import type { ILocalNewTableRow} from "../testdata/testData";
+import type { ILocalNewTableRow } from "../testdata/testData";
 import { TEST_DATA_ROW_TYPES } from "../testdata/testData";
 import { calcOwnSums, calcParentSums, calcTotalOwnSums } from "../../../helpers/calacSums";
 import { columnsToCalc, totalColumnsToCalc } from "../testdata/testColumns";
 import { NEW_TABLE_STANDART_CELL_ACTIONS, NEW_TABLE_STANDART_ROW_ACTIONS } from "../../../components/NewTableWrapper/constants/standartActions";
+import { NEW_TABLE_STANDART_ROW_MODES } from "../../../components/NewTable/constants/standartRowModes";
 
 import type NewReestr from "../../../components/NewReestr/NewReestr.vue";
 
 export function useTestPage1NewReestrActions(
   initialData: Ref<INewTableRow[]> | INewTableRow[] | (() => INewTableRow[]),
-  setRow: (row: INewTableRow) => void,
   newReestrRef: Ref<typeof NewReestr> | typeof NewReestr | (() => typeof NewReestr)
 ) {
-  function onSave(row: INewTableRow) {
+  const selectedRow = ref<INewTableRow | null>(null);
+
+  /**
+   * МЕНЯЕТ ДАННЫЕ
+   * @param row строка, которую нужно обновить в данных
+   */
+  function setRow(row: INewTableRow) {
+    const parenRows = findParentRowsById(row.data.id, toValue(initialData));
+
+    if (!parenRows) {
+      return;
+    }
+
+    parenRows?.forEach((r, index) => {
+      if (r.data.id === row.data.id) {
+        parenRows[index] = row;
+      }
+    });
+  }
+
+  function saveRow(row: INewTableRow) {
     setRow(row);
   }
 
-  function onDelete(event: INewTableRowActionEvent) {
+  function deleteRow(row: INewTableRow) {
     const confirmRes = confirm('Are you sure&');
 
     if (!confirmRes) {
       return;
     }
 
-    const row: INewTableRow = event.row;
-
     const parentRowWithChildRowId = findParentRowWithChildIndexByChildRowId(
-      event.row.data.id,
+      row.data.id,
       toValue(initialData)
     );
 
@@ -52,31 +74,59 @@ export function useTestPage1NewReestrActions(
     }
   }
 
+  function onSave(event: INewTableRowActionEvent) {
+    calcTotalOwnSums(event.row as ILocalNewTableRow);
+    saveRow(event.row);
+    calcParentSums(event.row, toValue(initialData), columnsToCalc);
+    toValue(newReestrRef).deleteChangedRow(event.row.data.id);
+  }
+
+  function onDelete(event: INewTableRowActionEvent) {
+    const parentRow = findParentRowWithChildIndexByChildRowId(event.row.data.id, toValue(initialData));
+    deleteRow(event.row);
+    if (parentRow) {
+      calcOwnSums(parentRow.parent, toValue(initialData), columnsToCalc);
+      calcParentSums(parentRow.parent, toValue(initialData), columnsToCalc);
+    }
+    toValue(newReestrRef).deleteChangedRow(event.row.data.id);
+  }
+
+  function onCancel(event: INewTableRowActionEvent) {
+    toValue(newReestrRef).deleteChangedRow(event.row.data.id);
+  }
+
   function onRowAction(event: INewTableRowActionEvent) {
     switch (event.name) {
       case NEW_TABLE_STANDART_ROW_ACTIONS.SAVE:
-        calcTotalOwnSums(event.row as ILocalNewTableRow);
-        onSave(event.row);
-        calcParentSums(event.row, toValue(initialData), columnsToCalc);
-        toValue(newReestrRef).deleteChangedRow(event.row.data.id);
+        onSave(event);
         break;
       case NEW_TABLE_STANDART_ROW_ACTIONS.DELETE:
-        const parentRow = findParentRowWithChildIndexByChildRowId(event.row.data.id, toValue(initialData));
         onDelete(event);
-        if (parentRow) {
-          calcOwnSums(parentRow.parent, toValue(initialData), columnsToCalc);
-          calcParentSums(parentRow.parent, toValue(initialData), columnsToCalc);
-        }
-        toValue(newReestrRef).deleteChangedRow(event.row.data.id);
         break;
       case NEW_TABLE_STANDART_ROW_ACTIONS.CANCEL:
-        toValue(newReestrRef).deleteChangedRow(event.row.data.id);
+        onCancel(event);
         break;
       case NEW_TABLE_STANDART_ROW_ACTIONS.CELL_ACTION:
         onCellAction(event);
         break;
-      default:
-        console.warn('Unknown action:', event.name, 'for row:', event.row);
+      case 'click':
+        selectedRow.value = event.row;
+        break;
+      case 'keyup':
+        onKeyup(event);
+        break;
+    }
+  }
+
+  function onKeyup(event: INewTableRowActionEvent) {
+    const key = event.event instanceof KeyboardEvent ? event.event.key : null;
+    if (key === 'Enter') {
+      onSave(event);
+      toValue(newReestrRef).switchOffModeForRow(NEW_TABLE_STANDART_ROW_MODES.EDIT, event.row);
+    }
+    if (key === 'Escape') {
+      onCancel(event);
+      toValue(newReestrRef).switchOffModeForRow(NEW_TABLE_STANDART_ROW_MODES.EDIT, event.row);
     }
   }
 
@@ -109,10 +159,14 @@ export function useTestPage1NewReestrActions(
   }
 
   return {
+    selectedRow,
+    setRow,
     onCellAction,
     onChangeCellValue,
     onDelete,
+    deleteRow,
     onRowAction,
     onSave,
+    saveRow,
   };
 }

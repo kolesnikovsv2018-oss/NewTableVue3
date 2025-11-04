@@ -3,9 +3,9 @@ import { computed, nextTick, ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faFolder, faFolderOpen, faSortUp, faSortDown, faSort } from '@fortawesome/free-solid-svg-icons';
 
-import type { INewTableColumn, INewTableHeaderSetting } from './types/INewTableHeadTypes';
+import type { INewTableColumn, INewTableColumnSettings } from './types/INewTableHeadTypes';
 import type {
-  INewTableChangeFilterValue,
+  INewTableChangeFilterValueEvent,
   INewTableChangeColumnsOrderEvent,
   INewTableChangeColumnWidthEvent
 } from '../../types/NewTableEventTypes';
@@ -19,7 +19,7 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
 const props = defineProps<{
   visibleSortedColumns: INewTableColumn[];
-  localColumnsSettings: Record<string, INewTableHeaderSetting>;
+  localColumnsSettings: INewTableColumnSettings;
   // фильтры для полей-колонок данных
   filters?: INewTableFilters,
   // объект сортировки, потенциально для нескольких полей
@@ -37,7 +37,7 @@ const emit = defineEmits<{
   (e: 'toggle:check-all-row', event?: boolean): void;
   (e: 'change:columns-order', event: INewTableChangeColumnsOrderEvent): void;
   (e: 'change:column-width', event: INewTableChangeColumnWidthEvent): void;
-  (e: 'change:filter-value', event: INewTableChangeFilterValue): void;
+  (e: 'change:filter-value', event: INewTableChangeFilterValueEvent): void;
   (e: 'change:column-sort', event: INewTableSorts): void;
 }>();
 
@@ -89,6 +89,20 @@ function getSortIconNameForField(fieldName: string) {
   return faSort;
 }
 
+function isFilterActiveForField(fieldName: string): boolean {
+  if (!props.filters || !props.filters[fieldName]) return false;
+
+  const filter = props.filters[fieldName];
+
+  if (filter.currentValue === undefined || filter.currentValue === null) return false;
+
+  if ('isDefault' in filter) {
+    return filter.isDefault(filter.currentValue, filter.defaultValue) === false;
+  }
+
+  return filter.currentValue !== filter.defaultValue;
+}
+
 function onExpandHeadClick() {
   emit('toggle:expand-all-row');
 }
@@ -123,7 +137,7 @@ function onDrop(event: DragEvent) {
   });
 }
 
-function onChangeFilterValue({ key, value }: INewTableChangeFilterValue) {
+function onChangeFilterValue({ key, value }: INewTableChangeFilterValueEvent) {
   emit('change:filter-value', { key, value });
 }
 
@@ -238,15 +252,7 @@ function onClickOnSort(key: string) {
             :icon="faFilter"
             class="icon new-table__header__cell__filter__icon"
             :class="{
-              '--active': props.filters[header.key]?.currentValue !== undefined
-                && props.filters[header.key]?.currentValue !== null
-                && (
-                  'isDefault' in props.filters[header.key]
-                    ? props.filters[header.key].isDefault(
-                      props.filters[header.key].currentValue, props.filters[header.key].defaultValue
-                    ) === false
-                    : props.filters[header.key].currentValue !== props.filters[header.key]?.defaultValue
-                ),
+              '--active': isFilterActiveForField(header.key),
             }"
             @click.stop.prevent="onClickOnFilter(header.key)"
           />
@@ -276,6 +282,7 @@ function onClickOnSort(key: string) {
           :style="{
             position: 'absolute',
             zIndex: 3,
+            top: '100%',
           }"
         />
 

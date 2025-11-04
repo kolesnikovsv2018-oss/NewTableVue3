@@ -1,11 +1,11 @@
-import type { Ref} from "vue";
+import type { Ref } from "vue";
 import { ref, toValue } from "vue";
 
 import type { INewTableRow } from "../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
-import type { INewTableColumn, INewTableHeaderSettings } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableColumns, INewTableColumnSettings } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
 import type { INewTableActions } from "../../../components/NewTable/types/NewTableActionTypes";
 import type { TNewTableActionsChangeModesStandart } from "../../../components/NewTable/types/NewTableActionsChangeModesTypes";
-import type { INewReestrContexMenuItems } from "../../../components/NewReestr/types/newReestrContexMenuItems";
+import type { INewReestrContexMenuItems } from "../../../components/NewReestr/types/newReestrTypes";
 import type { INewTableFilters, INewTableSorts } from "../../../components/NewTable/types/NewTableFilterTypes";
 import type { INewMenuItem } from "../../../components/NewContextMenu/types";
 
@@ -15,25 +15,45 @@ import {
   fetchActions,
   fetchActionsChangeModes,
   fetchColumns,
-  fetchColumnsSettings,
   fetchContextMenuItems,
   fetchData,
-  fetchFilters,
   fetchSideMenuItems,
   fetchSorts,
 } from "../api/TestPage1Api";
 import { NEW_TABLE_DEFAULT_ROW_TYPE } from "../../../components/NewTable/constants/defaultRowType";
+import { useColumnSettings } from "./ColumnSettings";
+import { useFilters } from "./Filters";
 
-export function useTestPage1NewReestrInitData(
+export interface IUseTestPage1NewReestrInitData {
+  data: Ref<INewTableRow[]>;
+  columns: Ref<INewTableColumns>;
+  columnSettings: Ref<INewTableColumnSettings>;
+  actions: Ref<INewTableActions>;
+  actionsChangeModes: Ref<TNewTableActionsChangeModesStandart>;
+  contextMenuItems: Ref<INewReestrContexMenuItems>;
+  sideMenuItems: Ref<INewMenuItem[] | undefined>;
+  filters: Ref<INewTableFilters>;
+  sorts: Ref<INewTableSorts>;
+  rowCount: Ref<number>;
+  initData: () => Promise<void>;
+  loadReestrSettingsFromLocalStorage: () => void;
+  saveReestrsettingsToLocalStorage: () => void;
+  loadColumnSettingsFromLocalStorage: () => void;
+  saveColumnSettingsToLocalStorage: () => void;
+  loadFiltersFromLocalStorage: () => void;
+  saveFiltersToLocalStorage: () => void;
+};
+
+export function useReestr(
+  reestrName: Ref<string> | string | (() => string),
   count: (number | Ref<number> | (() => number)) = 10000,
   maxLevel: (number | Ref<number> | (() => number)) = 5,
   extraFieldCount: (number | Ref<number> | (() => number)) = 7,
-) {
+  initialRowCount: (number | Ref<number> | (() => number)) = 10,
+): IUseTestPage1NewReestrInitData {
   const data = ref<INewTableRow[]>([]);
 
-  const columns = ref<INewTableColumn[]>([]);
-
-  const columnsSettings = ref<INewTableHeaderSettings>({});
+  const columns = ref<INewTableColumns>({});
 
   const actions = ref<INewTableActions>({})
 
@@ -43,9 +63,46 @@ export function useTestPage1NewReestrInitData(
 
   const sideMenuItems = ref<INewMenuItem[]>();
 
-  const filters = ref<INewTableFilters>({});
+  const {
+    filters,
+    initFilters,
+    saveFiltersToLocalStorage,
+    loadFiltersFromLocalStorage
+  } = useFilters(
+    () => toValue(reestrName),
+  );
 
   const sorts = ref<INewTableSorts>({});
+
+  const rowCount = ref<number>(toValue(initialRowCount));
+
+  const {
+    columnSettings,
+    initColumnSettings,
+    loadColumnSettingsFromLocalStorage,
+    saveColumnSettingsToLocalStorage,
+  } = useColumnSettings(
+    () => toValue(reestrName),
+    () => columns.value,
+    () => toValue(extraFieldCount),
+  );
+
+  function saveReestrsettingsToLocalStorage() {
+    const reestrSettings = {
+      rowCount: rowCount.value,
+    };
+
+    localStorage.setItem(`${toValue(reestrName)}_settings`, JSON.stringify(reestrSettings));
+  }
+
+  function loadReestrSettingsFromLocalStorage() {
+    const reestrSettingsJSON = localStorage.getItem(`${toValue(reestrName)}_settings`);
+
+    if (reestrSettingsJSON) {
+      const reestrSettings = JSON.parse(reestrSettingsJSON);
+      rowCount.value = reestrSettings.rowCount;
+    }
+  }
 
   async function initData() {
     actions.value = await fetchActions();
@@ -68,13 +125,13 @@ export function useTestPage1NewReestrInitData(
 
     columns.value = await fetchColumns({ extraFieldCount: toValue(extraFieldCount) });
 
-    columnsSettings.value = await fetchColumnsSettings({ extraFieldCount: toValue(extraFieldCount) });
+    await initColumnSettings();
 
     contextMenuItems.value = await fetchContextMenuItems();
 
     sideMenuItems.value = await fetchSideMenuItems();
 
-    filters.value = await fetchFilters();
+    await initFilters();
 
     sorts.value = await fetchSorts();
 
@@ -89,12 +146,19 @@ export function useTestPage1NewReestrInitData(
     actions,
     actionsChangeModes,
     columns,
-    columnsSettings,
+    columnSettings,
     data,
     contextMenuItems,
     sideMenuItems,
     filters,
     sorts,
+    rowCount,
     initData,
+    loadReestrSettingsFromLocalStorage,
+    saveReestrsettingsToLocalStorage,
+    loadColumnSettingsFromLocalStorage,
+    saveColumnSettingsToLocalStorage,
+    loadFiltersFromLocalStorage,
+    saveFiltersToLocalStorage,
   }
 }

@@ -1,10 +1,18 @@
 <script setup lang="ts">
+import type { StyleValue } from 'vue';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 
-import type { INewTableRow, INewTableRowCommonMeta } from '../NewTable/components/NewTableRow/types/NewTableRowTypes';
-import type { INewTableColumn, INewTableHeaderSetting } from '../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
 import type {
-  INewTableChangeFilterValue,
+  INewTableRow,
+  INewTableRowCommonMeta
+} from '../NewTable/components/NewTableRow/types/NewTableRowTypes';
+import type {
+  INewTableColumns,
+  INewTableColumnSetting,
+  INewTableColumnSettings,
+} from '../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
+import type {
+  INewTableChangeFilterValueEvent,
   INewTableChangeColumnsOrderEvent,
   INewTableChangeColumnWidthEvent,
   INewTableRowActionEvent,
@@ -18,7 +26,7 @@ import { useNewTableWrapperModes } from './composables/NewTableWrapperModes';
 import { useNewTableWrapperFlatData } from './composables/NewTableWrapperFlatData';
 import { useNewTablePagination } from './composables/NewTableWrapperPagination';
 import { useWheelEvent } from '../../composables/useWheelEvent';
-import { useNewTableWrapperHeader } from './composables/NewTableWrapperHeader';
+import { useNewTableWrapperColumns } from './composables/NewTableWrapperColumns';
 import { useNewTableWrapperFilteredData } from './composables/NewTableWrapperFilteredData';
 import { useNewTableWrapperSortData } from './composables/NewTableWrapperSortData';
 import { useDebounceFn } from '@vueuse/core';
@@ -31,10 +39,12 @@ import { NEW_TABLE_DEFAULT_ROW_TYPE } from '../NewTable/constants/defaultRowType
 import NewTable from '../NewTable/NewTable.vue';
 import NewScroller from '../NewScroller/NewScroller.vue';
 
+defineOptions({ inheritAttrs: false });
+
 const props = defineProps<{
   data: INewTableRow[];
-  columns: INewTableColumn[];
-  columnsSettings: Record<string, INewTableHeaderSetting>;
+  columns: INewTableColumns;
+  columnsSettings: Record<string, INewTableColumnSetting>;
   commonMeta?: INewTableRowCommonMeta;
   filters: INewTableFilters;
   sorts: INewTableSorts;
@@ -44,14 +54,18 @@ const props = defineProps<{
   isNumberColumnShown?: boolean;
   isCheckboxColumnShown?: boolean;
   isExpandColumnShown?: boolean;
+  rowCount: number;
 }>();
 
 const emit = defineEmits<{
   (e: 'row-action', event: INewTableRowActionEvent): void;
-  (e: 'change:column-width', event: INewTableChangeColumnWidthEvent): void;
-  (e: 'change:position', newPosition: number): void;
   (e: 'change:cell-value', event: INewTableChangeCellValueEvent): void;
+
+  (e: 'change:column-settings', event: INewTableColumnSettings): void;
   (e: 'change:filters', event: INewTableFilters): void;
+  (e: 'change:sorts', event: INewTableSorts): void;
+
+  (e: 'change:start-index', newStartIndex: number): void;
 }>();
 
 const {
@@ -95,14 +109,13 @@ const {
 
 const {
   startIndex,
-  rowCount,
   onlyExpandedFlatDataToView,
-  setRowCount,
   onPrevious,
   onNext
 } = useNewTablePagination(
   () => filteredFlatData.value,
   () => onlyExpandedFlatData.value,
+  () => props.rowCount,
 );
 
 const {
@@ -110,7 +123,7 @@ const {
   columnsSortByOrderVisible,
   changeColumnOrders,
   changeColumnWidths,
-} = useNewTableWrapperHeader(
+} = useNewTableWrapperColumns(
   () => props.columns,
   () => props.columnsSettings
 );
@@ -134,7 +147,7 @@ const {
 const { onWheelEvent } = useWheelEvent(onNext, onPrevious);
 
 const onChangeFilterValueDebounced = useDebounceFn(
-  (event: INewTableChangeFilterValue) => onChangeFilterValue(event),
+  (event: INewTableChangeFilterValueEvent) => onChangeFilterValue(event),
   300
 );
 
@@ -197,13 +210,17 @@ function onChangeColumnOrders(event: INewTableChangeColumnsOrderEvent) {
     return;
   }
   changeColumnOrders(event.columnFrom, event.columnTo);
+
+  emit('change:column-settings', localColumnsSettings.value);
 }
 
 function onChangeColumnWidths(event: INewTableChangeColumnWidthEvent) {
   changeColumnWidths(event.columnName, event.delta, event.currentWidth);
+
+  emit('change:column-settings', localColumnsSettings.value);
 }
 
-function onChangeFilterValue(event: INewTableChangeFilterValue) {
+function onChangeFilterValue(event: INewTableChangeFilterValueEvent) {
   filters.value = {
     ...(filters.value || {}),
     [event.key]: {
@@ -217,6 +234,8 @@ function onChangeFilterValue(event: INewTableChangeFilterValue) {
 
 function onChangeColumnSort(event: INewTableSorts) {
   sorts.value = event;
+
+  emit('change:sorts', event);
 }
 
 function onToggleExpandAllRow() {
@@ -229,6 +248,7 @@ function onToggleCheckAllRow() {
 
 function onChangeCellValue(event: INewTableChangeCellValueEvent) {
   changedRows.value[event.row.data.id] = event.row;
+
   emit('change:cell-value', event);
 }
 
@@ -242,9 +262,10 @@ function deleteChangedRow(idRow: number | string): INewTableRow {
   return deletedRow;
 }
 
-function onChangePosition(newPosition: number) {
-  startIndex.value = newPosition;
-  emit('change:position', newPosition);
+function onChangeStartIndex(newStartIndex: number) {
+  startIndex.value = newStartIndex;
+
+  emit('change:start-index', newStartIndex);
 }
 
 defineExpose({
@@ -259,8 +280,6 @@ defineExpose({
   toggleModeForRow,
   toggleModeForRowWithChildren,
 
-  rowCount,
-  setRowCount,
   fullFlatData,
   filteredFlatData,
 
@@ -270,7 +289,10 @@ defineExpose({
 </script>
 
 <template>
-  <div>
+  <div
+    :style="$attrs.style as Partial<StyleValue>"
+    :class="$attrs.class"
+  >
     <div class="new-table-wrapper">
       <NewTable
         ref="el"
@@ -328,7 +350,7 @@ defineExpose({
         :position="startIndex"
         :rowCount="rowCount"
         class="new-table__scroller"
-        @change:position="onChangePosition"
+        @change:position="onChangeStartIndex"
       />
     </div>
   </div>

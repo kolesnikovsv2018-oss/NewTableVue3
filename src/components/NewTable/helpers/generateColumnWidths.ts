@@ -1,8 +1,8 @@
-import type { INewTableColumn, INewTableHeaderSetting } from "../components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableColumn, INewTableColumnSetting } from "../components/NewTableHeader/types/INewTableHeadTypes";
 
 export function generateColumnWidths(
   visibleSortedColumns: INewTableColumn[],
-  localColumnsSettings: Record<string, INewTableHeaderSetting>
+  localColumnsSettings: Record<string, INewTableColumnSetting>
 ): Record<string, string> {
   const widths: Record<string, string> = {};
   visibleSortedColumns.forEach((column) => {

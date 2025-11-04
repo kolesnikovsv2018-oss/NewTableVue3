@@ -1,28 +1,27 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 
-import type { INewTableRow } from '../../components/NewTable/components/NewTableRow/types/NewTableRowTypes';
 import type { INewMenuItem } from '../../components/NewContextMenu/types';
-import type { INewTableCellNativeEvent } from '../../components/NewTable/types/NewTableEventTypes';
+import type { INewTableRowActionEvent } from '../../components/NewTable/types/NewTableEventTypes';
 import type { ILocalNewTableRow } from './testdata/testData';
 import type { INewTableFilters } from '../../components/NewTable/types/NewTableFilterTypes';
 import type { ITestRangeDate } from '../../components/FilterComponents/components/types';
+import type { INewTableColumnSettings } from '../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes';
+import type { IUseTestPage1NewReestrInitData } from './composables/Reestr'
 
-import { useTestPage1NewReestrInitData } from './composables/TestPage1NewReestrInitData';
+import { useReestr } from './composables/Reestr';
 import { useTestPage1NewReestrChangeRowParentId } from './composables/TestPage1NewReestrChangeRowParentId';
-
-import { findParentRowsById } from '../../helpers/finders';
 import { useTestPage1NewReestrActions } from './composables/TestPage1NewReestrActions';
+import { useTestPage1Settings } from './composables/TestPage1Settings';
+
 import { NEW_TABLE_STANDART_ROW_MODES } from '../../components/NewTable/constants/standartRowModes';
+import { integerToRoman } from '../../helpers/integerToRoman';
 
 import NewReestr from '../../components/NewReestr/NewReestr.vue';
 import NewReestrChangeRowParentDialog from '../../components/NewReestr/components/NewReestrChangeRowParentDialog/NewReestrChangeRowParentDialog.vue';
 import NewSplitter from '../../components/NewSplitter/NewSplitter.vue';
-import NewReestrSideMenuDateFilter from '../../components/NewReestr/components/NewReestrSideMenuDateFilter/NewReestrSideMenuDateFilter.vue';
-import NewReestrSideMenuSumms from '../../components/NewReestr/components/NewReestrSideMenuSumms/NewReestrSideMenuSumms.vue';
-import { calcParentSums, calcTotalOwnSums } from '../../helpers/calacSums';
-import { columnsToCalc } from './testdata/testColumns';
-import { integerToRoman } from '../../helpers/integerToRoman';
+import NewReestrSideMenuDateFilter from './components/NewReestrSideMenuDateFilter/NewReestrSideMenuDateFilter.vue';
+import NewReestrSideMenuSumms from './components/NewReestrSideMenuSumms/NewReestrSideMenuSumms.vue';
 
 interface ITestPage1NewReestrSideMenuSubmitEvent {
   name: string;
@@ -30,22 +29,13 @@ interface ITestPage1NewReestrSideMenuSubmitEvent {
   payload?: unknown;
 }
 
-const newReestrRef = ref<typeof NewReestr>();
+const newMainReestrRef = ref<typeof NewReestr>();
 
 const sideMenuComponents = ref<Record<string, { isShown: boolean, payload: unknown }>>({});
 
-const {
-  actions,
-  actionsChangeModes,
-  columns,
-  columnsSettings,
-  data,
-  contextMenuItems,
-  sideMenuItems,
-  filters,
-  sorts,
-  initData,
-} = useTestPage1NewReestrInitData();
+const mainReestr = useReestr('mainReestr', 10000, 5, 7, 14);
+
+const relativeReestr1 = useReestr('relativeReestr1', 1, 2, 3, 7);
 
 const {
   activeDestinationRowId,
@@ -53,53 +43,44 @@ const {
   activeSourceRow,
   onChangeRowParentId,
 } = useTestPage1NewReestrChangeRowParentId(
-  () => data.value
+  () => mainReestr.data.value
 );
 
 const {
+  selectedRow,
   onSave,
   onDelete,
   onRowAction,
   onChangeCellValue,
 } = useTestPage1NewReestrActions(
-  () => data.value,
-  setRow,
-  newReestrRef,
+  () => mainReestr.data.value,
+  () => newMainReestrRef.value,
 );
 
-/**
- * МЕНЯЕТ ДАННЫЕ
- * @param row строка, которую нужно обновить в данных
- */
-function setRow(row: INewTableRow) {
-  const parenRows = findParentRowsById(row.data.id, data.value);
+const {
+  splitterDiv1Height,
+  savePageSettingsToLocalStorage,
+  loadPageSettingsFromLocalStorage
+} = useTestPage1Settings(
+  'TestPage1',
+);
 
-  if (!parenRows) {
-    return;
+watch(
+  () => selectedRow.value,
+  async () => {
+    await relativeReestr1.initData();
   }
-
-  parenRows?.forEach((r, index) => {
-    if (r.data.id === row.data.id) {
-      parenRows[index] = row;
-    }
-  });
-}
+);
 
 function onSelectContextMenuItem(menuItem: INewMenuItem) {
-  const payload: INewTableCellNativeEvent = menuItem.payload as INewTableCellNativeEvent;
+  const payload: INewTableRowActionEvent = menuItem.payload;
 
   switch (menuItem.actionName) {
     case 'edit-row':
-      newReestrRef.value.switchOnModeForRow(NEW_TABLE_STANDART_ROW_MODES.EDIT, payload.row);
+      newMainReestrRef.value.switchOnModeForRow(NEW_TABLE_STANDART_ROW_MODES.EDIT, payload.row);
       break;
     case 'save-row':
-      calcTotalOwnSums(payload.row as ILocalNewTableRow);
-      onSave(payload.row);
-      calcParentSums(payload.row, data.value, columnsToCalc);
-      // TODO использовать готовую функцию из NewTableWrapper onAction
-      // её нужно вынести в хелпер
-      newReestrRef.value.switchOffModeForRow(NEW_TABLE_STANDART_ROW_MODES.EDIT, payload.row);
-      newReestrRef.value?.deleteChangedRow(payload.row.data.id);
+      onSave({ name: 'save', row: payload.row });
       break;
     case 'delete-row':
       onDelete({ name: 'delete', row: payload.row });
@@ -113,6 +94,11 @@ function onSelectContextMenuItem(menuItem: INewMenuItem) {
       activeDestinationRowId.value = null;
       isChangeRowParentDialogShown.value = true;
       break;
+  }
+}
+
+function onSelectSideMenuItem(menuItem: INewMenuItem) {
+  switch (menuItem.actionName) {
     case 'date-filter':
     case 'summs':
       sideMenuComponents.value = {
@@ -128,12 +114,12 @@ function onSelectContextMenuItem(menuItem: INewMenuItem) {
 function onNewReestrSideMenuDateFilterSubmit(
   { name, value }: ITestPage1NewReestrSideMenuSubmitEvent,
 ) {
-  filters.value['date'].currentValue = { date1: value, date2: value };
+  mainReestr.filters.value['date'].currentValue = { date1: value, date2: value };
 
-  filters.value = {
-    ...filters.value,
+  mainReestr.filters.value = {
+    ...mainReestr.filters.value,
     ['date']: {
-      ...filters.value['date'],
+      ...mainReestr.filters.value['date'],
       currentValue: { date1: value, date2: value },
     }
   };
@@ -142,41 +128,72 @@ function onNewReestrSideMenuDateFilterSubmit(
 }
 
 function onNewReestrSideMenuSummsSubmit(
-  { name, value }: ITestPage1NewReestrSideMenuSubmitEvent,
+  { name }: ITestPage1NewReestrSideMenuSubmitEvent,
 ) {
   sideMenuComponents.value[name].isShown = false
-  console.log('[onNewReestrSideMenuSummsSubmit]', value);
 }
 
-function onChangeFilters(changedFilters: INewTableFilters) {
-  filters.value = changedFilters;
+function onChangeFilters(
+  reestr: IUseTestPage1NewReestrInitData,
+  changedFilters: INewTableFilters
+) {
+  reestr.filters.value = changedFilters;
+  reestr.saveFiltersToLocalStorage();
 }
+
+function onChangeColumnsettings(
+  reestr: IUseTestPage1NewReestrInitData,
+  event: INewTableColumnSettings,
+) {
+  reestr.columnSettings.value = event;
+  reestr.saveColumnSettingsToLocalStorage();
+}
+
+function onUpdateDiv1Size(newSize: number) {
+  splitterDiv1Height.value = newSize;
+  savePageSettingsToLocalStorage();
+}
+
+function onChangeRowCount(
+  reestr: IUseTestPage1NewReestrInitData,
+  newRowCount: number,
+) {
+  reestr.rowCount.value = newRowCount;
+  reestr.saveReestrsettingsToLocalStorage();
+}
+
+onMounted(() => {
+  void mainReestr.initData();
+
+  loadPageSettingsFromLocalStorage();
+
+  mainReestr.loadReestrSettingsFromLocalStorage();
+  relativeReestr1.loadReestrSettingsFromLocalStorage();
+});
 </script>
 
 <template>
   <div class="test-page1">
-    <div class="test-page1__actions">
-      <button @click="initData">
-        Init Data
-      </button>
-    </div>
     <NewSplitter
-      variant="red"
+      color="green"
+      :minDivSize="200"
+      :currentDiv1Size="splitterDiv1Height"
       class="test-page1__splitter-wrapper"
+      @update:div1-size="onUpdateDiv1Size"
     >
       <template #div1>
         <NewReestr
-          ref="newReestrRef"
+          ref="newMainReestrRef"
           class="test-page1__new-reestr"
-          :initial-data="data"
-          :initial-columns="columns"
-          :initial-columns-settings="columnsSettings"
-          :initial-filters="filters"
-          :initial-sorts="sorts"
-          :initial-actions-change-modes="actionsChangeModes"
-          :initial-actions="actions"
-          :initial-context-menu-items="contextMenuItems"
-          :side-menu-items="sideMenuItems"
+          :initial-data="mainReestr.data.value"
+          :initial-columns="mainReestr.columns.value"
+          :initialColumnSettings="mainReestr.columnSettings.value"
+          :initial-filters="mainReestr.filters.value"
+          :initial-sorts="mainReestr.sorts.value"
+          :initial-actions-change-modes="mainReestr.actionsChangeModes.value"
+          :initial-actions="mainReestr.actions.value"
+          :initial-context-menu-items="mainReestr.contextMenuItems.value"
+          :side-menu-items="mainReestr.sideMenuItems.value"
           :isNumberColumnShown="true"
           :isCheckboxColumnShown="true"
           :isExpandColumnShown="true"
@@ -187,10 +204,15 @@ function onChangeFilters(changedFilters: INewTableFilters) {
               task: '--task',
             }
           }"
+          :row-count="mainReestr.rowCount.value"
+          @change:row-count="onChangeRowCount(mainReestr, $event)"
           @row-action="onRowAction"
           @change:cell-value="onChangeCellValue"
-          @select:item="onSelectContextMenuItem"
-          @change:filters="onChangeFilters"
+          @select:context-menu-item="onSelectContextMenuItem"
+          @select:side-menu-item="onSelectSideMenuItem"
+          @change:filters="onChangeFilters(mainReestr, $event)"
+          @change:column-settings="onChangeColumnsettings(mainReestr, $event)"
+          @keyup="onRowAction"
         >
           <template v-slot:cell[number]="idSlotProps">
             <span style="color: red;">[{{ integerToRoman(idSlotProps.rowNumber) }}]</span>
@@ -204,7 +226,7 @@ function onChangeFilters(changedFilters: INewTableFilters) {
             <NewReestrSideMenuDateFilter
               v-if="!!sideMenuComponents['date-filter']?.isShown"
               :payload="sideMenuComponents['date-filter'].payload"
-              :date="(filters['date'].currentValue as ITestRangeDate).date1"
+              :date="(mainReestr.filters.value['date'].currentValue as ITestRangeDate).date1"
               @submit="onNewReestrSideMenuDateFilterSubmit({
                 ...$event,
                 name: 'date-filter',
@@ -214,7 +236,7 @@ function onChangeFilters(changedFilters: INewTableFilters) {
 
             <NewReestrSideMenuSumms
               v-if="!!sideMenuComponents['summs']?.isShown"
-              :data="data as ILocalNewTableRow[]"
+              :data="mainReestr.data.value as ILocalNewTableRow[]"
               :payload="sideMenuComponents['summs'].payload"
               @submit="onNewReestrSideMenuSummsSubmit({
                 ...$event,
@@ -227,25 +249,37 @@ function onChangeFilters(changedFilters: INewTableFilters) {
       </template>
 
       <template #div2>
-        <NewSplitter
-          variant="blue"
-          class="test-page1__splitter-wrapper"
+        <NewReestr
+          ref="newSubReestrRef"
+          class="test-page1__new-reestr"
+          :initial-data="relativeReestr1.data.value"
+          :initial-columns="relativeReestr1.columns.value"
+          :initialColumnSettings="relativeReestr1.columnSettings.value"
+          :initial-filters="relativeReestr1.filters.value"
+          :initial-sorts="relativeReestr1.sorts.value"
+          :initial-actions-change-modes="relativeReestr1.actionsChangeModes.value"
+          :initial-actions="relativeReestr1.actions.value"
+          :initial-context-menu-items="relativeReestr1.contextMenuItems.value"
+          :isNumberColumnShown="true"
+          :isCheckboxColumnShown="true"
+          :isExpandColumnShown="true"
+          :common-meta="{
+            class: {
+              stage: '--stage',
+              subStage: '--sub-stage',
+              task: '--task',
+            }
+          }"
+          :row-count="relativeReestr1.rowCount.value"
+          @change:row-count="onChangeRowCount(relativeReestr1, $event)"
+          @row-action="onRowAction"
+          @change:cell-value="onChangeCellValue"
+          @select:context-menu-item="onSelectContextMenuItem"
+          @select:side-menu-item="onSelectSideMenuItem"
+          @change:filters="onChangeFilters(relativeReestr1, $event)"
+          @change:column-settings="onChangeColumnsettings(relativeReestr1, $event)"
         >
-          <template #div1>
-            <div>
-              SADFGSADRGSADREGAERGASGASDFA
-              SADFGSADRGSADREGAERGASGASDFA
-              SADFGSADRGSADREGAERGASGASDFA
-              SADFGSADRGSADREGAERGASGASDFA
-              SADFGSADRGSADREGAERGASGASDFA
-              SADFGSADRGSADREGAERGASGASDFA
-              SADFGSADRGSADREGAERGASGASDFA
-            </div>
-          </template>
-          <template #div2>
-            aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-          </template>
-        </NewSplitter>
+        </NewReestr>
       </template>
     </NewSplitter>
 
@@ -265,23 +299,12 @@ function onChangeFilters(changedFilters: INewTableFilters) {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  gap: 16px;
+  gap: var(--app-gap);
   box-sizing: border-box;
-  padding: 12px;
-  background-color: #777;
+  padding: var(--app-content-padding);
+  background-color: var(--app-body-bg);
   align-items: stretch;
   justify-content: space-between;
-}
-
-.test-page1__actions {
-  border-radius: 8px;
-  background-color: #eee;
-  width: 100%;
-  text-align: center;
-  padding: 8px;
-  box-sizing: border-box;
-
-  flex: 0 0;
 }
 
 .test-page1__splitter-wrapper {
@@ -297,15 +320,15 @@ function onChangeFilters(changedFilters: INewTableFilters) {
 }
 
 :deep() .--stage {
-  background-color: var(--app-row-stage-bg);
+  background-color: var(--app-row-stage-bg) !important;
 }
 
 :deep() .--sub-stage {
-  background-color: var(--app-row-substage-bg);
+  background-color: var(--app-row-substage-bg) !important;
 }
 
 :deep() .--task {
-  background-color: var(--app-row-task-bg);
+  background-color: var(--app-row-task-bg) !important;
 }
 
 /* так можно переопределять стили */
@@ -321,15 +344,15 @@ function onChangeFilters(changedFilters: INewTableFilters) {
 
 dialog {
   top: 50%;
-  z-index: 100;
-  background-color: #eee;
-  border: none;
-  border-radius: 8px;
-  box-shadow: 0 0 5px 1px #777;
-  color: #333;
+  z-index: var(--app-z-dialog);
+  background-color: var(--app-dialog-bg);
+  border: 1px solid var(--app-panel-border);
+  border-radius: var(--app-button-radius);
+  box-shadow: var(--app-dialog-shadow);
+  color: var(--app-text-primary);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--app-gap);
 }
 
 :deep(dialog p) {
@@ -340,7 +363,7 @@ dialog {
 :deep(dialog form) {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--app-gap);
 }
 
 :deep(dialog form .dialog-buttons) {

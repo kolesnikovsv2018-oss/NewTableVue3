@@ -1,4 +1,4 @@
-import type { INewTableColumn } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableColumn, INewTableColumns } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
 
 import { NEW_TABLE_DEFAULT_ROW_TYPE } from "../../../components/NewTable/constants/defaultRowType";
 
@@ -22,14 +22,14 @@ export const columnsToCalc: string[] = [
   'customPriceTotal'
 ];
 
-// колонки, который вычисляются путкм суммирования других
+// колонки, которые вычисляются путкм суммирования других
 export const totalColumnsToCalc: Record<string, string[]> = {
   'priceTotal': ['pricePNR', 'pricePIR', 'priceSMR'],
   'customPriceTotal': ['customPricePNR', 'customPricePIR', 'customPriceSMR'],
 };
 
-export const testColumns: INewTableColumn[] = [
-  {
+export const testColumns: INewTableColumns = {
+  id: {
     name: 'ID',
     key: 'id',
     meta: {
@@ -50,7 +50,7 @@ export const testColumns: INewTableColumn[] = [
       },
     },
   },
-  {
+  name: {
     name: 'Name',
     key: 'name',
     meta: {
@@ -71,7 +71,7 @@ export const testColumns: INewTableColumn[] = [
       },
     },
   },
-  {
+  date: {
     name: 'Date',
     key: 'date',
     meta: {
@@ -84,7 +84,7 @@ export const testColumns: INewTableColumn[] = [
       },
     },
   },
-  {
+  status: {
     name: 'Status',
     key: 'status',
     meta: {
@@ -111,7 +111,7 @@ export const testColumns: INewTableColumn[] = [
       },
     },
   },
-  {
+  pricePIR: {
     name: 'Price PIR',
     key: 'pricePIR',
     meta: {
@@ -132,7 +132,7 @@ export const testColumns: INewTableColumn[] = [
       },
     },
   },
-  {
+  pricePNR: {
     name: 'Price PNR',
     key: 'pricePNR',
     meta: {
@@ -153,7 +153,7 @@ export const testColumns: INewTableColumn[] = [
       },
     },
   },
-  {
+  priceSMR: {
     name: 'Price SMR',
     key: 'priceSMR',
     meta: {
@@ -174,7 +174,7 @@ export const testColumns: INewTableColumn[] = [
       },
     },
   },
-  {
+  priceTotal: {
     name: 'Price Total',
     key: 'priceTotal',
     meta: {
@@ -195,7 +195,7 @@ export const testColumns: INewTableColumn[] = [
       },
     },
   },
-  {
+  customPricePIR: {
     name: 'Custom Price PIR',
     key: 'customPricePIR',
     meta: {
@@ -216,7 +216,7 @@ export const testColumns: INewTableColumn[] = [
       },
     },
   },
-  {
+  customPricePNR: {
     name: 'Custom Price PNR',
     key: 'customPricePNR',
     meta: {
@@ -237,7 +237,7 @@ export const testColumns: INewTableColumn[] = [
       },
     },
   },
-  {
+  customPriceSMR: {
     name: 'Custom Price SMR',
     key: 'customPriceSMR',
     meta: {
@@ -258,7 +258,7 @@ export const testColumns: INewTableColumn[] = [
       },
     },
   },
-  {
+  customPriceTotal: {
     name: 'Custom Price Total',
     key: 'customPriceTotal',
     meta: {
@@ -279,20 +279,19 @@ export const testColumns: INewTableColumn[] = [
       },
     },
   },
-];
-
+};
 
 export function generateExtraColumns(
-  columnsToUpdate: INewTableColumn[],
+  columnsToUpdate: INewTableColumns,
   extraFieldCount: number = 3
-): INewTableColumn[] {
+): INewTableColumns {
   const resultColumns = structuredClone(columnsToUpdate);
 
   for (let i = 1; i <= extraFieldCount; i++) {
     const fieldName = `extraField${i}`
 
     const newColumn: INewTableColumn = {
-      key: fieldName.toLowerCase(),
+      key: fieldName,
       name: fieldName,
       components: {
         [NEW_TABLE_DEFAULT_ROW_TYPE]: {
@@ -302,7 +301,7 @@ export function generateExtraColumns(
       },
     };
 
-    resultColumns.push(newColumn);
+    resultColumns[fieldName] = newColumn;
   }
 
   return resultColumns;
