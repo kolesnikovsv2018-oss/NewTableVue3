@@ -1,5 +1,7 @@
 export interface INewTableColumnMeta {
   width?: number;
+  order?: number;
+  visible?: boolean;
   class?: string;
   headerClass?: string;
 }
@@ -26,6 +28,8 @@ export interface INewTableColumnSetting {
   order: number;
   visible: boolean;
 }
+
+export type INewTableColumns = Record<string, INewTableColumn>;
 
 export type INewTableColumnSettings = Record<string, INewTableColumnSetting>;
 

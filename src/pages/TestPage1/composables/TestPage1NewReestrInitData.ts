@@ -2,7 +2,7 @@ import type { Ref } from "vue";
 import { ref, toValue } from "vue";
 
 import type { INewTableRow } from "../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
-import type { INewTableColumn, INewTableColumnSettings } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableColumns, INewTableColumnSettings } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
 import type { INewTableActions } from "../../../components/NewTable/types/NewTableActionTypes";
 import type { TNewTableActionsChangeModesStandart } from "../../../components/NewTable/types/NewTableActionsChangeModesTypes";
 import type { INewReestrContexMenuItems } from "../../../components/NewReestr/types/newReestrTypes";
@@ -15,7 +15,6 @@ import {
   fetchActions,
   fetchActionsChangeModes,
   fetchColumns,
-  fetchColumnsSettings,
   fetchContextMenuItems,
   fetchData,
   fetchFilters,
@@ -23,18 +22,34 @@ import {
   fetchSorts,
 } from "../api/TestPage1Api";
 import { NEW_TABLE_DEFAULT_ROW_TYPE } from "../../../components/NewTable/constants/defaultRowType";
+import { useColumnSettings } from "./ColumnSettings";
+
+export interface IUseTestPage1NewReestrInitData {
+  data: Ref<INewTableRow[]>;
+  columns: Ref<INewTableColumns>;
+  columnSettings: Ref<INewTableColumnSettings>;
+  actions: Ref<INewTableActions>;
+  actionsChangeModes: Ref<TNewTableActionsChangeModesStandart>;
+  contextMenuItems: Ref<INewReestrContexMenuItems>;
+  sideMenuItems: Ref<INewMenuItem[] | undefined>;
+  filters: Ref<INewTableFilters>;
+  sorts: Ref<INewTableSorts>;
+  rowCount: Ref<number>;
+  initData: () => Promise<void>;
+  loadColumnSettingsFromLocalStorage: () => void;
+  saveColumnSettingsToLocalStorage: () => void;
+};
 
 export function useTestPage1NewReestrInitData(
+  reestrName: Ref<string> | string | (() => string) = "",
   count: (number | Ref<number> | (() => number)) = 10000,
   maxLevel: (number | Ref<number> | (() => number)) = 5,
   extraFieldCount: (number | Ref<number> | (() => number)) = 7,
   initialRowCount: (number | Ref<number> | (() => number)) = 10,
-) {
+): IUseTestPage1NewReestrInitData {
   const data = ref<INewTableRow[]>([]);
 
-  const columns = ref<INewTableColumn[]>([]);
-
-  const columnsSettings = ref<INewTableColumnSettings>({});
+  const columns = ref<INewTableColumns>({});
 
   const actions = ref<INewTableActions>({})
 
@@ -49,6 +64,17 @@ export function useTestPage1NewReestrInitData(
   const sorts = ref<INewTableSorts>({});
 
   const rowCount = ref<number>(toValue(initialRowCount));
+
+  const {
+    columnSettings,
+    initColumnSettings,
+    loadColumnSettingsFromLocalStorage,
+    saveColumnSettingsToLocalStorage,
+  } = useColumnSettings(
+    () => toValue(reestrName),
+    () => columns.value,
+    () => toValue(extraFieldCount),
+  );
 
   async function initData() {
     actions.value = await fetchActions();
@@ -71,7 +97,7 @@ export function useTestPage1NewReestrInitData(
 
     columns.value = await fetchColumns({ extraFieldCount: toValue(extraFieldCount) });
 
-    columnsSettings.value = await fetchColumnsSettings({ extraFieldCount: toValue(extraFieldCount) });
+    await initColumnSettings();
 
     contextMenuItems.value = await fetchContextMenuItems();
 
@@ -92,7 +118,7 @@ export function useTestPage1NewReestrInitData(
     actions,
     actionsChangeModes,
     columns,
-    columnsSettings,
+    columnSettings,
     data,
     contextMenuItems,
     sideMenuItems,
@@ -100,5 +126,7 @@ export function useTestPage1NewReestrInitData(
     sorts,
     rowCount,
     initData,
+    loadColumnSettingsFromLocalStorage,
+    saveColumnSettingsToLocalStorage,
   }
 }

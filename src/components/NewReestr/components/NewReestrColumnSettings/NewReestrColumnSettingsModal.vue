@@ -2,8 +2,8 @@
 import { ref } from 'vue';
 
 import type {
-  INewTableColumn,
-  INewTableColumnSettings
+  INewTableColumns,
+  INewTableColumnSettings,
 } from '../../../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
 import type { IChangeColumnSettingEvent } from './types';
 
@@ -12,7 +12,7 @@ import { useOutsideClickHandler } from '../../../../composables/useOutsideClickH
 import NewReestrColumnSettings from './NewReestrColumnSettings.vue';
 
 defineProps<{
-  columns: INewTableColumn[];
+  columns: INewTableColumns;
   columnsSettings: INewTableColumnSettings;
 }>();
 
@@ -48,9 +48,7 @@ function close() {
       <NewReestrColumnSettings
         :columns="columns"
         :columnSettings="columnsSettings"
-        @change:column-setting="(event: IChangeColumnSettingEvent) => {
-          emit('change:column-setting', event);
-        }"
+        @change:column-setting="$emit('change:column-setting', $event)"
       />
     </div>
   </div>

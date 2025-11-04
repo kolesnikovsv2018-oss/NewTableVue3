@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import type { INewTableColumn, INewTableColumnSetting } from '../../../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
+import type { INewTableColumn, INewTableColumns, INewTableColumnSetting } from '../../../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
 import type { IChangeColumnSettingEvent } from './types';
 
 type TListOfColumnSettings = Record<string, Partial<INewTableColumnSetting & INewTableColumn>>
 
 const props = defineProps<{
-  columns: INewTableColumn[];
+  columns: INewTableColumns;
   columnSettings: Record<string, INewTableColumnSetting>;
 }>();
 
@@ -15,16 +15,14 @@ const emit = defineEmits<{
   (e: 'change:column-setting', event: IChangeColumnSettingEvent): void
 }>()
 
-const omputedListOfColumnSettings = computed<TListOfColumnSettings>(
+const listOfColumnSettings = computed<TListOfColumnSettings>(
   (): TListOfColumnSettings => {
     return Object.keys(props.columnSettings || {}).reduce(
       (
         acc: TListOfColumnSettings,
         currentColumnSetttingName: string,
       ): TListOfColumnSettings => {
-        const currentColumn = props.columns.find(
-          (column: INewTableColumn) => column.key === currentColumnSetttingName
-        );
+        const currentColumn = props.columns[currentColumnSetttingName];
 
         if (!currentColumn) {
           acc[currentColumnSetttingName] = props.columnSettings[currentColumnSetttingName];
@@ -62,7 +60,7 @@ function onChangeVisible(columnName: string, event: Event) {
 <template>
   <div class="change-settings">
     <div
-      v-for="(columnSetting, columnName) in omputedListOfColumnSettings"
+      v-for="(columnSetting, columnName) in listOfColumnSettings"
       :key="columnName"
       class="change-settings__item"
     >

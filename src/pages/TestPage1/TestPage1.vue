@@ -6,7 +6,9 @@ import type { INewTableRowActionEvent } from '../../components/NewTable/types/Ne
 import type { ILocalNewTableRow } from './testdata/testData';
 import type { INewTableFilters } from '../../components/NewTable/types/NewTableFilterTypes';
 import type { ITestRangeDate } from '../../components/FilterComponents/components/types';
+import type { INewTableColumnSettings } from '../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes';
 
+import type { IUseTestPage1NewReestrInitData } from './composables/TestPage1NewReestrInitData';
 import { useTestPage1NewReestrInitData } from './composables/TestPage1NewReestrInitData';
 import { useTestPage1NewReestrChangeRowParentId } from './composables/TestPage1NewReestrChangeRowParentId';
 import { useTestPage1NewReestrActions } from './composables/TestPage1NewReestrActions';
@@ -30,9 +32,9 @@ const newMainReestrRef = ref<typeof NewReestr>();
 
 const sideMenuComponents = ref<Record<string, { isShown: boolean, payload: unknown }>>({});
 
-const mainReestr = useTestPage1NewReestrInitData(10000, 5, 7, 14);
+const mainReestr = useTestPage1NewReestrInitData('mainReestr', 10000, 5, 7, 14);
 
-const relativeReestr1 = useTestPage1NewReestrInitData(1, 2, 3, 7);
+const relativeReestr1 = useTestPage1NewReestrInitData('relativeReestr1', 10000, 5, 7, 14);
 
 const {
   activeDestinationRowId,
@@ -51,7 +53,7 @@ const {
   onChangeCellValue,
 } = useTestPage1NewReestrActions(
   () => mainReestr.data.value,
-  newMainReestrRef,
+  () => newMainReestrRef.value,
 );
 
 const splitterDiv1Height = ref<number | null>(null);
@@ -127,6 +129,15 @@ function onNewReestrSideMenuSummsSubmit(
 function onChangeFilters(changedFilters: INewTableFilters) {
   mainReestr.filters.value = changedFilters;
 }
+
+function onChangeColumnsettings(
+  reestr: IUseTestPage1NewReestrInitData,
+  event: INewTableColumnSettings,
+) {
+  reestr.columnSettings.value = event;
+  reestr.saveColumnSettingsToLocalStorage();
+}
+
 onMounted(() => {
   void mainReestr.initData();
 });
@@ -147,7 +158,7 @@ onMounted(() => {
           class="test-page1__new-reestr"
           :initial-data="mainReestr.data.value"
           :initial-columns="mainReestr.columns.value"
-          :initialColumnSettings="mainReestr.columnsSettings.value"
+          :initialColumnSettings="mainReestr.columnSettings.value"
           :initial-filters="mainReestr.filters.value"
           :initial-sorts="mainReestr.sorts.value"
           :initial-actions-change-modes="mainReestr.actionsChangeModes.value"
@@ -171,6 +182,7 @@ onMounted(() => {
           @select:context-menu-item="onSelectContextMenuItem"
           @select:side-menu-item="onSelectSideMenuItem"
           @change:filters="onChangeFilters"
+          @change:column-settings="onChangeColumnsettings(mainReestr, $event)"
           @keyup="onRowAction"
         >
           <template v-slot:cell[number]="idSlotProps">
@@ -213,7 +225,7 @@ onMounted(() => {
           class="test-page1__new-reestr"
           :initial-data="relativeReestr1.data.value"
           :initial-columns="relativeReestr1.columns.value"
-          :initialColumnSettings="relativeReestr1.columnsSettings.value"
+          :initialColumnSettings="relativeReestr1.columnSettings.value"
           :initial-filters="relativeReestr1.filters.value"
           :initial-sorts="relativeReestr1.sorts.value"
           :initial-actions-change-modes="relativeReestr1.actionsChangeModes.value"
@@ -236,6 +248,7 @@ onMounted(() => {
           @select:context-menu-item="onSelectContextMenuItem"
           @select:side-menu-item="onSelectSideMenuItem"
           @change:filters="onChangeFilters"
+          @change:column-settings="onChangeColumnsettings(relativeReestr1, $event)"
         >
         </NewReestr>
       </template>

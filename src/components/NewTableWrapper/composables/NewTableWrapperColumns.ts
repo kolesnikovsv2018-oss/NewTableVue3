@@ -1,13 +1,13 @@
 import type { Ref } from "vue";
 import { computed, ref, toValue, watchEffect } from "vue";
 
-import type { INewTableColumn, INewTableColumnSetting } from "../../NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableColumn, INewTableColumns, INewTableColumnSetting } from "../../NewTable/components/NewTableHeader/types/INewTableHeadTypes";
 
 const NEW_TABLE_HEAD_MIN_WIDTH: number = 20;
 const NEW_TABLE_HEAD_MAX_WIDTH: number = 500;
 
 export function useNewTableWrapperColumns(
-  initialColumns: Ref<INewTableColumn[]> | INewTableColumn[] | (() => INewTableColumn[]),
+  initialColumns: Ref<INewTableColumns> | INewTableColumns | (() => INewTableColumns),
   initialColumnsSettings: Ref<Record<string, INewTableColumnSetting>> | Record<string, INewTableColumnSetting> | (() => Record<string, INewTableColumnSetting>),
 ) {
   const localColumnsSettings = ref<Record<string, INewTableColumnSetting>>(
@@ -18,23 +18,17 @@ export function useNewTableWrapperColumns(
     localColumnsSettings.value = JSON.parse(JSON.stringify(toValue(initialColumnsSettings)));
   });
 
-  const localColumns = computed<Record<string, INewTableColumn>>(
-    () => {
-      return toValue(initialColumns).reduce((acc, col) => {
-        acc[col.key] = col;
-        return acc;
-      }, {} as Record<string, INewTableColumn>);
-    }
-  );
-
   const columnsSortByOrder = computed<INewTableColumn[]>(
     () => {
+      // чтобы не вызывать toValue много раз
+      const localColumns = toValue(initialColumns);
+
       return Object.keys(localColumnsSettings.value)
         .sort((keyA, keyB) => {
           return localColumnsSettings.value[keyA].order - localColumnsSettings.value[keyB].order;
         })
         .map(
-          (key) => localColumns.value[key]
+          (key) => localColumns[key],
         );
     }
   );

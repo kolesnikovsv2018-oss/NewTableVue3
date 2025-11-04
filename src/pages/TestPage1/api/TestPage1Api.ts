@@ -1,4 +1,4 @@
-import type { INewTableColumn, INewTableColumnSettings } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableColumns, INewTableColumnSettings } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
 import type { INewTableRow } from "../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
 import type { INewTableActions } from "../../../components/NewTable/types/NewTableActionTypes";
 import type { TNewTableActionsChangeModesStandart } from "../../../components/NewTable/types/NewTableActionsChangeModesTypes";
@@ -30,7 +30,7 @@ export function fetchActionsChangeModes(): Promise<TNewTableActionsChangeModesSt
 
 export function fetchColumns(
   payload: { extraFieldCount: number },
-): Promise<INewTableColumn[]> {
+): Promise<INewTableColumns> {
   return new Promise((resolve) => {
     const { extraFieldCount } = payload;
 

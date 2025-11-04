@@ -3,7 +3,7 @@ import type { StyleValue } from 'vue';
 import { ref, watch } from 'vue';
 
 import type { INewTableRow, INewTableRowCommonMeta } from '../NewTable/components/NewTableRow/types/NewTableRowTypes';
-import type { INewTableColumn, INewTableColumnSettings } from '../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
+import type { INewTableColumns, INewTableColumnSettings } from '../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
 import type { INewTableRowActionEvent, INewTableChangeCellValueEvent } from '../NewTable/types/NewTableEventTypes';
 import type { IChangeColumnSettingEvent } from './components/NewReestrColumnSettings/types';
 import type { TNewTableActionsChangeModesStandart } from '../NewTable/types/NewTableActionsChangeModesTypes';
@@ -29,7 +29,7 @@ defineOptions({ inheritAttrs: false });
 
 const props = defineProps<{
   initialData: INewTableRow[];
-  initialColumns: INewTableColumn[];
+  initialColumns: INewTableColumns;
   initialColumnSettings: INewTableColumnSettings;
   initialFilters: INewTableFilters;
   initialSorts: INewTableSorts;
@@ -48,7 +48,7 @@ const emit = defineEmits<{
   (e: 'row-action', event: INewTableRowActionEvent): void;
   (e: 'change:cell-value', event: INewTableChangeCellValueEvent): void;
 
-  (e: 'change:column-setting', event: INewTableColumnSettings): void;
+  (e: 'change:column-settings', event: INewTableColumnSettings): void;
   (e: 'change:filters', event: INewTableFilters): void;
   (e: 'change:sorts', event: INewTableSorts): void;
 
@@ -94,15 +94,16 @@ watch(
  * и настройки для всех колонок
  */
 function onChangeColumnSetting(event: IChangeColumnSettingEvent) {
-  columnSettings.value = {
-    ...columnSettings.value,
-    [event.columnName]: {
-      ...columnSettings.value[event.columnName],
-      ...event.columnSettings[event.columnName],
-    }
-  }
+  columnSettings.value = event.columnSettings;
+  // columnSettings.value = {
+  //   ...columnSettings.value,
+  //   [event.columnName]: {
+  //     ...columnSettings.value[event.columnName],
+  //     ...event.columnSettings[event.columnName],
+  //   }
+  // };
 
-  emit('change:column-setting', event.columnSettings);
+  emit('change:column-settings', columnSettings.value);
 }
 
 function onContextMenu(event: INewTableRowActionEvent) {
@@ -186,7 +187,7 @@ defineExpose({
         v-bind="$attrs"
         @row-action="$emit('row-action', $event)"
         @change:cell-value="$emit('change:cell-value', $event)"
-        @change:column-settings="$emit('change:column-setting', $event)"
+        @change:column-settings="$emit('change:column-settings', $event)"
         @change:filters="$emit('change:filters', $event)"
         @change:sorts="$emit('change:sorts', $event)"
         @change:start-index="onChangeStartIndex"

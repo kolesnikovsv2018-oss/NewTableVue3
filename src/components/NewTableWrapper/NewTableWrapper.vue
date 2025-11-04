@@ -7,9 +7,9 @@ import type {
   INewTableRowCommonMeta
 } from '../NewTable/components/NewTableRow/types/NewTableRowTypes';
 import type {
-  INewTableColumn,
+  INewTableColumns,
   INewTableColumnSetting,
-  INewTableColumnSettings
+  INewTableColumnSettings,
 } from '../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
 import type {
   INewTableChangeFilterValueEvent,
@@ -43,7 +43,7 @@ defineOptions({ inheritAttrs: false });
 
 const props = defineProps<{
   data: INewTableRow[];
-  columns: INewTableColumn[];
+  columns: INewTableColumns;
   columnsSettings: Record<string, INewTableColumnSetting>;
   commonMeta?: INewTableRowCommonMeta;
   filters: INewTableFilters;
@@ -61,7 +61,7 @@ const emit = defineEmits<{
   (e: 'row-action', event: INewTableRowActionEvent): void;
   (e: 'change:cell-value', event: INewTableChangeCellValueEvent): void;
 
-  (e: 'change:column-setting', event: INewTableColumnSettings): void;
+  (e: 'change:column-settings', event: INewTableColumnSettings): void;
   (e: 'change:filters', event: INewTableFilters): void;
   (e: 'change:sorts', event: INewTableSorts): void;
 
@@ -211,13 +211,13 @@ function onChangeColumnOrders(event: INewTableChangeColumnsOrderEvent) {
   }
   changeColumnOrders(event.columnFrom, event.columnTo);
 
-  emit('change:column-setting', localColumnsSettings.value);
+  emit('change:column-settings', localColumnsSettings.value);
 }
 
 function onChangeColumnWidths(event: INewTableChangeColumnWidthEvent) {
   changeColumnWidths(event.columnName, event.delta, event.currentWidth);
 
-  emit('change:column-setting', localColumnsSettings.value);
+  emit('change:column-settings', localColumnsSettings.value);
 }
 
 function onChangeFilterValue(event: INewTableChangeFilterValueEvent) {
