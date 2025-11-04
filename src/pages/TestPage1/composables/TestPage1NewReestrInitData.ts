@@ -17,7 +17,6 @@ import {
   fetchColumns,
   fetchContextMenuItems,
   fetchData,
-  fetchFilters,
   fetchSideMenuItems,
   fetchSorts,
 } from "../api/TestPage1Api";
@@ -132,7 +131,7 @@ export function useTestPage1NewReestrInitData(
 
     sideMenuItems.value = await fetchSideMenuItems();
 
-    initFilters();
+    await initFilters();
 
     sorts.value = await fetchSorts();
 
