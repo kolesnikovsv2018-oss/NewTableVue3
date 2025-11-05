@@ -75,11 +75,6 @@ watch(
   }
 );
 
-
-
-
-
-
 function onUpdateDiv1Size(newSize: number) {
   splitterDiv1Height.value = newSize;
   savePageSettingsToLocalStorage();
