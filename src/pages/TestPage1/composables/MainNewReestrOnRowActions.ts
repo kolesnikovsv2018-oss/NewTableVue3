@@ -8,20 +8,19 @@ import type {
   INewTableRowActionEvent
 } from "../../../components/NewTable/types/NewTableEventTypes";
 import type { IUseMainNewReestr } from "./MainNewReestr";
-import type { ILocalNewTableRow } from "../testdata/testMainData";
+import type { ILocalNewTableRow } from "../testdata/testNewReestrData";
 import type { IUseMainNewReestrChangeRowParent } from "./MainNewReestrChangeRowParent";
 import type NewReestr from "../../../components/NewReestr/NewReestr.vue";
 
 import { useMainNewReestrChangeRowParent } from "./MainNewReestrChangeRowParent";
 
-import { TEST_DATA_ROW_TYPES } from "../testdata/testMainData";
+import { TEST_DATA_ROW_TYPES } from "../testdata/testNewReestrData";
 import { NEW_TABLE_STANDART_CELL_ACTIONS, NEW_TABLE_STANDART_ROW_ACTIONS } from "../../../components/NewTableWrapper/constants/standartActions";
 import { NEW_TABLE_STANDART_ROW_MODES } from "../../../components/NewTable/constants/standartRowModes";
 
 import { findParentRowsById, findParentRowWithChildIndexByChildRowId, findRowById } from "../../../helpers/finders";
 import { calcOwnSums, calcParentSums, calcTotalOwnSums } from "../../../helpers/calacSums";
-import { columnsToCalc, totalColumnsToCalc } from "../testdata/testMainColumns";
-
+import { columnsToCalc, totalColumnsToCalc } from "../testdata/constants/calcs";
 
 export interface IUseMainNewReestrOnRowActions extends IUseMainNewReestrChangeRowParent {
   selectedRow: Ref<INewTableRow | null>;

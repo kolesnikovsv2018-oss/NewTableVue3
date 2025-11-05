@@ -3,7 +3,7 @@ import { ref, toValue } from "vue";
 
 import type { INewTableRow } from "../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
 
-import { TEST_DATA_ROW_TYPES } from "../testdata/testMainData";
+import { TEST_DATA_ROW_TYPES } from "../testdata/testNewReestrData";
 import {
   findAllParentRowsFor,
   findParentRowWithChildIndexByChildRowId,

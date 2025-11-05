@@ -2,8 +2,7 @@ import type { Ref } from "vue";
 import { ref, toValue } from "vue";
 
 import type { INewTableColumns, INewTableColumnSettings } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
-
-import { fetchColumnsSettings } from "../api/TestPage1Api";
+import type { IUseNewReestrColumnSettingsApi } from "../api/types";
 
 const DEFAULT_COLUMN_WIDTH: number = 150;
 
@@ -22,6 +21,7 @@ export interface IUseNewReestrColumnSettings {
 export function useNewReestrColumnSettings(
   reestrName: Ref<string> | string | (() => string) = "",
   initialColumns: Ref<INewTableColumns> | INewTableColumns | (() => INewTableColumns) = {},
+  api: IUseNewReestrColumnSettingsApi,
   extraFieldCount: (number | Ref<number> | (() => number)) = 7,
 ): IUseNewReestrColumnSettings {
   const columnSettings = ref<INewTableColumnSettings>({});
@@ -158,7 +158,7 @@ export function useNewReestrColumnSettings(
   async function initColumnSettings() {
     const preparedColumnSettingsFromColumns = prepareColumnSettingsFromColumns(toValue(initialColumns));
 
-    const columnSettingsFromServer = await fetchColumnsSettings({ extraFieldCount: toValue(extraFieldCount) });
+    const columnSettingsFromServer = await api.fetchColumnSettings({ extraFieldCount: toValue(extraFieldCount) });
 
     // меняет columnSettings.value на загруженные из localStorage
     loadColumnSettingsFromLocalStorage();

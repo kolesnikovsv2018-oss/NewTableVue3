@@ -1,8 +1,8 @@
 import type { INewTableRow } from "../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
-import { totalColumnsToCalc } from "../pages/TestPage1/testdata/testMainColumns";
-import type { ILocalNewTableRow } from "../pages/TestPage1/testdata/testMainData";
+import type { ILocalNewTableRow } from "../pages/TestPage1/testdata/testNewReestrData";
 import type { TFindParentRowWithChildIndexByChildRowId } from "./finders";
 
+import { totalColumnsToCalc } from "../pages/TestPage1/testdata/constants/calcs";
 import { findParentRowWithChildIndexByChildRowId } from "./finders";
 
 export function calcTotalOwnSums(row: ILocalNewTableRow) {

@@ -1,6 +1,6 @@
 import type { INewTableRow, INewTableRowTemplate } from "../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
-
-import { columnsToCalc } from './testMainColumns';
+import type { INewTableColumns } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import { columnsToCalc, totalColumnsToCalc } from "./constants/calcs";
 
 type TTestDataType = string | number | [] | object | null | undefined;
 
@@ -27,14 +27,18 @@ export const TEST_DATA_ROW_TYPES: Record<string, string> = {
 };
 
 export const generateLargeTestData = (
+  columns: INewTableColumns,
   count: number = 10000,
   maxLevel: number = 4,
-  extraFieldCount: number = 3,
 ): ILocalNewTableRow[] => {
   const result: ILocalNewTableRow[] = [];
   let currentId = 0;
 
   const availableStatuses = ['active', 'completed', 'in-progress', 'not-started'];
+
+  // Only calculate sums for columns that actually exist in provided headers
+  const calcColumns = columnsToCalc.filter((key) => key in columns);
+  const extraFieldKeys = Object.keys(columns).filter((k) => /^extraField\d+$/.test(k));
 
 
   const summAllChildrenForField = (node: ILocalNewTableRow, fieldName: string): ILocalNewTableRow => {
@@ -69,22 +73,32 @@ export const generateLargeTestData = (
     const node: ILocalNewTableRow = {
       meta: { rowType },
       data: {
+        // Always provide id and name for row identity
         id: currentId,
         name: `${rowType} ${currentId}`,
+        // status is required by ILocalNewTableRowData
         status: availableStatuses[Math.floor(Math.random() * availableStatuses.length)],
-        date: new Date(Date.now() + (30 - Math.random() * 60) * 24 * 60 * 60 * 1000).toISOString().replace(/T.*/, ''),
+        ...(('date' in columns) ? { date: new Date(Date.now() + (30 - Math.random() * 60) * 24 * 60 * 60 * 1000).toISOString().replace(/T.*/, '') } : {}),
       },
     };
 
     if (!hasChildren) {
-      node.data.pricePIR = Math.round(Math.random() * 1000);
-      node.data.pricePNR = Math.round(Math.random() * 1000);
-      node.data.priceSMR = Math.round(Math.random() * 1000);
-      node.data.priceTotal = node.data.pricePIR + node.data.pricePNR + node.data.priceSMR;
-      node.data.customPricePIR = Math.round(Math.random() * 1000);
-      node.data.customPricePNR = Math.round(Math.random() * 1000);
-      node.data.customPriceSMR = Math.round(Math.random() * 1000);
-      node.data.customPriceTotal = node.data.customPricePIR + node.data.customPricePNR + node.data.customPriceSMR;
+      // Base price fields (only if present in headers)
+      if ('pricePIR' in columns) node.data.pricePIR = Math.round(Math.random() * 1000);
+      if ('pricePNR' in columns) node.data.pricePNR = Math.round(Math.random() * 1000);
+      if ('priceSMR' in columns) node.data.priceSMR = Math.round(Math.random() * 1000);
+      if ('customPricePIR' in columns) node.data.customPricePIR = Math.round(Math.random() * 1000);
+      if ('customPricePNR' in columns) node.data.customPricePNR = Math.round(Math.random() * 1000);
+      if ('customPriceSMR' in columns) node.data.customPriceSMR = Math.round(Math.random() * 1000);
+
+      // Totals (only if totals columns exist in headers)
+      Object.entries(totalColumnsToCalc).forEach(([totalKey, parts]) => {
+        if (!(totalKey in columns)) return;
+        const total = parts
+          .filter((k) => k in columns)
+          .reduce((acc, k) => acc + Number(node.data[k] ?? 0), 0);
+        node.data[totalKey] = total;
+      });
     }
 
     function randomString(length) {
@@ -97,10 +111,10 @@ export const generateLargeTestData = (
       return result;
     }
 
-    for (let i = 1; i <= extraFieldCount; i++) {
-      const fieldName = `extraField${i}`
+    // Fill extra fields present in headers
+    extraFieldKeys.forEach((fieldName) => {
       node.data[fieldName] = randomString(10);
-    }
+    });
 
     if (hasChildren) {
       node.children = Array.from(
@@ -108,7 +122,7 @@ export const generateLargeTestData = (
         (): ILocalNewTableRow => {
           const resNode = createNode(level + 1);
 
-          return summAllChildrenForFields(resNode, columnsToCalc);
+          return summAllChildrenForFields(resNode, calcColumns);
         },
       );
     }
@@ -119,10 +133,8 @@ export const generateLargeTestData = (
   while (currentId < count) {
     const resNode = createNode();
 
-    result.push(summAllChildrenForFields(resNode, columnsToCalc));
+    result.push(summAllChildrenForFields(resNode, calcColumns));
   }
 
   return result;
 };
-
-export const largeTestData = generateLargeTestData();

@@ -1,6 +1,6 @@
-import type { INewTableColumn, INewTableColumns } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableColumn, INewTableColumns } from "../../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
 
-import { NEW_TABLE_DEFAULT_ROW_TYPE } from "../../../components/NewTable/constants/defaultRowType";
+import { NEW_TABLE_DEFAULT_ROW_TYPE } from "../../../../components/NewTable/constants/defaultRowType";
 
 export const statusOptions = [
   { value: null, name: 'Not set' },
@@ -9,24 +9,6 @@ export const statusOptions = [
   { value: 'completed', name: 'Completed' },
   { value: 'active', name: 'Active' },
 ];
-
-// колонки, при изменнии которых, нужно посчитать суммы у родительских строк
-export const columnsToCalc: string[] = [
-  'pricePIR',
-  'pricePNR',
-  'priceSMR',
-  'priceTotal',
-  'customPricePIR',
-  'customPricePNR',
-  'customPriceSMR',
-  'customPriceTotal'
-];
-
-// колонки, которые вычисляются путкм суммирования других
-export const totalColumnsToCalc: Record<string, string[]> = {
-  'priceTotal': ['pricePNR', 'pricePIR', 'priceSMR'],
-  'customPriceTotal': ['customPricePNR', 'customPricePIR', 'customPriceSMR'],
-};
 
 export const testColumns: INewTableColumns = {
   id: {

@@ -2,8 +2,7 @@ import type { Ref } from "vue";
 import { ref, toValue } from "vue";
 
 import type { INewTableFilter, INewTableFilters } from "../../../components/NewTable/types/NewTableFilterTypes";
-
-import { fetchFilters } from "../api/TestPage1Api";
+import type { IUseNewReestrFiltersApi } from "../api/types";
 
 export interface IUseNewReestrFilters {
   filters: Ref<INewTableFilters>;
@@ -14,7 +13,8 @@ export interface IUseNewReestrFilters {
 };
 
 export function useNewReestrFilters(
-  reestrName: Ref<string> | string | (() => string)
+  reestrName: Ref<string> | string | (() => string),
+  api: IUseNewReestrFiltersApi,
 ): IUseNewReestrFilters {
   const filters = ref<INewTableFilters>({});
 
@@ -62,7 +62,7 @@ export function useNewReestrFilters(
   }
 
   async function initFilters() {
-    const fetchedFilters = await fetchFilters();
+    const fetchedFilters = await api.fetchFilters();
 
     // текущие настройки фильтров из localStorage
     loadFiltersFromLocalStorage();

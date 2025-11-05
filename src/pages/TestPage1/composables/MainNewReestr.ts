@@ -39,6 +39,8 @@ export function useMainNewReestr(
   extraFieldCount: (number | Ref<number> | (() => number)) = 7,
   initialRowCount: (number | Ref<number> | (() => number)) = 10,
 ): IUseMainNewReestr {
+  const mainNewReestrApiComposable = useMainNewReestrApi();
+
   const data = ref<INewTableRow[]>([]);
 
   const columns = ref<INewTableColumns>({});
@@ -51,6 +53,7 @@ export function useMainNewReestr(
 
   const newReestrFiltersComposable = useNewReestrFilters(
     () => toValue(reestrName),
+    mainNewReestrApiComposable,
   );
 
   const sorts = ref<INewTableSorts>({});
@@ -60,12 +63,11 @@ export function useMainNewReestr(
   const newReestrColumnSettingsComposable = useNewReestrColumnSettings(
     () => toValue(reestrName),
     () => columns.value,
+    mainNewReestrApiComposable,
     () => toValue(extraFieldCount),
   );
 
   const mainNewReestrActionsChangeModesComposable = useMainNewReestrActionsChangeModes();
-
-  const mainNewReestrApiComposable = useMainNewReestrApi();
 
   function saveReestrSettingsToLocalStorage() {
     const reestrSettings = {
@@ -102,9 +104,9 @@ export function useMainNewReestr(
     sorts.value = await mainNewReestrApiComposable.fetchSorts();
 
     data.value = await mainNewReestrApiComposable.fetchData({
-      count: toValue(count),
+      columns: columns.value,
+      // count: toValue(rowCount),
       maxLevel: toValue(maxLevel),
-      extraFieldCount: toValue(extraFieldCount),
     });
   }
 
