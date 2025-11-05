@@ -1,5 +1,5 @@
 import type { Ref } from "vue";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 import type { INewTableRow } from "../../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
 
@@ -19,7 +19,7 @@ export interface IUseMainNewReestrChangeRowParent {
 export function useMainNewReestrChangeRowParent(
   mainReestr: IUseMainNewReestr,
 ): IUseMainNewReestrChangeRowParent {
-  const initialData = ref<INewTableRow[]>(mainReestr.data.value);
+  const initialData = computed<INewTableRow[]>(() => mainReestr.data.value);
 
   const activeRowForChangeParent = ref<INewTableRow>(null);
 
