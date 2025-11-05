@@ -6,7 +6,6 @@ import type { ITestRangeDate } from '../../components/FilterComponents/component
 
 import { useMainNewReestr } from './composables/main/MainNewReestr';
 import { useTestPage1Settings } from './composables/TestPage1Settings';
-import { useMainNewReestrSideMenu } from './composables/main/MainNewReestrSideMenu';
 import { useSub1NewReestr } from './composables/sub1/Sub1NewReestr';
 
 import { integerToRoman } from '../../helpers/integerToRoman';
