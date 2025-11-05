@@ -1,6 +1,6 @@
 import type { INewTableRow } from "../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
-import { totalColumnsToCalc } from "../pages/TestPage1/testdata/testColumns";
-import type { ILocalNewTableRow } from "../pages/TestPage1/testdata/testData";
+import { totalColumnsToCalc } from "../pages/TestPage1/testdata/testMainColumns";
+import type { ILocalNewTableRow } from "../pages/TestPage1/testdata/testMainData";
 import type { TFindParentRowWithChildIndexByChildRowId } from "./finders";
 
 import { findParentRowWithChildIndexByChildRowId } from "./finders";

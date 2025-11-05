@@ -1,20 +1,17 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue';
 
-import type { INewMenuItem } from '../../components/NewContextMenu/types';
 import type { INewTableRowActionEvent } from '../../components/NewTable/types/NewTableEventTypes';
-import type { ILocalNewTableRow } from './testdata/testData';
+import type { ILocalNewTableRow } from './testdata/testMainData';
 import type { INewTableFilters } from '../../components/NewTable/types/NewTableFilterTypes';
 import type { ITestRangeDate } from '../../components/FilterComponents/components/types';
 import type { INewTableColumnSettings } from '../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes';
-import type { IUseTestPage1NewReestrInitData } from './composables/Reestr'
+import type { IUseMainNewReestr } from './composables/MainNewReestr'
 
-import { useReestr } from './composables/Reestr';
-import { useTestPage1NewReestrChangeRowParentId } from './composables/TestPage1NewReestrChangeRowParentId';
-import { useTestPage1NewReestrActions } from './composables/TestPage1NewReestrActions';
+import { useMainNewReestr } from './composables/MainNewReestr';
+import { useMainNewReestrOnRowActions } from './composables/MainNewReestrOnRowActions';
 import { useTestPage1Settings } from './composables/TestPage1Settings';
 
-import { NEW_TABLE_STANDART_ROW_MODES } from '../../components/NewTable/constants/standartRowModes';
 import { integerToRoman } from '../../helpers/integerToRoman';
 
 import NewReestr from '../../components/NewReestr/NewReestr.vue';
@@ -22,39 +19,44 @@ import NewReestrChangeRowParentDialog from '../../components/NewReestr/component
 import NewSplitter from '../../components/NewSplitter/NewSplitter.vue';
 import NewReestrSideMenuDateFilter from './components/NewReestrSideMenuDateFilter/NewReestrSideMenuDateFilter.vue';
 import NewReestrSideMenuSumms from './components/NewReestrSideMenuSumms/NewReestrSideMenuSumms.vue';
-
-interface ITestPage1NewReestrSideMenuSubmitEvent {
-  name: string;
-  value?: unknown;
-  payload?: unknown;
-}
+import { useMainNewReestrSideMenu } from './composables/MainNewReestrSideMenu';
+import { useMainNewReestrContextMenu } from './composables/MainNewReestrContextMenu';
 
 const newMainReestrRef = ref<typeof NewReestr>();
 
-const sideMenuComponents = ref<Record<string, { isShown: boolean, payload: unknown }>>({});
+const newSubReestrRef = ref<typeof NewReestr>();
 
-const mainReestr = useReestr('mainReestr', 10000, 5, 7, 14);
+const mainReestr = useMainNewReestr('mainReestr', 10000, 5, 7, 14);
 
-const relativeReestr1 = useReestr('relativeReestr1', 1, 2, 3, 7);
+const relativeReestr1 = useMainNewReestr('relativeReestr1', 1, 2, 3, 7);
 
-const {
-  activeDestinationRowId,
-  isChangeRowParentDialogShown,
-  activeSourceRow,
-  onChangeRowParentId,
-} = useTestPage1NewReestrChangeRowParentId(
-  () => mainReestr.data.value
+const mainNewReestrOnRowActionsComposable = useMainNewReestrOnRowActions(
+  mainReestr,
+  () => newMainReestrRef.value,
+);
+
+const relativeNewReestrOnRowActionsComposable = useMainNewReestrOnRowActions(
+  relativeReestr1,
+  () => newSubReestrRef.value,
+);
+
+const mainNewReestrContextMenuComposable = useMainNewReestrContextMenu(
+  () => newMainReestrRef.value,
+  mainNewReestrOnRowActionsComposable,
+);
+
+const relativeNewReestrContextMenuComposable = useMainNewReestrContextMenu(
+  () => newSubReestrRef.value,
+  relativeNewReestrOnRowActionsComposable,
 );
 
 const {
-  selectedRow,
-  onSave,
-  onDelete,
-  onRowAction,
-  onChangeCellValue,
-} = useTestPage1NewReestrActions(
-  () => mainReestr.data.value,
-  () => newMainReestrRef.value,
+  sideMenuComponentSettings,
+  onSelectSideMenuItem,
+  onNewReestrSideMenuDateFilterSubmit,
+  onNewReestrSideMenuSummsSubmit,
+} = useMainNewReestrSideMenu(
+  mainReestr,
 );
 
 const {
@@ -66,75 +68,14 @@ const {
 );
 
 watch(
-  () => selectedRow.value,
+  () => mainNewReestrOnRowActionsComposable.selectedRow.value,
   async () => {
     await relativeReestr1.initData();
   }
 );
 
-function onSelectContextMenuItem(menuItem: INewMenuItem) {
-  const payload: INewTableRowActionEvent = menuItem.payload;
-
-  switch (menuItem.actionName) {
-    case 'edit-row':
-      newMainReestrRef.value.switchOnModeForRow(NEW_TABLE_STANDART_ROW_MODES.EDIT, payload.row);
-      break;
-    case 'save-row':
-      onSave({ name: 'save', row: payload.row });
-      break;
-    case 'delete-row':
-      onDelete({ name: 'delete', row: payload.row });
-      break;
-    case 'cell-info':
-      const strData = payload.row.data[payload.header.key] as string;
-      alert(`${payload.row.data.id} - ${payload.header.key} => ${String(strData)}`)
-      break;
-    case 'change-row-parent':
-      activeSourceRow.value = payload.row;
-      activeDestinationRowId.value = null;
-      isChangeRowParentDialogShown.value = true;
-      break;
-  }
-}
-
-function onSelectSideMenuItem(menuItem: INewMenuItem) {
-  switch (menuItem.actionName) {
-    case 'date-filter':
-    case 'summs':
-      sideMenuComponents.value = {
-        ...sideMenuComponents.value,
-        [menuItem.actionName]: {
-          isShown: true,
-          payload: menuItem.payload,
-        },
-      };
-  }
-}
-
-function onNewReestrSideMenuDateFilterSubmit(
-  { name, value }: ITestPage1NewReestrSideMenuSubmitEvent,
-) {
-  mainReestr.filters.value['date'].currentValue = { date1: value, date2: value };
-
-  mainReestr.filters.value = {
-    ...mainReestr.filters.value,
-    ['date']: {
-      ...mainReestr.filters.value['date'],
-      currentValue: { date1: value, date2: value },
-    }
-  };
-
-  sideMenuComponents.value[name].isShown = false
-}
-
-function onNewReestrSideMenuSummsSubmit(
-  { name }: ITestPage1NewReestrSideMenuSubmitEvent,
-) {
-  sideMenuComponents.value[name].isShown = false
-}
-
 function onChangeFilters(
-  reestr: IUseTestPage1NewReestrInitData,
+  reestr: IUseMainNewReestr,
   changedFilters: INewTableFilters
 ) {
   reestr.filters.value = changedFilters;
@@ -142,7 +83,7 @@ function onChangeFilters(
 }
 
 function onChangeColumnsettings(
-  reestr: IUseTestPage1NewReestrInitData,
+  reestr: IUseMainNewReestr,
   event: INewTableColumnSettings,
 ) {
   reestr.columnSettings.value = event;
@@ -155,7 +96,7 @@ function onUpdateDiv1Size(newSize: number) {
 }
 
 function onChangeRowCount(
-  reestr: IUseTestPage1NewReestrInitData,
+  reestr: IUseMainNewReestr,
   newRowCount: number,
 ) {
   reestr.rowCount.value = newRowCount;
@@ -163,7 +104,7 @@ function onChangeRowCount(
 }
 
 onMounted(() => {
-  void mainReestr.initData();
+  mainReestr.initData();
 
   loadPageSettingsFromLocalStorage();
 
@@ -206,13 +147,13 @@ onMounted(() => {
           }"
           :row-count="mainReestr.rowCount.value"
           @change:row-count="onChangeRowCount(mainReestr, $event)"
-          @row-action="onRowAction"
-          @change:cell-value="onChangeCellValue"
-          @select:context-menu-item="onSelectContextMenuItem"
+          @row-action="mainNewReestrOnRowActionsComposable.onRowAction"
+          @change:cell-value="mainNewReestrOnRowActionsComposable.onChangeCellValue"
+          @select:context-menu-item="mainNewReestrContextMenuComposable.onSelectContextMenuItem"
           @select:side-menu-item="onSelectSideMenuItem"
           @change:filters="onChangeFilters(mainReestr, $event)"
           @change:column-settings="onChangeColumnsettings(mainReestr, $event)"
-          @keyup="onRowAction"
+          @keyup="mainNewReestrOnRowActionsComposable.onRowAction"
         >
           <template v-slot:cell[number]="idSlotProps">
             <span style="color: red;">[{{ integerToRoman(idSlotProps.rowNumber) }}]</span>
@@ -224,25 +165,25 @@ onMounted(() => {
 
           <template #before-side-menu>
             <NewReestrSideMenuDateFilter
-              v-if="!!sideMenuComponents['date-filter']?.isShown"
-              :payload="sideMenuComponents['date-filter'].payload"
+              v-if="!!sideMenuComponentSettings['date-filter']?.isShown"
+              :payload="sideMenuComponentSettings['date-filter'].payload"
               :date="(mainReestr.filters.value['date'].currentValue as ITestRangeDate).date1"
               @submit="onNewReestrSideMenuDateFilterSubmit({
                 ...$event,
                 name: 'date-filter',
               })"
-              @close="sideMenuComponents['date-filter'].isShown = false"
+              @close="sideMenuComponentSettings['date-filter'].isShown = false"
             />
 
             <NewReestrSideMenuSumms
-              v-if="!!sideMenuComponents['summs']?.isShown"
+              v-if="!!sideMenuComponentSettings['summs']?.isShown"
               :data="mainReestr.data.value as ILocalNewTableRow[]"
-              :payload="sideMenuComponents['summs'].payload"
+              :payload="sideMenuComponentSettings['summs'].payload"
               @submit="onNewReestrSideMenuSummsSubmit({
                 ...$event,
                 name: 'summs',
               })"
-              @close="sideMenuComponents['summs'].isShown = false"
+              @close="sideMenuComponentSettings['summs'].isShown = false"
             />
           </template>
         </NewReestr>
@@ -272,10 +213,9 @@ onMounted(() => {
           }"
           :row-count="relativeReestr1.rowCount.value"
           @change:row-count="onChangeRowCount(relativeReestr1, $event)"
-          @row-action="onRowAction"
-          @change:cell-value="onChangeCellValue"
-          @select:context-menu-item="onSelectContextMenuItem"
-          @select:side-menu-item="onSelectSideMenuItem"
+          @row-action="relativeNewReestrOnRowActionsComposable.onRowAction"
+          @change:cell-value="relativeNewReestrOnRowActionsComposable.onChangeCellValue"
+          @select:context-menu-item="relativeNewReestrContextMenuComposable.onSelectContextMenuItem"
           @change:filters="onChangeFilters(relativeReestr1, $event)"
           @change:column-settings="onChangeColumnsettings(relativeReestr1, $event)"
         >
@@ -284,10 +224,10 @@ onMounted(() => {
     </NewSplitter>
 
     <NewReestrChangeRowParentDialog
-      v-if="isChangeRowParentDialogShown"
-      :activeSourceRow="activeSourceRow"
-      @close="isChangeRowParentDialogShown = false"
-      @change:destination-row-id="onChangeRowParentId"
+      v-if="!!mainNewReestrOnRowActionsComposable.activeRowForChangeParent.value"
+      :activeSourceRow="mainNewReestrOnRowActionsComposable.activeRowForChangeParent.value"
+      @close="mainNewReestrOnRowActionsComposable.activeRowForChangeParent.value = null"
+      @change:destination-row-id="mainNewReestrOnRowActionsComposable.onChangeRowParentId"
     />
   </div>
 </template>

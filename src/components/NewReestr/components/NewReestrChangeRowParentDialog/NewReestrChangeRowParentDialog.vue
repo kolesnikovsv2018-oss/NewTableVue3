@@ -30,7 +30,7 @@ function onSubmitChangeRowParentId() {
       @submit="onSubmitChangeRowParentId"
     >
       <label>
-        activeDestinationRowId:
+        New Row ParentId:
         <input
           v-model.number="newRowParentId"
           type="number"

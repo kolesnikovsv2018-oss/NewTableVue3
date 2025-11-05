@@ -4,7 +4,7 @@ import type { ITestRangeDate } from "../../../components/FilterComponents/compon
 
 import { NEW_TABLE_STANDART_ROW_MODES } from "../../../components/NewTable/constants/standartRowModes";
 import { compareFilterAsString } from "../../../helpers/compareFilterAsString";
-import { statusOptions } from "./testColumns";
+import { statusOptions } from "./testMainColumns";
 
 function generateEmptyTextFilter(): INewTableFilter {
   return {

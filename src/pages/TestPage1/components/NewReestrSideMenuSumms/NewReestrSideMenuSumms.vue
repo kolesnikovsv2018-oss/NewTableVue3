@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import type { ILocalNewTableRow } from '../../../../pages/TestPage1/testdata/testData';
+import type { ILocalNewTableRow } from '../../testdata/testMainData';
 
 import { useOutsideClickHandler } from '../../../../composables/useOutsideClickHandler';
 

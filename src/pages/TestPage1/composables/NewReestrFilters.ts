@@ -5,10 +5,30 @@ import type { INewTableFilter, INewTableFilters } from "../../../components/NewT
 
 import { fetchFilters } from "../api/TestPage1Api";
 
-export function useFilters(
+export interface IUseNewReestrFilters {
+  filters: Ref<INewTableFilters>;
+  setFilter: (params: { name: string; value: unknown }) => void;
+  initFilters: () => Promise<void>;
+  saveFiltersToLocalStorage: () => void;
+  loadFiltersFromLocalStorage: () => void;
+};
+
+export function useNewReestrFilters(
   reestrName: Ref<string> | string | (() => string)
-) {
+): IUseNewReestrFilters {
   const filters = ref<INewTableFilters>({});
+
+  function setFilter(
+    { name, value }: { name: string; value: unknown },
+  ) {
+    filters.value = {
+      ...(filters.value || {} as INewTableFilters),
+      [name]: {
+        ...(filters.value?.[name] || {} as INewTableFilter),
+        currentValue: value,
+      }
+    };
+  }
 
   function saveFiltersToLocalStorage() {
     localStorage.setItem(
@@ -57,6 +77,7 @@ export function useFilters(
 
   return {
     filters,
+    setFilter,
     initFilters,
     saveFiltersToLocalStorage,
     loadFiltersFromLocalStorage,

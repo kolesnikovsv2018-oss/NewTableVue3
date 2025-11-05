@@ -68,14 +68,6 @@ export function useNewTableWrapperFilteredData(
     );
   }
 
-  function clearFilters() {
-    filters.value = {};
-  }
-
-  function reset() {
-    filters.value = toValue(initialFilters || {});
-  }
-
   function resetFiltersToDefaultValues() {
     const currentFilters: Record<string, INewTableFilter> = filters.value;
 
@@ -134,8 +126,6 @@ export function useNewTableWrapperFilteredData(
   return {
     filters,
     filteredData,
-    clearFilters,
-    reset,
     resetFiltersToDefaultValues,
     resetFiltersToInitialValues,
     generateFilteredData,

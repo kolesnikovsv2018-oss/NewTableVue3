@@ -7,11 +7,23 @@ import { fetchColumnsSettings } from "../api/TestPage1Api";
 
 const DEFAULT_COLUMN_WIDTH: number = 150;
 
-export function useColumnSettings(
+export interface IUseNewReestrColumnSettings {
+  columnSettings: Ref<INewTableColumnSettings>;
+  saveColumnSettingsToLocalStorage: () => void;
+  loadColumnSettingsFromLocalStorage: () => void;
+  initColumnSettings: () => Promise<void>;
+  prepareColumnSettingsFromColumns: (columnsToPrepare: INewTableColumns) => INewTableColumnSettings;
+  mergeColumnSettings: (
+    oldColumnSettings: INewTableColumnSettings,
+    newColumnSettings: INewTableColumnSettings,
+  ) => INewTableColumnSettings;
+};
+
+export function useNewReestrColumnSettings(
   reestrName: Ref<string> | string | (() => string) = "",
   initialColumns: Ref<INewTableColumns> | INewTableColumns | (() => INewTableColumns) = {},
   extraFieldCount: (number | Ref<number> | (() => number)) = 7,
-) {
+): IUseNewReestrColumnSettings {
   const columnSettings = ref<INewTableColumnSettings>({});
 
   function saveColumnSettingsToLocalStorage() {
