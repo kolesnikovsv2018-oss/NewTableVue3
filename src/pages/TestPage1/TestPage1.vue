@@ -52,7 +52,7 @@ const {
   'TestPage1',
 );
 
-const activeReestr = ref<typeof sub1ReestrComposable | typeof sub2ReestrComposable>(sub1ReestrComposable);
+const activeReestr = ref<ReturnType<typeof useSub1NewReestr>>(sub1ReestrComposable);
 
 watch(
   () => mainReestrComposable.selectedRow.value,
@@ -76,11 +76,11 @@ function onUpdateDiv1Size(newSize: number) {
   savePageSettingsToLocalStorage();
 }
 
-function isActive(reestrComposable: typeof sub1ReestrComposable | typeof sub2ReestrComposable) {
+function isActive(reestrComposable: ReturnType<typeof useSub1NewReestr>) {
   return activeReestr.value.reestrName === reestrComposable.reestrName;
 }
 
-function setActiveReestr(reestrComposable: typeof sub1ReestrComposable | typeof sub2ReestrComposable) {
+function setActiveReestr(reestrComposable: ReturnType<typeof useSub1NewReestr>) {
   activeReestr.value = reestrComposable;
 }
 

@@ -18,11 +18,13 @@ import type { INewTableActions, INewTableRowAction, INewTableRowActions } from '
 
 import { generateColumnWidths } from '../../helpers/generateColumnWidths';
 import { NEW_TABLE_STANDART_ROW_MODES } from '../../constants/standartRowModes';
-import { NEW_TABLE_DEFAULT_CELL_COMPONENT_NAME } from '../../constants/defaultComponentName';
 import {
   NEW_TABLE_STANDART_ROW_ACTIONS
 } from '../../../NewTableWrapper/constants/standartActions';
-import { NEW_TABLE_DEFAULT_ROW_TYPE } from '../../constants/defaultRowType';
+import {
+  NEW_TABLE_DEFAULT_CELL_COMPONENT_NAME,
+  NEW_TABLE_DEFAULT_ROW_TYPE
+} from '../../constants/defaults';
 
 type TParentCellListener = (payload: INewTableRowActionEvent) => void;
 
@@ -159,7 +161,7 @@ function getComponentName(header: INewTableColumn, rowType?: string | number) {
     || NEW_TABLE_DEFAULT_CELL_COMPONENT_NAME;
 }
 
-function checkIsActionEnabled(action: INewTableRowAction, modes: string[]) {
+function checkIsActionEnabled(action: INewTableRowAction, modes: string[]): boolean {
   // если для действия не задан ни один режим, это подразумевает,
   // что действие доступно для любого режима
   if (!action?.modes?.length) {
@@ -198,11 +200,9 @@ function getComponentProps(header: INewTableColumn, rowType?: string | number) {
 function onChangeCheck($event: InputEvent) {
   const value = ($event.target as HTMLInputElement)?.checked;
 
-  let actionName = NEW_TABLE_STANDART_ROW_ACTIONS.CHECK_OFF; // 'check-off';
-
-  if (value) {
-    actionName = NEW_TABLE_STANDART_ROW_ACTIONS.CHECK_ON; // 'check-on';
-  }
+  const actionName = !!value
+    ? NEW_TABLE_STANDART_ROW_ACTIONS.CHECK_ON
+    : NEW_TABLE_STANDART_ROW_ACTIONS.CHECK_OFF;
 
   emit('row-action', {
     name: actionName,
@@ -245,7 +245,6 @@ function generateListenersFromParentAttrs(
     if (attrKey.startsWith('on') && typeof attrs[attrKey] === 'function') {
       const eventName = attrKey.replace(/^on/, '').toLowerCase();
       listeners[eventName] = (event: Event) => {
-        // if (!props.modes?.includes('edit')) {
         if (
           !!stopAndPreventFlags?.prevent &&
           typeof event?.preventDefault === 'function'
@@ -259,7 +258,6 @@ function generateListenersFromParentAttrs(
         ) {
           event.stopPropagation();
         }
-        // }
 
         (attrs[attrKey] as TParentCellListener)({
           name: eventName,
@@ -350,10 +348,6 @@ function generateListenersFromParentAttrs(
       </slot>
     </div>
 
-    <!--
-      @dblclick.stop.prevent="$emit('dblclick', { row: localRow, header, event: $event, modes: props.modes })"
-      @contextmenu.stop.prevent="$emit('contextmenu', { row: localRow, header, event: $event, modes: props.modes })"
-    -->
     <div
       v-for="(header, cellIndex) in visibleSortedColumns"
       :key="cellIndex"
@@ -364,7 +358,9 @@ function generateListenersFromParentAttrs(
         'max-width': conputedColumnWidths[header.key],
         boxSizing: 'border-box',
       }"
-      v-on="!props.modes?.includes('edit') ? generateListenersFromParentAttrs(header, { stop: true, prevent: true }) : {}"
+      v-on="!props.modes?.includes(NEW_TABLE_STANDART_ROW_MODES.EDIT)
+        ? generateListenersFromParentAttrs(header, { stop: true, prevent: true })
+        : {}"
     >
       <slot
         :name="`cell[${header.key}]`"

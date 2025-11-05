@@ -4,7 +4,7 @@ import { ref, toValue } from "vue";
 import type { INewTableColumns, INewTableColumnSettings } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
 import type { IUseNewReestrColumnSettingsApi } from "../api/types";
 
-const DEFAULT_COLUMN_WIDTH: number = 150;
+import { NEW_TABLE_DEFAULT_COLUMN_WIDTH } from "../../../components/NewTable/constants/defaults";
 
 export interface IUseNewReestrColumnSettings {
   columnSettings: Ref<INewTableColumnSettings>;
@@ -131,7 +131,7 @@ export function useNewReestrColumnSettings(
 
     Object.keys(columnsToPrepare).forEach((key, index) => {
       newSettings[key] = {
-        width: columnsToPrepare[key].meta?.width || DEFAULT_COLUMN_WIDTH,
+        width: columnsToPrepare[key].meta?.width || NEW_TABLE_DEFAULT_COLUMN_WIDTH,
         order: columnsToPrepare[key].meta?.order ?? index,
         visible: columnsToPrepare[key].meta?.visible ?? true,
       };
