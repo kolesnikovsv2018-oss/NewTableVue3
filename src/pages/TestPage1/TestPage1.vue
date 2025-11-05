@@ -24,17 +24,17 @@ const newMainReestrRef = ref<typeof NewReestr>();
 
 const newSubReestrRef = ref<typeof NewReestr>();
 
-const mainReestr = useMainNewReestr('mainReestr', 10000, 5, 7, 14);
+const mainReestrComposable = useMainNewReestr('mainReestr', 10000, 5, 7, 14);
 
-const relativeReestr1 = useSub1NewReestr('relativeReestr1', 1, 2, 3, 7);
+const sub1ReestrComposable = useSub1NewReestr('relativeReestr1', 1, 2, 3, 7);
 
 const mainNewReestrOnRowActionsComposable = useMainNewReestrOnRowActions(
-  mainReestr,
+  mainReestrComposable,
   () => newMainReestrRef.value,
 );
 
-const relativeNewReestrOnRowActionsComposable = useSub1NewReestrOnRowActions(
-  relativeReestr1,
+const sub1NewReestrOnRowActionsComposable = useSub1NewReestrOnRowActions(
+  sub1ReestrComposable,
   () => newSubReestrRef.value,
 );
 
@@ -43,9 +43,9 @@ const mainNewReestrContextMenuComposable = useMainNewReestrContextMenu(
   mainNewReestrOnRowActionsComposable,
 );
 
-const relativeNewReestrContextMenuComposable = useMainNewReestrContextMenu(
+const sub1NewReestrContextMenuComposable = useMainNewReestrContextMenu(
   () => newSubReestrRef.value,
-  relativeNewReestrOnRowActionsComposable,
+  sub1NewReestrOnRowActionsComposable,
 );
 
 const {
@@ -54,7 +54,7 @@ const {
   onNewReestrSideMenuDateFilterSubmit,
   onNewReestrSideMenuSummsSubmit,
 } = useMainNewReestrSideMenu(
-  mainReestr,
+  mainReestrComposable,
 );
 
 const {
@@ -68,7 +68,7 @@ const {
 watch(
   () => mainNewReestrOnRowActionsComposable.selectedRow.value,
   async () => {
-    await relativeReestr1.initData();
+    await sub1ReestrComposable.initData();
   }
 );
 
@@ -78,12 +78,12 @@ function onUpdateDiv1Size(newSize: number) {
 }
 
 onMounted(async () => {
-  await mainReestr.initData();
+  await mainReestrComposable.initData();
 
   loadPageSettingsFromLocalStorage();
 
-  mainReestr.loadReestrSettingsFromLocalStorage();
-  relativeReestr1.loadReestrSettingsFromLocalStorage();
+  mainReestrComposable.loadReestrSettingsFromLocalStorage();
+  sub1ReestrComposable.loadReestrSettingsFromLocalStorage();
 });
 </script>
 
@@ -100,15 +100,15 @@ onMounted(async () => {
         <NewReestr
           ref="newMainReestrRef"
           class="test-page1__new-reestr"
-          :initial-data="mainReestr.data.value"
-          :initial-columns="mainReestr.columns.value"
-          :initialColumnSettings="mainReestr.columnSettings.value"
-          :initial-filters="mainReestr.filters.value"
-          :initial-sorts="mainReestr.sorts.value"
-          :initial-actions-change-modes="mainReestr.actionsChangeModes.value"
-          :initial-actions="mainReestr.actions.value"
-          :initial-context-menu-items="mainReestr.contextMenuItems.value"
-          :side-menu-items="mainReestr.sideMenuItems.value"
+          :initial-data="mainReestrComposable.data.value"
+          :initial-columns="mainReestrComposable.columns.value"
+          :initialColumnSettings="mainReestrComposable.columnSettings.value"
+          :initial-filters="mainReestrComposable.filters.value"
+          :initial-sorts="mainReestrComposable.sorts.value"
+          :initial-actions-change-modes="mainReestrComposable.actionsChangeModes.value"
+          :initial-actions="mainReestrComposable.actions.value"
+          :initial-context-menu-items="mainReestrComposable.contextMenuItems.value"
+          :side-menu-items="mainReestrComposable.sideMenuItems.value"
           :isNumberColumnShown="true"
           :isCheckboxColumnShown="true"
           :isExpandColumnShown="true"
@@ -119,14 +119,14 @@ onMounted(async () => {
               task: '--task',
             }
           }"
-          :row-count="mainReestr.rowCount.value"
-          @change:row-count="mainReestr.onChangeRowCount($event)"
+          :row-count="mainReestrComposable.rowCount.value"
+          @change:row-count="mainReestrComposable.onChangeRowCount($event)"
           @row-action="mainNewReestrOnRowActionsComposable.onRowAction"
           @change:cell-value="mainNewReestrOnRowActionsComposable.onChangeCellValue"
           @select:context-menu-item="mainNewReestrContextMenuComposable.onSelectContextMenuItem"
           @select:side-menu-item="onSelectSideMenuItem"
-          @change:filters="mainReestr.onChangeFilters($event)"
-          @change:column-settings="mainReestr.onChangeColumnsettings($event)"
+          @change:filters="mainReestrComposable.onChangeFilters($event)"
+          @change:column-settings="mainReestrComposable.onChangeColumnsettings($event)"
           @keyup="mainNewReestrOnRowActionsComposable.onRowAction"
         >
           <template v-slot:cell[number]="idSlotProps">
@@ -141,7 +141,7 @@ onMounted(async () => {
             <NewReestrSideMenuDateFilter
               v-if="!!sideMenuComponentSettings['date-filter']?.isShown"
               :payload="sideMenuComponentSettings['date-filter'].payload"
-              :date="(mainReestr.filters.value['date'].currentValue as ITestRangeDate).date1"
+              :date="(mainReestrComposable.filters.value['date'].currentValue as ITestRangeDate).date1"
               @submit="onNewReestrSideMenuDateFilterSubmit({
                 ...$event,
                 name: 'date-filter',
@@ -151,7 +151,7 @@ onMounted(async () => {
 
             <NewReestrSideMenuSumms
               v-if="!!sideMenuComponentSettings['summs']?.isShown"
-              :data="mainReestr.data.value as ILocalNewTableRow[]"
+              :data="mainReestrComposable.data.value as ILocalNewTableRow[]"
               :payload="sideMenuComponentSettings['summs'].payload"
               @submit="onNewReestrSideMenuSummsSubmit({
                 ...$event,
@@ -167,14 +167,14 @@ onMounted(async () => {
         <NewReestr
           ref="newSubReestrRef"
           class="test-page1__new-reestr"
-          :initial-data="relativeReestr1.data.value"
-          :initial-columns="relativeReestr1.columns.value"
-          :initialColumnSettings="relativeReestr1.columnSettings.value"
-          :initial-filters="relativeReestr1.filters.value"
-          :initial-sorts="relativeReestr1.sorts.value"
-          :initial-actions-change-modes="relativeReestr1.actionsChangeModes.value"
-          :initial-actions="relativeReestr1.actions.value"
-          :initial-context-menu-items="relativeReestr1.contextMenuItems.value"
+          :initial-data="sub1ReestrComposable.data.value"
+          :initial-columns="sub1ReestrComposable.columns.value"
+          :initialColumnSettings="sub1ReestrComposable.columnSettings.value"
+          :initial-filters="sub1ReestrComposable.filters.value"
+          :initial-sorts="sub1ReestrComposable.sorts.value"
+          :initial-actions-change-modes="sub1ReestrComposable.actionsChangeModes.value"
+          :initial-actions="sub1ReestrComposable.actions.value"
+          :initial-context-menu-items="sub1ReestrComposable.contextMenuItems.value"
           :isNumberColumnShown="true"
           :isCheckboxColumnShown="true"
           :isExpandColumnShown="true"
@@ -185,14 +185,14 @@ onMounted(async () => {
               task: '--task',
             }
           }"
-          :row-count="relativeReestr1.rowCount.value"
-          @change:row-count="relativeReestr1.onChangeRowCount($event)"
-          @row-action="relativeNewReestrOnRowActionsComposable.onRowAction"
-          @change:cell-value="relativeNewReestrOnRowActionsComposable.onChangeCellValue"
-          @select:context-menu-item="relativeNewReestrContextMenuComposable.onSelectContextMenuItem"
-          @change:filters="relativeReestr1.onChangeFilters($event)"
-          @change:column-settings="relativeReestr1.onChangeColumnsettings($event)"
-          @keyup="relativeNewReestrOnRowActionsComposable.onRowAction"
+          :row-count="sub1ReestrComposable.rowCount.value"
+          @change:row-count="sub1ReestrComposable.onChangeRowCount($event)"
+          @row-action="sub1NewReestrOnRowActionsComposable.onRowAction"
+          @change:cell-value="sub1NewReestrOnRowActionsComposable.onChangeCellValue"
+          @select:context-menu-item="sub1NewReestrContextMenuComposable.onSelectContextMenuItem"
+          @change:filters="sub1ReestrComposable.onChangeFilters($event)"
+          @change:column-settings="sub1ReestrComposable.onChangeColumnsettings($event)"
+          @keyup="sub1NewReestrOnRowActionsComposable.onRowAction"
         >
         </NewReestr>
       </template>
