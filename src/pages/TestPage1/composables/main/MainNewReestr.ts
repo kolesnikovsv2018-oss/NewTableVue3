@@ -13,6 +13,7 @@ import type { IUseNewReestrColumnSettings } from "../NewReestrColumnSettings";
 import type { IUseMainNewReestrActionsChangeModes } from "./MainNewReestrActionsChangeModes.js";
 import type { IUseMainNewReestrOnRowActions } from "./MainNewReestrOnRowActions";
 import type { IUseMainNewReestrContextMenu } from "./MainNewReestrContextMenu";
+import type { IUseMainNewReestrSideMenu } from "./MainNewReestrSideMenu";
 import type NewReestr from "../../../../components/NewReestr/NewReestr.vue";
 
 import { useNewReestr } from "../NewReestr";
@@ -22,6 +23,7 @@ import { useMainNewReestrApi } from "../../api/MainNewReestrApi";
 import { useMainNewReestrActionsChangeModes } from "./MainNewReestrActionsChangeModes.js";
 import { useMainNewReestrOnRowActions } from "./MainNewReestrOnRowActions";
 import { useMainNewReestrContextMenu } from "./MainNewReestrContextMenu";
+import { useMainNewReestrSideMenu } from "./MainNewReestrSideMenu";
 
 export interface IUseMainNewReestr extends
   IUseNewReestr,
@@ -29,7 +31,8 @@ export interface IUseMainNewReestr extends
   IUseNewReestrColumnSettings,
   IUseMainNewReestrActionsChangeModes,
   IUseMainNewReestrOnRowActions,
-  IUseMainNewReestrContextMenu {
+  IUseMainNewReestrContextMenu,
+  IUseMainNewReestrSideMenu {
   data: Ref<INewTableRow[]>;
   columns: Ref<INewTableColumns>;
   actions: Ref<INewTableActions>;
@@ -47,7 +50,7 @@ export function useMainNewReestr(
   extraFieldCount: (number | Ref<number> | (() => number)) = 7,
   initialRowCount: (number | Ref<number> | (() => number)) = 10,
 ): IUseMainNewReestr {
-  const reestr = useNewReestr(
+  const newReestrComposable = useNewReestr(
     reestrName,
     initialRowCount,
   );
@@ -89,7 +92,11 @@ export function useMainNewReestr(
   const mainNewReestrContextMenuComposable = useMainNewReestrContextMenu(
     () => toValue(newReestrRef),
     mainNewReestrOnRowActionsComposable,
-  )
+  );
+
+  const mainNewReestrSideMenuComposable = useMainNewReestrSideMenu(
+    newReestrFiltersComposable,
+  );
 
   async function initData() {
     actions.value = await mainNewReestrApiComposable.fetchActions();
@@ -116,12 +123,13 @@ export function useMainNewReestr(
   }
 
   return {
-    ...reestr,
+    ...newReestrComposable,
     ...newReestrColumnSettingsComposable,
     ...newReestrFiltersComposable,
     ...mainNewReestrActionsChangeModesComposable,
     ...mainNewReestrOnRowActionsComposable,
     ...mainNewReestrContextMenuComposable,
+    ...mainNewReestrSideMenuComposable,
 
     actions,
     columns,

@@ -32,15 +32,6 @@ const sub1ReestrComposable = useSub1NewReestr(
   1, 2, 3, 5);
 
 const {
-  sideMenuComponentSettings,
-  onSelectSideMenuItem,
-  onNewReestrSideMenuDateFilterSubmit,
-  onNewReestrSideMenuSummsSubmit,
-} = useMainNewReestrSideMenu(
-  mainReestrComposable,
-);
-
-const {
   splitterDiv1Height,
   savePageSettingsToLocalStorage,
   loadPageSettingsFromLocalStorage
@@ -107,7 +98,7 @@ onMounted(async () => {
           @row-action="mainReestrComposable.onRowAction"
           @change:cell-value="mainReestrComposable.onChangeCellValue"
           @select:context-menu-item="mainReestrComposable.onSelectContextMenuItem"
-          @select:side-menu-item="onSelectSideMenuItem"
+          @select:side-menu-item="mainReestrComposable.onSelectSideMenuItem"
           @change:filters="mainReestrComposable.onChangeFilters($event)"
           @change:column-settings="mainReestrComposable.onChangeColumnsettings($event)"
           @keyup="mainReestrComposable.onRowAction"
@@ -122,25 +113,25 @@ onMounted(async () => {
 
           <template #before-side-menu>
             <NewReestrSideMenuDateFilter
-              v-if="!!sideMenuComponentSettings['date-filter']?.isShown"
-              :payload="sideMenuComponentSettings['date-filter'].payload"
+              v-if="!!mainReestrComposable.sideMenuComponentSettings.value['date-filter']?.isShown"
+              :payload="mainReestrComposable.sideMenuComponentSettings.value['date-filter'].payload"
               :date="(mainReestrComposable.filters.value['date'].currentValue as ITestRangeDate).date1"
-              @submit="onNewReestrSideMenuDateFilterSubmit({
+              @submit="mainReestrComposable.onNewReestrSideMenuDateFilterSubmit({
                 ...$event,
                 name: 'date-filter',
               })"
-              @close="sideMenuComponentSettings['date-filter'].isShown = false"
+              @close="mainReestrComposable.sideMenuComponentSettings.value['date-filter'].isShown = false"
             />
 
             <NewReestrSideMenuSumms
-              v-if="!!sideMenuComponentSettings['summs']?.isShown"
+              v-if="!!mainReestrComposable.sideMenuComponentSettings.value['summs']?.isShown"
               :data="mainReestrComposable.data.value as ILocalNewTableRow[]"
-              :payload="sideMenuComponentSettings['summs'].payload"
-              @submit="onNewReestrSideMenuSummsSubmit({
+              :payload="mainReestrComposable.sideMenuComponentSettings.value['summs'].payload"
+              @submit="mainReestrComposable.onNewReestrSideMenuSummsSubmit({
                 ...$event,
                 name: 'summs',
               })"
-              @close="sideMenuComponentSettings['summs'].isShown = false"
+              @close="mainReestrComposable.sideMenuComponentSettings.value['summs'].isShown = false"
             />
           </template>
         </NewReestr>

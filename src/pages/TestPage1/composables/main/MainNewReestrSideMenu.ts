@@ -1,17 +1,25 @@
+import type { Ref } from "vue";
 import { ref } from "vue";
 
 import type { INewMenuItem } from "../../../../components/NewContextMenu/types";
-import type { IUseMainNewReestr } from "./MainNewReestr";
+import type { IUseNewReestrFilters } from "../NewReestrFilters";
 
 interface IMainNewReestrSideMenuSubmitEvent {
   name: string;
   value?: unknown;
   payload?: unknown;
-}
+};
+
+export interface IUseMainNewReestrSideMenu {
+  sideMenuComponentSettings: Ref<Record<string, { isShown: boolean, payload: unknown }>>;
+  onSelectSideMenuItem: (menuItem: INewMenuItem) => void;
+  onNewReestrSideMenuDateFilterSubmit: (event: IMainNewReestrSideMenuSubmitEvent) => void;
+  onNewReestrSideMenuSummsSubmit: (event: IMainNewReestrSideMenuSubmitEvent) => void;
+};
 
 export function useMainNewReestrSideMenu(
-  mainReestr: IUseMainNewReestr,
-) {
+  mainReestr: IUseNewReestrFilters,
+): IUseMainNewReestrSideMenu {
   const sideMenuComponentSettings = ref<Record<string, { isShown: boolean, payload: unknown }>>({});
 
   function onSelectSideMenuItem(menuItem: INewMenuItem) {
