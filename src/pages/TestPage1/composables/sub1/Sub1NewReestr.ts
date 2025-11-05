@@ -10,18 +10,25 @@ import type { INewTableSorts } from "../../../../components/NewTable/types/NewTa
 import type { IUseNewReestrFilters } from "../NewReestrFilters";
 import type { IUseNewReestrColumnSettings } from "../NewReestrColumnSettings";
 import type { IUseSub1NewReestrActionsChangeModes } from "./Sub1NewReestrActionsChangeModes.js";
+import type { IUseSub1NewReestrOnRowActions } from "./Sub1NewReestrOnRowActions";
+import type { IUseSub1NewReestrContextMenu } from "./Sub1NewReestrContextMenu";
+import type NewReestr from "../../../../components/NewReestr/NewReestr.vue";
 
 import { useNewReestr } from "../NewReestr";
 import { useNewReestrColumnSettings } from "../NewReestrColumnSettings";
 import { useNewReestrFilters } from "../NewReestrFilters";
 import { useSub1NewReestrActionsChangeModes } from "./Sub1NewReestrActionsChangeModes.js";
 import { useSub1NewReestrApi } from "../../api/Sub1NewReestrApi";
+import { useSub1NewReestrOnRowActions } from "./Sub1NewReestrOnRowActions";
+import { useSub1NewReestrContextMenu } from "./Sub1NewReestrContextMenu";
 
 export interface IUseSub1NewReestr extends
   IUseNewReestr,
   IUseNewReestrFilters,
   IUseNewReestrColumnSettings,
-  IUseSub1NewReestrActionsChangeModes {
+  IUseSub1NewReestrActionsChangeModes,
+  IUseSub1NewReestrOnRowActions,
+  IUseSub1NewReestrContextMenu {
   data: Ref<INewTableRow[]>;
   columns: Ref<INewTableColumns>;
   actions: Ref<INewTableActions>;
@@ -32,6 +39,7 @@ export interface IUseSub1NewReestr extends
 
 export function useSub1NewReestr(
   reestrName: Ref<string> | string | (() => string),
+  newReestrRef: Ref<typeof NewReestr> | typeof NewReestr | (() => typeof NewReestr),
   count: (number | Ref<number> | (() => number)) = 10000,
   maxLevel: (number | Ref<number> | (() => number)) = 5,
   extraFieldCount: (number | Ref<number> | (() => number)) = 7,
@@ -68,6 +76,16 @@ export function useSub1NewReestr(
 
   const sub1NewReestrActionsChangeModesComposable = useSub1NewReestrActionsChangeModes();
 
+  const sub1NewReestrOnRowActionsComposable = useSub1NewReestrOnRowActions(
+    () => data.value,
+    () => toValue(newReestrRef),
+  );
+
+  const sub1NewReestrContextMenuComposable = useSub1NewReestrContextMenu(
+    () => toValue(newReestrRef),
+    sub1NewReestrOnRowActionsComposable,
+  )
+
   async function initData() {
     actions.value = await sub1NewReestrApiComposable.fetchActions();
 
@@ -95,6 +113,8 @@ export function useSub1NewReestr(
     ...newReestrColumnSettingsComposable,
     ...newReestrFiltersComposable,
     ...sub1NewReestrActionsChangeModesComposable,
+    ...sub1NewReestrOnRowActionsComposable,
+    ...sub1NewReestrContextMenuComposable,
 
     actions,
     columns,

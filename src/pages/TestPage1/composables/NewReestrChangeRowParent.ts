@@ -1,26 +1,24 @@
 import type { Ref } from "vue";
-import { computed, ref } from "vue";
+import { ref, toValue } from "vue";
 
-import type { INewTableRow } from "../../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
+import type { INewTableRow } from "../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
 
-import { TEST_DATA_ROW_TYPES } from "../../testdata/testNewReestrData";
+import { TEST_DATA_ROW_TYPES } from "../testdata/testNewReestrData";
 import {
   findAllParentRowsFor,
   findParentRowWithChildIndexByChildRowId,
   findRowById
-} from "../../../../helpers/finders";
-import type { IUseMainNewReestr } from "./MainNewReestr";
+} from "../../../helpers/finders";
+import type { IUseMainNewReestr } from "./main/MainNewReestr";
 
-export interface IUseMainNewReestrChangeRowParent {
+export interface IUseNewReestrChangeRowParent {
   activeRowForChangeParent: Ref<INewTableRow>;
   onChangeRowParentId: (newRowParentId: number) => void;
 };
 
-export function useMainNewReestrChangeRowParent(
-  mainReestr: IUseMainNewReestr,
-): IUseMainNewReestrChangeRowParent {
-  const initialData = computed<INewTableRow[]>(() => mainReestr.data.value);
-
+export function useNewReestrChangeRowParent(
+  initialData: Ref<INewTableRow[]> | INewTableRow[] | (() => INewTableRow[]),
+): IUseNewReestrChangeRowParent {
   const activeRowForChangeParent = ref<INewTableRow>(null);
 
   /**
@@ -33,7 +31,7 @@ export function useMainNewReestrChangeRowParent(
     sourceRow: INewTableRow,
     destinationRowId: number | string
   ): boolean {
-    const destinationRow = findRowById(destinationRowId, initialData.value);
+    const destinationRow = findRowById(destinationRowId, toValue(initialData));
 
     if (!destinationRow) {
       console.warn('[changeRowParent] Wrong destinationRowId', destinationRowId);
@@ -43,14 +41,14 @@ export function useMainNewReestrChangeRowParent(
 
     // проверим, если строка на 0-м уровне, то для неё не найлется ролитель
     // нужно найти в данных на самом верхнем уровне
-    const idx = initialData.value.findIndex(
+    const idx = toValue(initialData).findIndex(
       (currentRow: INewTableRow) => String(currentRow.data.id) === String(sourceRow.data.id),
     );
     if (idx !== -1) {
-      initialData.value.splice(idx, 1);
+      toValue(initialData).splice(idx, 1);
     } else {
       const sourceParentRow =
-        findParentRowWithChildIndexByChildRowId(sourceRow.data.id, initialData.value);
+        findParentRowWithChildIndexByChildRowId(sourceRow.data.id, toValue(initialData));
 
       if (!sourceParentRow) {
         return false;
@@ -77,7 +75,7 @@ export function useMainNewReestrChangeRowParent(
       return;
     }
 
-    const allParentIds = findAllParentRowsFor(newRowParentId, initialData.value);
+    const allParentIds = findAllParentRowsFor(newRowParentId, toValue(initialData));
 
     if (allParentIds?.includes(String(activeRowForChangeParent.value.data.id))) {
       console.warn('[onSubmitDestinationRowIdDialog] Loop parent!!!')

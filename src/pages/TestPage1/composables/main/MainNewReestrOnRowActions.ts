@@ -9,10 +9,10 @@ import type {
 } from "../../../../components/NewTable/types/NewTableEventTypes";
 import type { IUseMainNewReestr } from "./MainNewReestr";
 import type { ILocalNewTableRow } from "../../testdata/testNewReestrData";
-import type { IUseMainNewReestrChangeRowParent } from "./MainNewReestrChangeRowParent";
+import type { IUseNewReestrChangeRowParent } from "../NewReestrChangeRowParent";
 import type NewReestr from "../../../../components/NewReestr/NewReestr.vue";
 
-import { useMainNewReestrChangeRowParent } from "./MainNewReestrChangeRowParent";
+import { useNewReestrChangeRowParent } from "../NewReestrChangeRowParent";
 
 import { TEST_DATA_ROW_TYPES } from "../../testdata/testNewReestrData";
 import { NEW_TABLE_STANDART_CELL_ACTIONS, NEW_TABLE_STANDART_ROW_ACTIONS } from "../../../../components/NewTableWrapper/constants/standartActions";
@@ -22,7 +22,7 @@ import { findParentRowsById, findParentRowWithChildIndexByChildRowId, findRowByI
 import { calcOwnSums, calcParentSums, calcTotalOwnSums } from "../../../../helpers/calacSums";
 import { columnsToCalc, totalColumnsToCalc } from "../../testdata/constants/calcs";
 
-export interface IUseMainNewReestrOnRowActions extends IUseMainNewReestrChangeRowParent {
+export interface IUseMainNewReestrOnRowActions extends IUseNewReestrChangeRowParent {
   selectedRow: Ref<INewTableRow | null>;
   onCellAction: (event: INewTableRowActionEvent) => void;
   onChangeCellValue: (event: INewTableChangeCellValueEvent) => void;
@@ -32,15 +32,13 @@ export interface IUseMainNewReestrOnRowActions extends IUseMainNewReestrChangeRo
 }
 
 export function useMainNewReestrOnRowActions(
-  mainReestr: IUseMainNewReestr,
+  initialData: Ref<INewTableRow[]> | INewTableRow[] | (() => INewTableRow[]),
   newReestrRef: Ref<typeof NewReestr> | typeof NewReestr | (() => typeof NewReestr)
 ): IUseMainNewReestrOnRowActions {
   const selectedRow = ref<INewTableRow | null>(null);
 
-  const initialData = computed<INewTableRow[]>(() => mainReestr.data.value);
-
-  const mainNewReestrChangeRowParentComposable = useMainNewReestrChangeRowParent(
-    mainReestr,
+  const mainNewReestrChangeRowParentComposable = useNewReestrChangeRowParent(
+    () => toValue(initialData),
   );
 
   /**
@@ -48,7 +46,7 @@ export function useMainNewReestrOnRowActions(
    * @param row строка, которую нужно обновить в данных
    */
   function setRow(row: INewTableRow) {
-    const parenRows = findParentRowsById(row.data.id, initialData.value);
+    const parenRows = findParentRowsById(row.data.id, toValue(initialData));
 
     if (!parenRows) {
       return;
@@ -74,10 +72,10 @@ export function useMainNewReestrOnRowActions(
 
     const parentRowWithChildRowId = findParentRowWithChildIndexByChildRowId(
       row.data.id,
-      initialData.value
+      toValue(initialData)
     );
 
-    const parenRows = findParentRowsById(row.data.id, initialData.value);
+    const parenRows = findParentRowsById(row.data.id, toValue(initialData));
     parenRows?.splice(
       parenRows.findIndex(r => r.data.id === row.data.id),
       1
@@ -88,24 +86,24 @@ export function useMainNewReestrOnRowActions(
     }
 
     if (parentRowWithChildRowId) {
-      calcOwnSums(parentRowWithChildRowId.parent, initialData.value, columnsToCalc);
-      calcParentSums(parentRowWithChildRowId.parent, initialData.value, columnsToCalc);
+      calcOwnSums(parentRowWithChildRowId.parent, toValue(initialData), columnsToCalc);
+      calcParentSums(parentRowWithChildRowId.parent, toValue(initialData), columnsToCalc);
     }
   }
 
   function onSave(event: INewTableRowActionEvent) {
     calcTotalOwnSums(event.row as ILocalNewTableRow);
     saveRow(event.row);
-    calcParentSums(event.row, initialData.value, columnsToCalc);
+    calcParentSums(event.row, toValue(initialData), columnsToCalc);
     toValue(newReestrRef).deleteChangedRow(event.row.data.id);
   }
 
   function onDelete(event: INewTableRowActionEvent) {
-    const parentRow = findParentRowWithChildIndexByChildRowId(event.row.data.id, initialData.value);
+    const parentRow = findParentRowWithChildIndexByChildRowId(event.row.data.id, toValue(initialData));
     deleteRow(event.row);
     if (parentRow) {
-      calcOwnSums(parentRow.parent, initialData.value, columnsToCalc);
-      calcParentSums(parentRow.parent, initialData.value, columnsToCalc);
+      calcOwnSums(parentRow.parent, toValue(initialData), columnsToCalc);
+      calcParentSums(parentRow.parent, toValue(initialData), columnsToCalc);
     }
     toValue(newReestrRef).deleteChangedRow(event.row.data.id);
   }
@@ -164,7 +162,7 @@ export function useMainNewReestrOnRowActions(
   }
 
   function onChangeCellValue(event: INewTableChangeCellValueEvent) {
-    const row = findRowById(event.row.data.id, initialData.value);
+    const row = findRowById(event.row.data.id, toValue(initialData));
     if (row) {
       // row.data[event.key] = event.value;
       event.row[event.key] = event.value;
@@ -178,13 +176,12 @@ export function useMainNewReestrOnRowActions(
   }
 
   return {
+    ...mainNewReestrChangeRowParentComposable,
     selectedRow,
     onCellAction,
     onChangeCellValue,
     onDelete,
     onRowAction,
     onSave,
-
-    ...mainNewReestrChangeRowParentComposable,
   };
 }

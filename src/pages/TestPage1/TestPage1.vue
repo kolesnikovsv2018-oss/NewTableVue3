@@ -5,12 +5,9 @@ import type { ILocalNewTableRow } from './testdata/testNewReestrData';
 import type { ITestRangeDate } from '../../components/FilterComponents/components/types';
 
 import { useMainNewReestr } from './composables/main/MainNewReestr';
-import { useMainNewReestrOnRowActions } from './composables/main/MainNewReestrOnRowActions';
 import { useTestPage1Settings } from './composables/TestPage1Settings';
 import { useMainNewReestrSideMenu } from './composables/main/MainNewReestrSideMenu';
-import { useMainNewReestrContextMenu } from './composables/main/MainNewReestrContextMenu';
 import { useSub1NewReestr } from './composables/sub1/Sub1NewReestr';
-import { useSub1NewReestrOnRowActions } from './composables/sub1/Sub1NewReestrOnRowActions';
 
 import { integerToRoman } from '../../helpers/integerToRoman';
 
@@ -24,29 +21,15 @@ const newMainReestrRef = ref<typeof NewReestr>();
 
 const newSubReestrRef = ref<typeof NewReestr>();
 
-const mainReestrComposable = useMainNewReestr('mainReestr', 10000, 5, 7, 14);
-
-const sub1ReestrComposable = useSub1NewReestr('relativeReestr1', 1, 2, 3, 7);
-
-const mainNewReestrOnRowActionsComposable = useMainNewReestrOnRowActions(
-  mainReestrComposable,
+const mainReestrComposable = useMainNewReestr(
+  'mainReestr',
   () => newMainReestrRef.value,
-);
+  10000, 5, 7, 15);
 
-const sub1NewReestrOnRowActionsComposable = useSub1NewReestrOnRowActions(
-  sub1ReestrComposable,
+const sub1ReestrComposable = useSub1NewReestr(
+  'relativeReestr1',
   () => newSubReestrRef.value,
-);
-
-const mainNewReestrContextMenuComposable = useMainNewReestrContextMenu(
-  () => newMainReestrRef.value,
-  mainNewReestrOnRowActionsComposable,
-);
-
-const sub1NewReestrContextMenuComposable = useMainNewReestrContextMenu(
-  () => newSubReestrRef.value,
-  sub1NewReestrOnRowActionsComposable,
-);
+  1, 2, 3, 5);
 
 const {
   sideMenuComponentSettings,
@@ -66,7 +49,7 @@ const {
 );
 
 watch(
-  () => mainNewReestrOnRowActionsComposable.selectedRow.value,
+  () => mainReestrComposable.selectedRow.value,
   async () => {
     await sub1ReestrComposable.initData();
   }
@@ -121,13 +104,13 @@ onMounted(async () => {
           }"
           :row-count="mainReestrComposable.rowCount.value"
           @change:row-count="mainReestrComposable.onChangeRowCount($event)"
-          @row-action="mainNewReestrOnRowActionsComposable.onRowAction"
-          @change:cell-value="mainNewReestrOnRowActionsComposable.onChangeCellValue"
-          @select:context-menu-item="mainNewReestrContextMenuComposable.onSelectContextMenuItem"
+          @row-action="mainReestrComposable.onRowAction"
+          @change:cell-value="mainReestrComposable.onChangeCellValue"
+          @select:context-menu-item="mainReestrComposable.onSelectContextMenuItem"
           @select:side-menu-item="onSelectSideMenuItem"
           @change:filters="mainReestrComposable.onChangeFilters($event)"
           @change:column-settings="mainReestrComposable.onChangeColumnsettings($event)"
-          @keyup="mainNewReestrOnRowActionsComposable.onRowAction"
+          @keyup="mainReestrComposable.onRowAction"
         >
           <template v-slot:cell[number]="idSlotProps">
             <span style="color: red;">[{{ integerToRoman(idSlotProps.rowNumber) }}]</span>
@@ -187,22 +170,22 @@ onMounted(async () => {
           }"
           :row-count="sub1ReestrComposable.rowCount.value"
           @change:row-count="sub1ReestrComposable.onChangeRowCount($event)"
-          @row-action="sub1NewReestrOnRowActionsComposable.onRowAction"
-          @change:cell-value="sub1NewReestrOnRowActionsComposable.onChangeCellValue"
-          @select:context-menu-item="sub1NewReestrContextMenuComposable.onSelectContextMenuItem"
+          @row-action="sub1ReestrComposable.onRowAction"
+          @change:cell-value="sub1ReestrComposable.onChangeCellValue"
+          @select:context-menu-item="sub1ReestrComposable.onSelectContextMenuItem"
           @change:filters="sub1ReestrComposable.onChangeFilters($event)"
           @change:column-settings="sub1ReestrComposable.onChangeColumnsettings($event)"
-          @keyup="sub1NewReestrOnRowActionsComposable.onRowAction"
+          @keyup="sub1ReestrComposable.onRowAction"
         >
         </NewReestr>
       </template>
     </NewSplitter>
 
     <NewReestrChangeRowParentDialog
-      v-if="!!mainNewReestrOnRowActionsComposable.activeRowForChangeParent.value"
-      :activeSourceRow="mainNewReestrOnRowActionsComposable.activeRowForChangeParent.value"
-      @close="mainNewReestrOnRowActionsComposable.activeRowForChangeParent.value = null"
-      @change:destination-row-id="mainNewReestrOnRowActionsComposable.onChangeRowParentId"
+      v-if="!!mainReestrComposable.activeRowForChangeParent.value"
+      :activeSourceRow="mainReestrComposable.activeRowForChangeParent.value"
+      @close="mainReestrComposable.activeRowForChangeParent.value = null"
+      @change:destination-row-id="mainReestrComposable.onChangeRowParentId"
     />
   </div>
 </template>

@@ -11,18 +11,25 @@ import type { INewMenuItem } from "../../../../components/NewContextMenu/types";
 import type { IUseNewReestrFilters } from "../NewReestrFilters";
 import type { IUseNewReestrColumnSettings } from "../NewReestrColumnSettings";
 import type { IUseMainNewReestrActionsChangeModes } from "./MainNewReestrActionsChangeModes.js";
+import type { IUseMainNewReestrOnRowActions } from "./MainNewReestrOnRowActions";
+import type { IUseMainNewReestrContextMenu } from "./MainNewReestrContextMenu";
+import type NewReestr from "../../../../components/NewReestr/NewReestr.vue";
 
 import { useNewReestr } from "../NewReestr";
 import { useNewReestrColumnSettings } from "../NewReestrColumnSettings";
 import { useNewReestrFilters } from "../NewReestrFilters";
 import { useMainNewReestrApi } from "../../api/MainNewReestrApi";
 import { useMainNewReestrActionsChangeModes } from "./MainNewReestrActionsChangeModes.js";
+import { useMainNewReestrOnRowActions } from "./MainNewReestrOnRowActions";
+import { useMainNewReestrContextMenu } from "./MainNewReestrContextMenu";
 
 export interface IUseMainNewReestr extends
   IUseNewReestr,
   IUseNewReestrFilters,
   IUseNewReestrColumnSettings,
-  IUseMainNewReestrActionsChangeModes {
+  IUseMainNewReestrActionsChangeModes,
+  IUseMainNewReestrOnRowActions,
+  IUseMainNewReestrContextMenu {
   data: Ref<INewTableRow[]>;
   columns: Ref<INewTableColumns>;
   actions: Ref<INewTableActions>;
@@ -34,6 +41,7 @@ export interface IUseMainNewReestr extends
 
 export function useMainNewReestr(
   reestrName: Ref<string> | string | (() => string),
+  newReestrRef: Ref<typeof NewReestr> | typeof NewReestr | (() => typeof NewReestr),
   count: (number | Ref<number> | (() => number)) = 10000,
   maxLevel: (number | Ref<number> | (() => number)) = 5,
   extraFieldCount: (number | Ref<number> | (() => number)) = 7,
@@ -73,6 +81,16 @@ export function useMainNewReestr(
 
   const mainNewReestrActionsChangeModesComposable = useMainNewReestrActionsChangeModes();
 
+  const mainNewReestrOnRowActionsComposable = useMainNewReestrOnRowActions(
+    () => data.value,
+    () => toValue(newReestrRef),
+  );
+
+  const mainNewReestrContextMenuComposable = useMainNewReestrContextMenu(
+    () => toValue(newReestrRef),
+    mainNewReestrOnRowActionsComposable,
+  )
+
   async function initData() {
     actions.value = await mainNewReestrApiComposable.fetchActions();
 
@@ -102,6 +120,8 @@ export function useMainNewReestr(
     ...newReestrColumnSettingsComposable,
     ...newReestrFiltersComposable,
     ...mainNewReestrActionsChangeModesComposable,
+    ...mainNewReestrOnRowActionsComposable,
+    ...mainNewReestrContextMenuComposable,
 
     actions,
     columns,
