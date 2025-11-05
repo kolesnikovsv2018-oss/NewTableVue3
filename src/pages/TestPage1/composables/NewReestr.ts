@@ -3,6 +3,7 @@ import { ref, toValue } from "vue";
 
 export interface IUseNewReestr {
   rowCount: Ref<number>;
+  reestrName: string;
   loadReestrSettingsFromLocalStorage: () => void;
   saveReestrSettingsToLocalStorage: () => void;
   onChangeRowCount: (newRowCount: number) => void;
@@ -40,6 +41,7 @@ export function useNewReestr(
 
   return {
     rowCount,
+    reestrName: toValue(reestrName),
     loadReestrSettingsFromLocalStorage,
     saveReestrSettingsToLocalStorage,
     onChangeRowCount,

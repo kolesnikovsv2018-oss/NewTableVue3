@@ -23,12 +23,26 @@ const newSubReestrRef = ref<typeof NewReestr>();
 const mainReestrComposable = useMainNewReestr(
   'mainReestr',
   () => newMainReestrRef.value,
-  10000, 5, 7, 15);
+  10000, 5, 7, 15
+);
 
 const sub1ReestrComposable = useSub1NewReestr(
   'relativeReestr1',
   () => newSubReestrRef.value,
-  1, 2, 3, 5);
+  1, 2, 3, 4
+);
+
+const sub2ReestrComposable = useSub1NewReestr(
+  'relativeReestr2',
+  () => newSubReestrRef.value,
+  1, 3, 4, 5
+);
+
+const sub3ReestrComposable = useSub1NewReestr(
+  'relativeReestr3',
+  () => newSubReestrRef.value,
+  1, 4, 5, 6
+);
 
 const {
   splitterDiv1Height,
@@ -38,16 +52,36 @@ const {
   'TestPage1',
 );
 
+const activeReestr = ref<typeof sub1ReestrComposable | typeof sub2ReestrComposable>(sub1ReestrComposable);
+
 watch(
   () => mainReestrComposable.selectedRow.value,
   async () => {
-    await sub1ReestrComposable.initData();
+    await activeReestr.value.initData();
+  }
+);
+
+watch(
+  () => activeReestr.value,
+  async () => {
+    if (!mainReestrComposable.selectedRow.value) {
+      return;
+    }
+    await activeReestr.value.initData();
   }
 );
 
 function onUpdateDiv1Size(newSize: number) {
   splitterDiv1Height.value = newSize;
   savePageSettingsToLocalStorage();
+}
+
+function isActive(reestrComposable: typeof sub1ReestrComposable | typeof sub2ReestrComposable) {
+  return activeReestr.value.reestrName === reestrComposable.reestrName;
+}
+
+function setActiveReestr(reestrComposable: typeof sub1ReestrComposable | typeof sub2ReestrComposable) {
+  activeReestr.value = reestrComposable;
 }
 
 onMounted(async () => {
@@ -137,37 +171,60 @@ onMounted(async () => {
       </template>
 
       <template #div2>
-        <NewReestr
-          ref="newSubReestrRef"
-          class="test-page1__new-reestr"
-          :initial-data="sub1ReestrComposable.data.value"
-          :initial-columns="sub1ReestrComposable.columns.value"
-          :initialColumnSettings="sub1ReestrComposable.columnSettings.value"
-          :initial-filters="sub1ReestrComposable.filters.value"
-          :initial-sorts="sub1ReestrComposable.sorts.value"
-          :initial-actions-change-modes="sub1ReestrComposable.actionsChangeModes.value"
-          :initial-actions="sub1ReestrComposable.actions.value"
-          :initial-context-menu-items="sub1ReestrComposable.contextMenuItems.value"
-          :isNumberColumnShown="true"
-          :isCheckboxColumnShown="true"
-          :isExpandColumnShown="true"
-          :common-meta="{
-            class: {
-              stage: '--stage',
-              subStage: '--sub-stage',
-              task: '--task',
-            }
-          }"
-          :row-count="sub1ReestrComposable.rowCount.value"
-          @change:row-count="sub1ReestrComposable.onChangeRowCount($event)"
-          @row-action="sub1ReestrComposable.onRowAction"
-          @change:cell-value="sub1ReestrComposable.onChangeCellValue"
-          @select:context-menu-item="sub1ReestrComposable.onSelectContextMenuItem"
-          @change:filters="sub1ReestrComposable.onChangeFilters($event)"
-          @change:column-settings="sub1ReestrComposable.onChangeColumnsettings($event)"
-          @keyup="sub1ReestrComposable.onRowAction"
-        >
-        </NewReestr>
+        <div class="page-reestr-tabs">
+          <div class="page-reestr-tabs__buttons">
+            <button
+              :class="{
+                '--active-tab': isActive(sub1ReestrComposable),
+              }"
+              @click="setActiveReestr(sub1ReestrComposable)"
+            >Activate Sub1 Reestr</button>
+            <button
+              :class="{
+                '--active-tab': isActive(sub2ReestrComposable),
+              }"
+              @click="setActiveReestr(sub2ReestrComposable)"
+            >Activate Sub2 Reestr</button>
+            <button
+              :class="{
+                '--active-tab': isActive(sub3ReestrComposable),
+              }"
+              @click="setActiveReestr(sub3ReestrComposable)"
+            >Activate Sub3 Reestr</button>
+          </div>
+          <NewReestr
+            ref="newSubReestrRef"
+            :key="activeReestr.reestrName"
+            class="test-page1__new-reestr page-reestr-tabs__reestr"
+            :initial-data="activeReestr.data"
+            :initial-columns="activeReestr.columns"
+            :initialColumnSettings="activeReestr.columnSettings"
+            :initial-filters="activeReestr.filters"
+            :initial-sorts="activeReestr.sorts"
+            :initial-actions-change-modes="activeReestr.actionsChangeModes"
+            :initial-actions="activeReestr.actions"
+            :initial-context-menu-items="activeReestr.contextMenuItems"
+            :isNumberColumnShown="true"
+            :isCheckboxColumnShown="true"
+            :isExpandColumnShown="true"
+            :common-meta="{
+              class: {
+                stage: '--stage',
+                subStage: '--sub-stage',
+                task: '--task',
+              }
+            }"
+            :row-count="activeReestr.rowCount"
+            @change:row-count="activeReestr.onChangeRowCount($event)"
+            @row-action="activeReestr.onRowAction"
+            @change:cell-value="activeReestr.onChangeCellValue"
+            @select:context-menu-item="activeReestr.onSelectContextMenuItem"
+            @change:filters="activeReestr.onChangeFilters($event)"
+            @change:column-settings="activeReestr.onChangeColumnsettings($event)"
+            @keyup="activeReestr.onRowAction"
+          >
+          </NewReestr>
+        </div>
       </template>
     </NewSplitter>
 
@@ -200,6 +257,10 @@ onMounted(async () => {
   flex: 1 1;
   min-height: 0;
   height: 100%;
+}
+
+.test-page1 :deep(.split-div1) {
+  padding-bottom: 4px;
 }
 
 .test-page1__new-reestr {
@@ -257,5 +318,42 @@ dialog {
 :deep(dialog form .dialog-buttons) {
   display: flex;
   gap: 8px;
+}
+
+.page-reestr-tabs {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.page-reestr-tabs__buttons {
+  display: flex;
+  gap: 8px;
+  flex: 0 0;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+.page-reestr-tabs__buttons button {
+  background-color: var(--app-button-bg);
+  color: var(--app-button-text-color);
+  border: 1px solid var(--app-button-border-color);
+  border-radius: var(--app-button-radius);
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.page-reestr-tabs__buttons button.--active-tab {
+  background-color: var(--app-button-active-bg);
+  color: var(--app-button-active-text-color);
+  border: 1px solid var(--app-button-active-border-color);
+}
+
+.page-reestr-tabs__reestr {
+  flex: 1 1;
+  min-height: 0;
+  box-sizing: border-box;
 }
 </style>

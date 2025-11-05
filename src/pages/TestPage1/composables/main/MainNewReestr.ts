@@ -74,7 +74,6 @@ export function useMainNewReestr(
 
   const sorts = ref<INewTableSorts>({});
 
-
   const newReestrColumnSettingsComposable = useNewReestrColumnSettings(
     () => toValue(reestrName),
     () => columns.value,
