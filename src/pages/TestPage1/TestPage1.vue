@@ -192,6 +192,7 @@ onMounted(async () => {
           @select:context-menu-item="relativeNewReestrContextMenuComposable.onSelectContextMenuItem"
           @change:filters="relativeReestr1.onChangeFilters($event)"
           @change:column-settings="relativeReestr1.onChangeColumnsettings($event)"
+          @keyup="relativeNewReestrOnRowActionsComposable.onRowAction"
         >
         </NewReestr>
       </template>
