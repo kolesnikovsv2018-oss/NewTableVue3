@@ -2,10 +2,7 @@
 import { ref, watch, onMounted } from 'vue';
 
 import type { ILocalNewTableRow } from './testdata/testNewReestrData';
-import type { INewTableFilters } from '../../components/NewTable/types/NewTableFilterTypes';
 import type { ITestRangeDate } from '../../components/FilterComponents/components/types';
-import type { INewTableColumnSettings } from '../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes';
-import type { IUseMainNewReestr } from './composables/main/MainNewReestr'
 
 import { useMainNewReestr } from './composables/main/MainNewReestr';
 import { useMainNewReestrOnRowActions } from './composables/main/MainNewReestrOnRowActions';
