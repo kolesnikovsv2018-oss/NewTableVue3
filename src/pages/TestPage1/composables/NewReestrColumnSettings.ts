@@ -16,6 +16,7 @@ export interface IUseNewReestrColumnSettings {
     oldColumnSettings: INewTableColumnSettings,
     newColumnSettings: INewTableColumnSettings,
   ) => INewTableColumnSettings;
+  onChangeColumnsettings: (event: INewTableColumnSettings) => void;
 };
 
 export function useNewReestrColumnSettings(
@@ -155,6 +156,13 @@ export function useNewReestrColumnSettings(
     );
   }
 
+  function onChangeColumnsettings(
+    event: INewTableColumnSettings,
+  ) {
+    columnSettings.value = event;
+    saveColumnSettingsToLocalStorage();
+  }
+
   async function initColumnSettings() {
     const preparedColumnSettingsFromColumns = prepareColumnSettingsFromColumns(toValue(initialColumns));
 
@@ -181,5 +189,6 @@ export function useNewReestrColumnSettings(
     initColumnSettings,
     prepareColumnSettingsFromColumns,
     mergeColumnSettings,
+    onChangeColumnsettings,
   };
 }

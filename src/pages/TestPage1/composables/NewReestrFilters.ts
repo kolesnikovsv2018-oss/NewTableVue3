@@ -8,6 +8,7 @@ export interface IUseNewReestrFilters {
   filters: Ref<INewTableFilters>;
   setFilter: (params: { name: string; value: unknown }) => void;
   initFilters: () => Promise<void>;
+  onChangeFilters: (changedFilters: INewTableFilters) => void;
   saveFiltersToLocalStorage: () => void;
   loadFiltersFromLocalStorage: () => void;
 };
@@ -61,6 +62,13 @@ export function useNewReestrFilters(
     filters.value = newFilters;
   }
 
+  function onChangeFilters(
+    changedFilters: INewTableFilters
+  ) {
+    filters.value = changedFilters;
+    saveFiltersToLocalStorage();
+  }
+
   async function initFilters() {
     const fetchedFilters = await api.fetchFilters();
 
@@ -78,6 +86,7 @@ export function useNewReestrFilters(
   return {
     filters,
     setFilter,
+    onChangeFilters,
     initFilters,
     saveFiltersToLocalStorage,
     loadFiltersFromLocalStorage,

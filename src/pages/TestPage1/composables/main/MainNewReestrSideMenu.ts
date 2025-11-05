@@ -1,6 +1,6 @@
 import { ref } from "vue";
 
-import type { INewMenuItem } from "../../../components/NewContextMenu/types";
+import type { INewMenuItem } from "../../../../components/NewContextMenu/types";
 import type { IUseMainNewReestr } from "./MainNewReestr";
 
 interface IMainNewReestrSideMenuSubmitEvent {

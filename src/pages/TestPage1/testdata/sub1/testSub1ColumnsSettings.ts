@@ -16,11 +16,6 @@ export const testColumnsSettings: Record<string, INewTableColumnSetting> = {
     order: 3,
     visible: true,
   },
-  status: {
-    width: 150,
-    order: 4,
-    visible: true,
-  },
   pricePNR: {
     width: 120,
     order: 5,

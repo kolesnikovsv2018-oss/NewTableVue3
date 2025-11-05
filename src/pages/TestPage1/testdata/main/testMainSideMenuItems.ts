@@ -1,4 +1,4 @@
-import type { INewMenuItem } from "../../../components/NewContextMenu/types";
+import type { INewMenuItem } from "../../../../components/NewContextMenu/types";
 
 import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 import { faSquareRootVariable } from "@fortawesome/free-solid-svg-icons";

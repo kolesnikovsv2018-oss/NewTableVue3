@@ -1,15 +1,15 @@
 import type { Ref } from "vue";
-import { ref, toValue } from "vue";
+import { ref } from "vue";
 
-import type { INewTableRow } from "../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
+import type { INewTableRow } from "../../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
 
-import { TEST_DATA_ROW_TYPES } from "../testdata/testNewReestrData";
+import { TEST_DATA_ROW_TYPES } from "../../testdata/testNewReestrData";
 import {
   findAllParentRowsFor,
   findParentRowWithChildIndexByChildRowId,
   findRowById
-} from "../../../helpers/finders";
-import { IUseMainNewReestr } from "./MainNewReestr";
+} from "../../../../helpers/finders";
+import type { IUseMainNewReestr } from "./MainNewReestr";
 
 export interface IUseMainNewReestrChangeRowParent {
   activeRowForChangeParent: Ref<INewTableRow>;

@@ -1,13 +1,13 @@
 import type { Ref } from "vue";
 import { ref } from "vue";
 
-import type { TNewTableActionsChangeModesStandart } from "../../../components/NewTable/types/NewTableActionsChangeModesTypes";
+import type { TNewTableActionsChangeModesStandart } from "../../../../components/NewTable/types/NewTableActionsChangeModesTypes";
 
-import { NEW_TABLE_DEFAULT_ROW_TYPE } from "../../../components/NewTable/constants/defaultRowType";
-import { NEW_TABLE_STANDART_ROW_ACTIONS } from "../../../components/NewTableWrapper/constants/standartActions";
+import { NEW_TABLE_DEFAULT_ROW_TYPE } from "../../../../components/NewTable/constants/defaultRowType";
+import { NEW_TABLE_STANDART_ROW_ACTIONS } from "../../../../components/NewTableWrapper/constants/standartActions";
 
-import { newTableStandartActionsChangeModes } from "../../../components/NewTableWrapper/constants/standartActionsChangeModes";
-import { useMainNewReestrApi } from "../api/MainNewReestrApi";
+import { newTableStandartActionsChangeModes } from "../../../../components/NewTableWrapper/constants/standartActionsChangeModes";
+import { useMainNewReestrApi } from "../../api/MainNewReestrApi";
 
 export interface IUseMainNewReestrActionsChangeModes {
   actionsChangeModes: Ref<TNewTableActionsChangeModesStandart>;

@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue';
 
-import type { INewTableRowActionEvent } from '../../components/NewTable/types/NewTableEventTypes';
 import type { ILocalNewTableRow } from './testdata/testNewReestrData';
 import type { INewTableFilters } from '../../components/NewTable/types/NewTableFilterTypes';
 import type { ITestRangeDate } from '../../components/FilterComponents/components/types';
 import type { INewTableColumnSettings } from '../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes';
-import type { IUseMainNewReestr } from './composables/MainNewReestr'
+import type { IUseMainNewReestr } from './composables/main/MainNewReestr'
 
-import { useMainNewReestr } from './composables/MainNewReestr';
-import { useMainNewReestrOnRowActions } from './composables/MainNewReestrOnRowActions';
+import { useMainNewReestr } from './composables/main/MainNewReestr';
+import { useMainNewReestrOnRowActions } from './composables/main/MainNewReestrOnRowActions';
 import { useTestPage1Settings } from './composables/TestPage1Settings';
+import { useMainNewReestrSideMenu } from './composables/main/MainNewReestrSideMenu';
+import { useMainNewReestrContextMenu } from './composables/main/MainNewReestrContextMenu';
+import { useSub1NewReestr } from './composables/sub1/Sub1NewReestr';
+import { useSub1NewReestrOnRowActions } from './composables/sub1/Sub1NewReestrOnRowActions';
 
 import { integerToRoman } from '../../helpers/integerToRoman';
 
@@ -19,8 +22,6 @@ import NewReestrChangeRowParentDialog from '../../components/NewReestr/component
 import NewSplitter from '../../components/NewSplitter/NewSplitter.vue';
 import NewReestrSideMenuDateFilter from './components/NewReestrSideMenuDateFilter/NewReestrSideMenuDateFilter.vue';
 import NewReestrSideMenuSumms from './components/NewReestrSideMenuSumms/NewReestrSideMenuSumms.vue';
-import { useMainNewReestrSideMenu } from './composables/MainNewReestrSideMenu';
-import { useMainNewReestrContextMenu } from './composables/MainNewReestrContextMenu';
 
 const newMainReestrRef = ref<typeof NewReestr>();
 
@@ -28,14 +29,14 @@ const newSubReestrRef = ref<typeof NewReestr>();
 
 const mainReestr = useMainNewReestr('mainReestr', 10000, 5, 7, 14);
 
-const relativeReestr1 = useMainNewReestr('relativeReestr1', 1, 2, 3, 7);
+const relativeReestr1 = useSub1NewReestr('relativeReestr1', 1, 2, 3, 7);
 
 const mainNewReestrOnRowActionsComposable = useMainNewReestrOnRowActions(
   mainReestr,
   () => newMainReestrRef.value,
 );
 
-const relativeNewReestrOnRowActionsComposable = useMainNewReestrOnRowActions(
+const relativeNewReestrOnRowActionsComposable = useSub1NewReestrOnRowActions(
   relativeReestr1,
   () => newSubReestrRef.value,
 );
@@ -74,37 +75,18 @@ watch(
   }
 );
 
-function onChangeFilters(
-  reestr: IUseMainNewReestr,
-  changedFilters: INewTableFilters
-) {
-  reestr.filters.value = changedFilters;
-  reestr.saveFiltersToLocalStorage();
-}
 
-function onChangeColumnsettings(
-  reestr: IUseMainNewReestr,
-  event: INewTableColumnSettings,
-) {
-  reestr.columnSettings.value = event;
-  reestr.saveColumnSettingsToLocalStorage();
-}
+
+
+
 
 function onUpdateDiv1Size(newSize: number) {
   splitterDiv1Height.value = newSize;
   savePageSettingsToLocalStorage();
 }
 
-function onChangeRowCount(
-  reestr: IUseMainNewReestr,
-  newRowCount: number,
-) {
-  reestr.rowCount.value = newRowCount;
-  reestr.saveReestrSettingsToLocalStorage();
-}
-
-onMounted(() => {
-  mainReestr.initData();
+onMounted(async () => {
+  await mainReestr.initData();
 
   loadPageSettingsFromLocalStorage();
 
@@ -146,13 +128,13 @@ onMounted(() => {
             }
           }"
           :row-count="mainReestr.rowCount.value"
-          @change:row-count="onChangeRowCount(mainReestr, $event)"
+          @change:row-count="mainReestr.onChangeRowCount($event)"
           @row-action="mainNewReestrOnRowActionsComposable.onRowAction"
           @change:cell-value="mainNewReestrOnRowActionsComposable.onChangeCellValue"
           @select:context-menu-item="mainNewReestrContextMenuComposable.onSelectContextMenuItem"
           @select:side-menu-item="onSelectSideMenuItem"
-          @change:filters="onChangeFilters(mainReestr, $event)"
-          @change:column-settings="onChangeColumnsettings(mainReestr, $event)"
+          @change:filters="mainReestr.onChangeFilters($event)"
+          @change:column-settings="mainReestr.onChangeColumnsettings($event)"
           @keyup="mainNewReestrOnRowActionsComposable.onRowAction"
         >
           <template v-slot:cell[number]="idSlotProps">
@@ -212,12 +194,12 @@ onMounted(() => {
             }
           }"
           :row-count="relativeReestr1.rowCount.value"
-          @change:row-count="onChangeRowCount(relativeReestr1, $event)"
+          @change:row-count="relativeReestr1.onChangeRowCount($event)"
           @row-action="relativeNewReestrOnRowActionsComposable.onRowAction"
           @change:cell-value="relativeNewReestrOnRowActionsComposable.onChangeCellValue"
           @select:context-menu-item="relativeNewReestrContextMenuComposable.onSelectContextMenuItem"
-          @change:filters="onChangeFilters(relativeReestr1, $event)"
-          @change:column-settings="onChangeColumnsettings(relativeReestr1, $event)"
+          @change:filters="relativeReestr1.onChangeFilters($event)"
+          @change:column-settings="relativeReestr1.onChangeColumnsettings($event)"
         >
         </NewReestr>
       </template>

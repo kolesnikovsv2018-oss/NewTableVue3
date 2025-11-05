@@ -1,28 +1,28 @@
 import type { Ref } from "vue";
 import { computed, ref, toValue } from "vue";
 
-import type { INewTableRow } from "../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
+import type { INewTableRow } from "../../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
 import type {
   INewTableCellActionData,
   INewTableChangeCellValueEvent,
   INewTableRowActionEvent
-} from "../../../components/NewTable/types/NewTableEventTypes";
-import type { IUseMainNewReestr } from "./MainNewReestr";
-import type { ILocalNewTableRow } from "../testdata/testNewReestrData";
-import type { IUseMainNewReestrChangeRowParent } from "./MainNewReestrChangeRowParent";
-import type NewReestr from "../../../components/NewReestr/NewReestr.vue";
+} from "../../../../components/NewTable/types/NewTableEventTypes";
+import type { IUseSub1NewReestr } from "./Sub1NewReestr";
+import type { ILocalNewTableRow } from "../../testdata/testNewReestrData";
+import type { IUseSub1NewReestrChangeRowParent } from "./Sub1NewReestrChangeRowParent";
+import type NewReestr from "../../../../components/NewReestr/NewReestr.vue";
 
-import { useMainNewReestrChangeRowParent } from "./MainNewReestrChangeRowParent";
+import { useSub1NewReestrChangeRowParent } from "./Sub1NewReestrChangeRowParent";
 
-import { TEST_DATA_ROW_TYPES } from "../testdata/testNewReestrData";
-import { NEW_TABLE_STANDART_CELL_ACTIONS, NEW_TABLE_STANDART_ROW_ACTIONS } from "../../../components/NewTableWrapper/constants/standartActions";
-import { NEW_TABLE_STANDART_ROW_MODES } from "../../../components/NewTable/constants/standartRowModes";
+import { TEST_DATA_ROW_TYPES } from "../../testdata/testNewReestrData";
+import { NEW_TABLE_STANDART_CELL_ACTIONS, NEW_TABLE_STANDART_ROW_ACTIONS } from "../../../../components/NewTableWrapper/constants/standartActions";
+import { NEW_TABLE_STANDART_ROW_MODES } from "../../../../components/NewTable/constants/standartRowModes";
 
-import { findParentRowsById, findParentRowWithChildIndexByChildRowId, findRowById } from "../../../helpers/finders";
-import { calcOwnSums, calcParentSums, calcTotalOwnSums } from "../../../helpers/calacSums";
-import { columnsToCalc, totalColumnsToCalc } from "../testdata/constants/calcs";
+import { findParentRowsById, findParentRowWithChildIndexByChildRowId, findRowById } from "../../../../helpers/finders";
+import { calcOwnSums, calcParentSums, calcTotalOwnSums } from "../../../../helpers/calacSums";
+import { columnsToCalc, totalColumnsToCalc } from "../../testdata/constants/calcs";
 
-export interface IUseMainNewReestrOnRowActions extends IUseMainNewReestrChangeRowParent {
+export interface IUseSub1NewReestrOnRowActions extends IUseSub1NewReestrChangeRowParent {
   selectedRow: Ref<INewTableRow | null>;
   onCellAction: (event: INewTableRowActionEvent) => void;
   onChangeCellValue: (event: INewTableChangeCellValueEvent) => void;
@@ -31,16 +31,16 @@ export interface IUseMainNewReestrOnRowActions extends IUseMainNewReestrChangeRo
   onSave: (event: INewTableRowActionEvent) => void;
 }
 
-export function useMainNewReestrOnRowActions(
-  mainReestr: IUseMainNewReestr,
+export function useSub1NewReestrOnRowActions(
+  sub1Reestr: IUseSub1NewReestr,
   newReestrRef: Ref<typeof NewReestr> | typeof NewReestr | (() => typeof NewReestr)
-): IUseMainNewReestrOnRowActions {
+): IUseSub1NewReestrOnRowActions {
   const selectedRow = ref<INewTableRow | null>(null);
 
-  const initialData = computed<INewTableRow[]>(() => mainReestr.data.value);
+  const initialData = computed<INewTableRow[]>(() => sub1Reestr.data.value);
 
-  const mainNewReestrChangeRowParentComposable = useMainNewReestrChangeRowParent(
-    mainReestr,
+  const sub1NewReestrChangeRowParentComposable = useSub1NewReestrChangeRowParent(
+    sub1Reestr,
   );
 
   /**
@@ -185,6 +185,6 @@ export function useMainNewReestrOnRowActions(
     onRowAction,
     onSave,
 
-    ...mainNewReestrChangeRowParentComposable,
+    ...sub1NewReestrChangeRowParentComposable,
   };
 }

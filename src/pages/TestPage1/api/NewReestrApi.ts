@@ -1,4 +1,4 @@
-import type { INewTableColumns, INewTableColumnSettings } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableColumns } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
 import type { INewTableRow } from "../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
 import type { INewTableActions } from "../../../components/NewTable/types/NewTableActionTypes";
 
