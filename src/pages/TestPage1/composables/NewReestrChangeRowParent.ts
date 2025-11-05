@@ -9,7 +9,6 @@ import {
   findParentRowWithChildIndexByChildRowId,
   findRowById
 } from "../../../helpers/finders";
-import type { IUseMainNewReestr } from "./main/MainNewReestr";
 
 export interface IUseNewReestrChangeRowParent {
   activeRowForChangeParent: Ref<INewTableRow>;

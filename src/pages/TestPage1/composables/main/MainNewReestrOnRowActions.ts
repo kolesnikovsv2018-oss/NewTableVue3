@@ -1,5 +1,5 @@
 import type { Ref } from "vue";
-import { computed, ref, toValue } from "vue";
+import { ref, toValue } from "vue";
 
 import type { INewTableRow } from "../../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
 import type {
@@ -7,7 +7,6 @@ import type {
   INewTableChangeCellValueEvent,
   INewTableRowActionEvent
 } from "../../../../components/NewTable/types/NewTableEventTypes";
-import type { IUseMainNewReestr } from "./MainNewReestr";
 import type { ILocalNewTableRow } from "../../testdata/testNewReestrData";
 import type { IUseNewReestrChangeRowParent } from "../NewReestrChangeRowParent";
 import type NewReestr from "../../../../components/NewReestr/NewReestr.vue";
