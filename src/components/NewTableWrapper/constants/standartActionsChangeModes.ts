@@ -2,7 +2,8 @@ import type { TNewTableActionsChangeModesStandart } from "../../NewTable/types/N
 
 import { NEW_TABLE_STANDART_ROW_MODES } from "../../NewTable/constants/standartRowModes";
 import { NEW_TABLE_STANDART_ROW_ACTIONS } from "./standartActions";
-import { NEW_TABLE_DEFAULT_ROW_TYPE } from "../../NewTable/constants/defaultRowType";
+import { NEW_TABLE_DEFAULT_ROW_TYPE } from "../../NewTable/constants/defaults";
+
 
 /**
  * @constant {TTActionsChangeModesStandart} standartActionsChangeModes для каждого типа строк указаны дкйствия,

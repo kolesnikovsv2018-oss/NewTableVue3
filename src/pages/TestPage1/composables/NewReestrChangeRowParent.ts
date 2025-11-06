@@ -30,24 +30,24 @@ export function useNewReestrChangeRowParent(
     sourceRow: INewTableRow,
     destinationRowId: number | string
   ): boolean {
-    const destinationRow = findRowById(destinationRowId, toValue(initialData));
+    const destinationRow = findRowById({ id: destinationRowId }, toValue(initialData), ['id']);
 
     if (!destinationRow) {
       console.warn('[changeRowParent] Wrong destinationRowId', destinationRowId);
       return false;
     }
 
-
-    // проверим, если строка на 0-м уровне, то для неё не найлется ролитель
+    // проверим, если строка на 0-м уровне, то для неё не найдётся родитель
     // нужно найти в данных на самом верхнем уровне
     const idx = toValue(initialData).findIndex(
+      // ЭТО ЧАСТНЫЙ СЛУЧАЙ ДЛЯ ТЕСТИОВОЙ СТРАНИЦЫ, ГДЕ id - ЕДИНСТВЕННОЕ ПОЛЕ ДЛЯ ID
       (currentRow: INewTableRow) => String(currentRow.data.id) === String(sourceRow.data.id),
     );
     if (idx !== -1) {
       toValue(initialData).splice(idx, 1);
     } else {
       const sourceParentRow =
-        findParentRowWithChildIndexByChildRowId(sourceRow.data.id, toValue(initialData));
+        findParentRowWithChildIndexByChildRowId(sourceRow.data, toValue(initialData), ['id']);
 
       if (!sourceParentRow) {
         return false;
@@ -74,11 +74,11 @@ export function useNewReestrChangeRowParent(
       return;
     }
 
-    const allParentIds = findAllParentRowsFor(newRowParentId, toValue(initialData));
+    const allParentIds = findAllParentRowsFor({ id: newRowParentId }, toValue(initialData), ['id']);
 
     if (allParentIds?.includes(String(activeRowForChangeParent.value.data.id))) {
       console.warn('[onSubmitDestinationRowIdDialog] Loop parent!!!')
-      alert('Warninh! Loop parent!')
+      alert('Warning! Loop parent!')
       return;
     }
 

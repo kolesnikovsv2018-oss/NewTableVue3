@@ -34,28 +34,37 @@ import { useNewTableSlots } from '../NewTable/composables/NewTableSlots';
 import { useNewTableWrapperExpanded } from './composables/NewTableWrapperExpanded';
 import { useNewTableWrapperChecked } from './composables/NewTableWrapperChecked';
 
-import { NEW_TABLE_DEFAULT_ROW_TYPE } from '../NewTable/constants/defaultRowType';
+import { NEW_TABLE_DEFAULT_ROW_TYPE } from '../NewTable/constants/defaults';
+import { getComplexId } from '../NewTable/helpers/getComplexId';
 
 import NewTable from '../NewTable/NewTable.vue';
 import NewScroller from '../NewScroller/NewScroller.vue';
 
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<{
-  data: INewTableRow[];
-  columns: INewTableColumns;
-  columnsSettings: Record<string, INewTableColumnSetting>;
-  commonMeta?: INewTableRowCommonMeta;
-  filters: INewTableFilters;
-  sorts: INewTableSorts;
-  actionsChangeModes: TNewTableActionsChangeModesStandart;
-  // действия, доступные для каждой строки в зависимости от режима
-  actions?: INewTableActions;
-  isNumberColumnShown?: boolean;
-  isCheckboxColumnShown?: boolean;
-  isExpandColumnShown?: boolean;
-  rowCount: number;
-}>();
+const props = withDefaults(
+  defineProps<{
+    data: INewTableRow[];
+    columns: INewTableColumns;
+    columnsSettings: Record<string, INewTableColumnSetting>;
+    commonMeta?: INewTableRowCommonMeta;
+    filters: INewTableFilters;
+    sorts: INewTableSorts;
+    actionsChangeModes: TNewTableActionsChangeModesStandart;
+    // действия, доступные для каждой строки в зависимости от режима
+    actions?: INewTableActions;
+    isNumberColumnShown?: boolean;
+    isCheckboxColumnShown?: boolean;
+    isExpandColumnShown?: boolean;
+    rowCount: number;
+    idFields: string[];
+  }>(),
+  {
+    isNumberColumnShown: false,
+    isCheckboxColumnShown: false,
+    isExpandColumnShown: false,
+    idFields: () => ['id'],
+  });
 
 const emit = defineEmits<{
   (e: 'row-action', event: INewTableRowActionEvent): void;
@@ -247,12 +256,14 @@ function onToggleCheckAllRow() {
 }
 
 function onChangeCellValue(event: INewTableChangeCellValueEvent) {
-  changedRows.value[event.row.data.id] = event.row;
+  changedRows.value[getComplexId(event.row.data, props.idFields)] = event.row;
 
   emit('change:cell-value', event);
 }
 
-function deleteChangedRow(idRow: number | string): INewTableRow {
+function deleteChangedRow(complexRowId: Partial<INewTableRow>, idFields: string[]): INewTableRow {
+  const idRow: string = getComplexId(complexRowId, idFields);
+
   const {
     [idRow]: deletedRow,
     ...newChangedRows
@@ -312,6 +323,7 @@ defineExpose({
         :isExpandColumnShown="isExpandColumnShown"
         :isExpandedAll="isExpandedAll"
         :isCheckedAll="isCheckedAll"
+        :idFields="idFields"
         v-bind="$attrs"
         @row-action="onAction"
         @change:columns-order="onChangeColumnOrders"

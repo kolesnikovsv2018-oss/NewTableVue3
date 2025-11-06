@@ -1,14 +1,16 @@
-import type { Ref} from "vue";
+import type { Ref } from "vue";
 import { computed, toValue } from "vue";
 
 import type { INewTableRow } from "../../NewTable/components/NewTableRow/types/NewTableRowTypes";
 
 import { NEW_TABLE_STANDART_ROW_MODES } from "../../NewTable/constants/standartRowModes";
+import { getComplexId } from "../../NewTable/helpers/getComplexId";
 
 export function useNewTableWrapperFlatData(
   initialData: Ref<INewTableRow[]> | INewTableRow[] | (() => INewTableRow[]),
   filteredData: Ref<INewTableRow[]> | INewTableRow[] | (() => INewTableRow[]),
-  modeIds: Ref<Record<string, Set<number | string>>> | Record<string, Set<number | string>> | (() => Record<string, Set<number | string>>)
+  modeIds: Ref<Record<string, Set<number | string>>> | Record<string, Set<number | string>> | (() => Record<string, Set<number | string>>),
+  idFields: string[] = ['id'],
 ) {
   const fullFlatData = computed<INewTableRow[]>(
     () => generateFlatData(toValue(initialData)),
@@ -56,7 +58,7 @@ export function useNewTableWrapperFlatData(
       if (
         row.children
         && row.children.length > 0
-        && expandedRowsForTransform?.has(row.data.id)
+        && expandedRowsForTransform?.has(getComplexId(row.data, idFields))
       ) {
         const childFlatData = generateOnlyExpandedFlatData(row.children, expandedRowsForTransform, level + 1);
         flatData.push(...childFlatData);

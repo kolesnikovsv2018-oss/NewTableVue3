@@ -1,15 +1,19 @@
-import type { Ref} from "vue";
+import type { Ref } from "vue";
 import { computed, toValue } from "vue";
+
 import type { INewTableRow } from "../../NewTable/components/NewTableRow/types/NewTableRowTypes";
+
 import { NEW_TABLE_STANDART_ROW_MODES } from "../../NewTable/constants/standartRowModes";
+import { getComplexId } from "../../NewTable/helpers/getComplexId";
 
 export function useNewTableWrapperChecked(
   modeIds: Ref<Record<string, Set<number | string>>> | Record<string, Set<number | string>> | (() => Record<string, Set<number | string>>),
   initialFlatData: Ref<INewTableRow[]> | INewTableRow[] | (() => INewTableRow[]),
+  idFields: string[] = ['id'],
 ) {
   const allRowIds = computed<(number | string)[]>(
     () => toValue(initialFlatData).map(
-      (row: INewTableRow) => row.data.id,
+      (row: INewTableRow) => getComplexId(row.data, idFields),
     ),
   );
 

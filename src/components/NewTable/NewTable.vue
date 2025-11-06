@@ -15,16 +15,18 @@ import type { INewTableFilters, INewTableSorts } from './types/NewTableFilterTyp
 import type { INewTableActions } from './types/NewTableActionTypes';
 
 import { NEW_TABLE_STANDART_ROW_MODES } from './constants/standartRowModes';
+import { useNewTableSlots } from './composables/NewTableSlots';
+import { getComplexId } from './helpers/getComplexId';
 
 import NewTableHeader from './components/NewTableHeader/NewTableHeader.vue';
 import NewTableRow from './components/NewTableRow/NewTableRow.vue';
-import { useNewTableSlots } from './composables/NewTableSlots';
+import { get } from 'http';
 
 defineOptions({
   inheritAttrs: false,
 });
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   // подготовленные данные, которые полностьб будут отображаться
   data: INewTableRow[];
   // измененные строки, которые редактируются в данный момент
@@ -54,7 +56,14 @@ const props = defineProps<{
   isExpandColumnShown?: boolean;
   isExpandedAll: boolean;
   isCheckedAll: boolean;
-}>();
+  idFields: string[];
+}>(), {
+  startIndex: 0,
+  isNumberColumnShown: false,
+  isCheckboxColumnShown: false,
+  isExpandColumnShown: false,
+  idFields: () => ['id'],
+});
 
 const emit = defineEmits<{
   // (e: 'toggle:expand-row', row: INewTableRow): void;
@@ -96,7 +105,9 @@ const isActionsColumnShown = computed<boolean>(
 
 function getModesForRow(row: INewTableRow): string[] | undefined {
   const result = Object.keys(computedModeIds.value || {}).filter(
-    (mode) => computedModeIds.value?.[mode]?.has(row.data.id)
+    (mode) => {
+      return computedModeIds.value?.[mode]?.has(getComplexId(row.data, props.idFields));
+    }
   );
 
   if (!result.includes(NEW_TABLE_STANDART_ROW_MODES.EDIT) && !result.includes(NEW_TABLE_STANDART_ROW_MODES.VIEW)) {
@@ -104,6 +115,10 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
   }
 
   return result;
+}
+
+function getChangedRow(row: INewTableRow): INewTableRow | undefined {
+  return props.changedRows[getComplexId(row.data, props.idFields)];
 }
 </script>
 
@@ -153,9 +168,9 @@ function getModesForRow(row: INewTableRow): string[] | undefined {
       -->
       <NewTableRow
         v-for="(row, rowIndex) in data"
-        :key="`${startIndex + rowIndex + 1}-${row.data.id}`"
+        :key="`${startIndex + rowIndex + 1}-${getComplexId(row.data, props.idFields)}`"
         :row="row"
-        :changedRow="changedRows[row.data.id]"
+        :changedRow="getChangedRow(row)"
         :localColumnsSettings="columnsSettings"
         :isNumberColumnShown="true"
         :rowNumber="startIndex + rowIndex + 1"

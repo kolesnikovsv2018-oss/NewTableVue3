@@ -3,8 +3,11 @@ import { computed, ref } from "vue";
 import type { INewTableRow } from "../../NewTable/components/NewTableRow/types/NewTableRowTypes";
 
 import { NEW_TABLE_STANDART_ROW_MODES } from "../../NewTable/constants/standartRowModes";
+import { getComplexId } from "../../NewTable/helpers/getComplexId";
 
-export function useNewTableWrapperModes() {
+export function useNewTableWrapperModes(
+  idFields: string[] = ['id'],
+) {
   const modeIds = ref<Record<string, Set<number | string>>>({});
 
   const editingIds = computed<Set<number | string> | undefined>(
@@ -21,12 +24,12 @@ export function useNewTableWrapperModes() {
     if (!modeIds.value[mode]) {
       modeIds.value[mode] = new Set();
     }
-    modeIds.value[mode].add(row.data.id);
+    modeIds.value[mode].add(getComplexId(row.data, idFields));
   }
 
   function switchOffModeForRow(mode: string, row: INewTableRow) {
-    if (modeIds.value[mode]?.has(row.data.id)) {
-      modeIds.value[mode].delete(row.data.id);
+    if (modeIds.value[mode]?.has(getComplexId(row.data, idFields))) {
+      modeIds.value[mode].delete(getComplexId(row.data, idFields));
     }
   }
 
@@ -51,7 +54,7 @@ export function useNewTableWrapperModes() {
   }
 
   function toggleModeForRow(mode: string, row: INewTableRow) {
-    if (modeIds.value?.[mode]?.has(row.data.id)) {
+    if (modeIds.value?.[mode]?.has(getComplexId(row.data, idFields))) {
       switchOffModeForRow(mode, row);
     } else {
       switchOnModeForRow(mode, row);
@@ -59,7 +62,7 @@ export function useNewTableWrapperModes() {
   }
 
   function toggleModeForRowWithChildren(mode: string, row: INewTableRow) {
-    if (modeIds.value?.[mode]?.has(row.data.id)) {
+    if (modeIds.value?.[mode]?.has(getComplexId(row.data, idFields))) {
       switchOffModeForRowWithChildren(mode, row);
     } else {
       switchOnModeForRowWithChildren(mode, row);

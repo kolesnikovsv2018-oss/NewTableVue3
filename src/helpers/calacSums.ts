@@ -38,16 +38,17 @@ export function calcOwnSums(row: INewTableRow, data: INewTableRow[], columnsToCa
 export function calcParentSums(
   row: INewTableRow,
   data: INewTableRow[],
-  columnsToCalc: string[]
+  columnsToCalc: string[],
+  idFields: string[] = ['id']
 ): void {
   let currentParent: TFindParentRowWithChildIndexByChildRowId | null = null;
 
   let newParentRowWithIndexOfParent: TFindParentRowWithChildIndexByChildRowId
-    = findParentRowWithChildIndexByChildRowId(row.data.id, data);
+    = findParentRowWithChildIndexByChildRowId(row.data, data, idFields);
 
   while (currentParent !== newParentRowWithIndexOfParent && !!newParentRowWithIndexOfParent) {
     calcOwnSums(newParentRowWithIndexOfParent.parent, data, columnsToCalc);
     currentParent = newParentRowWithIndexOfParent;
-    newParentRowWithIndexOfParent = findParentRowWithChildIndexByChildRowId(currentParent.parent.data.id, data);
+    newParentRowWithIndexOfParent = findParentRowWithChildIndexByChildRowId(currentParent.parent.data, data, idFields);
   }
 }

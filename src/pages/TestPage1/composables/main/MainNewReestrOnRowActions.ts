@@ -20,6 +20,7 @@ import { NEW_TABLE_STANDART_ROW_MODES } from "../../../../components/NewTable/co
 import { findParentRowsById, findParentRowWithChildIndexByChildRowId, findRowById } from "../../../../helpers/finders";
 import { calcOwnSums, calcParentSums, calcTotalOwnSums } from "../../../../helpers/calacSums";
 import { columnsToCalc, totalColumnsToCalc } from "../../testdata/constants/calcs";
+import { getComplexId } from "../../../../components/NewTable/helpers/getComplexId";
 
 export interface IUseMainNewReestrOnRowActions extends IUseNewReestrChangeRowParent {
   selectedRow: Ref<INewTableRow | null>;
@@ -32,7 +33,8 @@ export interface IUseMainNewReestrOnRowActions extends IUseNewReestrChangeRowPar
 
 export function useMainNewReestrOnRowActions(
   initialData: Ref<INewTableRow[]> | INewTableRow[] | (() => INewTableRow[]),
-  newReestrRef: Ref<typeof NewReestr> | typeof NewReestr | (() => typeof NewReestr)
+  newReestrRef: Ref<typeof NewReestr> | typeof NewReestr | (() => typeof NewReestr),
+  idFields: string[] = ['id'],
 ): IUseMainNewReestrOnRowActions {
   const selectedRow = ref<INewTableRow | null>(null);
 
@@ -45,15 +47,19 @@ export function useMainNewReestrOnRowActions(
    * @param row строка, которую нужно обновить в данных
    */
   function setRow(row: INewTableRow) {
-    const parenRows = findParentRowsById(row.data.id, toValue(initialData));
+    const parentRows = findParentRowsById(
+      row.data,
+      toValue(initialData),
+      idFields,
+    );
 
-    if (!parenRows) {
+    if (!parentRows) {
       return;
     }
 
-    parenRows?.forEach((r, index) => {
-      if (r.data.id === row.data.id) {
-        parenRows[index] = row;
+    parentRows?.forEach((r, index) => {
+      if (getComplexId(r.data, idFields) === getComplexId(row.data, idFields)) {
+        parentRows[index] = row;
       }
     });
   }
@@ -70,13 +76,21 @@ export function useMainNewReestrOnRowActions(
     }
 
     const parentRowWithChildRowId = findParentRowWithChildIndexByChildRowId(
-      row.data.id,
-      toValue(initialData)
+      row.data,
+      toValue(initialData),
+      idFields,
     );
 
-    const parenRows = findParentRowsById(row.data.id, toValue(initialData));
-    parenRows?.splice(
-      parenRows.findIndex(r => r.data.id === row.data.id),
+    const parentRows = findParentRowsById(
+      row.data,
+      toValue(initialData),
+      idFields,
+    );
+
+    parentRows?.splice(
+      parentRows.findIndex(
+        (r: INewTableRow) => getComplexId(r.data, idFields) === getComplexId(row.data, idFields)
+      ),
       1
     );
 
@@ -94,21 +108,27 @@ export function useMainNewReestrOnRowActions(
     calcTotalOwnSums(event.row as ILocalNewTableRow);
     saveRow(event.row);
     calcParentSums(event.row, toValue(initialData), columnsToCalc);
-    toValue(newReestrRef).deleteChangedRow(event.row.data.id);
+    toValue(newReestrRef).deleteChangedRow(event.row.data, idFields);
   }
 
   function onDelete(event: INewTableRowActionEvent) {
-    const parentRow = findParentRowWithChildIndexByChildRowId(event.row.data.id, toValue(initialData));
+    const parentRow = findParentRowWithChildIndexByChildRowId(
+      event.row.data,
+      toValue(initialData),
+      idFields,
+    );
+
     deleteRow(event.row);
+
     if (parentRow) {
       calcOwnSums(parentRow.parent, toValue(initialData), columnsToCalc);
       calcParentSums(parentRow.parent, toValue(initialData), columnsToCalc);
     }
-    toValue(newReestrRef).deleteChangedRow(event.row.data.id);
+    toValue(newReestrRef).deleteChangedRow(event.row.data, idFields);
   }
 
   function onCancel(event: INewTableRowActionEvent) {
-    toValue(newReestrRef).deleteChangedRow(event.row.data.id);
+    toValue(newReestrRef).deleteChangedRow(event.row.data, idFields);
   }
 
   function onRowAction(event: INewTableRowActionEvent) {
@@ -161,7 +181,12 @@ export function useMainNewReestrOnRowActions(
   }
 
   function onChangeCellValue(event: INewTableChangeCellValueEvent) {
-    const row = findRowById(event.row.data.id, toValue(initialData));
+    const row = findRowById(
+      event.row.data,
+      toValue(initialData),
+      idFields,
+    );
+
     if (row) {
       // row.data[event.key] = event.value;
       event.row[event.key] = event.value;

@@ -15,8 +15,8 @@ import type { INewTableFilters, INewTableSorts } from '../NewTable/types/NewTabl
 import { useNewReestrContextMenu } from './composables/NewReestrContextMenu';
 import { useNewTableSlots } from '../NewTable/composables/NewTableSlots';
 
+import { NEW_TABLE_DEFAULT_ROW_TYPE } from '../NewTable/constants/defaults';
 import { NEW_TABLE_STANDART_ROW_MODES } from '../NewTable/constants/standartRowModes';
-import { NEW_TABLE_DEFAULT_ROW_TYPE } from '../NewTable/constants/defaultRowType';
 
 import NewTableWrapper from '../NewTableWrapper/NewTableWrapper.vue';
 import NewContextMenu from '../NewContextMenu/NewContextMenu.vue';
@@ -153,7 +153,7 @@ function onChangeStartIndex(newStartIndex: number) {
 }
 
 defineExpose({
-  deleteChangedRow: (idRow: number | string) => newTableWrapperRef.value?.deleteChangedRow(idRow),
+  deleteChangedRow: (complexRowId: Partial<INewTableRow>, idFields: string[]) => newTableWrapperRef.value?.deleteChangedRow(complexRowId, idFields),
   switchOnModeForRow: (mode: string, row: INewTableRow) => newTableWrapperRef.value?.switchOnModeForRow(mode, row),
   switchOffModeForRow: (mode: string, row: INewTableRow) => newTableWrapperRef.value?.switchOffModeForRow(mode, row),
 });
