@@ -1,3 +1,6 @@
-export function getComplexId(rowData: Record<string, any>, idFields: string[]): string {
+export function getComplexId(
+  rowData: Record<string, unknown>,
+  idFields: string[]
+): string {
   return idFields.map(field => rowData[field]).toString();
 }

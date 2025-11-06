@@ -20,7 +20,6 @@ import { getComplexId } from './helpers/getComplexId';
 
 import NewTableHeader from './components/NewTableHeader/NewTableHeader.vue';
 import NewTableRow from './components/NewTableRow/NewTableRow.vue';
-import { get } from 'http';
 
 defineOptions({
   inheritAttrs: false,
