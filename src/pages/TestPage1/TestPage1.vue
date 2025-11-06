@@ -127,6 +127,7 @@ onMounted(async () => {
             }
           }"
           :row-count="mainReestrComposable.rowCount.value"
+          :id-fields="mainReestrComposable.idFields.value"
           @change:row-count="mainReestrComposable.onChangeRowCount($event)"
           @row-action="mainReestrComposable.onRowAction"
           @change:cell-value="mainReestrComposable.onChangeCellValue"
@@ -215,6 +216,7 @@ onMounted(async () => {
               }
             }"
             :row-count="activeReestr.rowCount"
+            :id-fields="activeReestr.idFields"
             @change:row-count="activeReestr.onChangeRowCount($event)"
             @row-action="activeReestr.onRowAction"
             @change:cell-value="activeReestr.onChangeCellValue"

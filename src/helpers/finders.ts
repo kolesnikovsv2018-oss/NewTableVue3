@@ -89,7 +89,7 @@ export function findParentRowsById(
   if (!findedRow) {
     for (const row of rows) {
       if (row.children?.length) {
-        const childRows = findParentRowsById(complexRowId, row.children);
+        const childRows = findParentRowsById(complexRowId, row.children, idFields);
         if (childRows) {
           return childRows;
         }
@@ -133,7 +133,7 @@ export function findParentRowWithChildIndexByChildRowId(
       };
     }
 
-    const parentRowWithChildIndex = findParentRowWithChildIndexByChildRowId(childComplexRowId, row.children);
+    const parentRowWithChildIndex = findParentRowWithChildIndexByChildRowId(childComplexRowId, row.children, idFields);
     if (parentRowWithChildIndex) {
       return parentRowWithChildIndex;
     }

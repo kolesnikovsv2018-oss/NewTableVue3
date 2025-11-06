@@ -29,6 +29,7 @@ export interface IUseSub1NewReestr extends
   IUseSub1NewReestrActionsChangeModes,
   IUseSub1NewReestrOnRowActions,
   IUseSub1NewReestrContextMenu {
+  idFields: Ref<string[]>;
   data: Ref<INewTableRow[]>;
   columns: Ref<INewTableColumns>;
   actions: Ref<INewTableActions>;
@@ -49,6 +50,8 @@ export function useSub1NewReestr(
     reestrName,
     initialRowCount,
   );
+
+  const idFields = ref<string[]>(['id']);
 
   const sub1NewReestrApiComposable = useSub1NewReestrApi();
 
@@ -79,6 +82,7 @@ export function useSub1NewReestr(
   const sub1NewReestrOnRowActionsComposable = useSub1NewReestrOnRowActions(
     () => data.value,
     () => toValue(newReestrRef),
+    idFields.value,
   );
 
   const sub1NewReestrContextMenuComposable = useSub1NewReestrContextMenu(
@@ -116,6 +120,7 @@ export function useSub1NewReestr(
     ...sub1NewReestrOnRowActionsComposable,
     ...sub1NewReestrContextMenuComposable,
 
+    idFields,
     actions,
     columns,
     data,

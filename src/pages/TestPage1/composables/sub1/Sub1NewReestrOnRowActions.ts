@@ -100,14 +100,14 @@ export function useSub1NewReestrOnRowActions(
 
     if (parentRowWithChildRowId) {
       calcOwnSums(parentRowWithChildRowId.parent, toValue(initialData), columnsToCalc);
-      calcParentSums(parentRowWithChildRowId.parent, toValue(initialData), columnsToCalc);
+      calcParentSums(parentRowWithChildRowId.parent, toValue(initialData), columnsToCalc, idFields);
     }
   }
 
   function onSave(event: INewTableRowActionEvent) {
     calcTotalOwnSums(event.row as ILocalNewTableRow);
     saveRow(event.row);
-    calcParentSums(event.row, toValue(initialData), columnsToCalc);
+    calcParentSums(event.row, toValue(initialData), columnsToCalc, idFields);
     toValue(newReestrRef).deleteChangedRow(event.row.data, idFields);
   }
 
@@ -122,7 +122,7 @@ export function useSub1NewReestrOnRowActions(
 
     if (parentRow) {
       calcOwnSums(parentRow.parent, toValue(initialData), columnsToCalc);
-      calcParentSums(parentRow.parent, toValue(initialData), columnsToCalc);
+      calcParentSums(parentRow.parent, toValue(initialData), columnsToCalc, idFields);
     }
     toValue(newReestrRef).deleteChangedRow(event.row.data, idFields);
   }

@@ -88,7 +88,7 @@ const {
   switchOffModeForRowWithChildren,
   toggleModeForRow,
   toggleModeForRowWithChildren,
-} = useNewTableWrapperModes();
+} = useNewTableWrapperModes(props.idFields);
 
 const {
   filters,
@@ -113,7 +113,8 @@ const {
 } = useNewTableWrapperFlatData(
   () => props.data,
   () => sortedData.value,
-  () => modeIds.value
+  () => modeIds.value,
+  props.idFields,
 );
 
 const {
@@ -143,6 +144,7 @@ const {
 } = useNewTableWrapperExpanded(
   () => modeIds.value,
   () => filteredFlatData.value,
+  props.idFields,
 );
 
 const {
@@ -151,6 +153,7 @@ const {
 } = useNewTableWrapperChecked(
   () => modeIds.value,
   () => filteredFlatData.value,
+  props.idFields,
 );
 
 const { onWheelEvent } = useWheelEvent(onNext, onPrevious);

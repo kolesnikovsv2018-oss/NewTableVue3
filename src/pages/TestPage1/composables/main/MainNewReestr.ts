@@ -33,6 +33,7 @@ export interface IUseMainNewReestr extends
   IUseMainNewReestrOnRowActions,
   IUseMainNewReestrContextMenu,
   IUseMainNewReestrSideMenu {
+  idFields: Ref<string[]>;
   data: Ref<INewTableRow[]>;
   columns: Ref<INewTableColumns>;
   actions: Ref<INewTableActions>;
@@ -54,6 +55,7 @@ export function useMainNewReestr(
     reestrName,
     initialRowCount,
   );
+  const idFields = ref<string[]>(['id', 'name']);
 
   const mainNewReestrApiComposable = useMainNewReestrApi();
 
@@ -86,6 +88,7 @@ export function useMainNewReestr(
   const mainNewReestrOnRowActionsComposable = useMainNewReestrOnRowActions(
     () => data.value,
     () => toValue(newReestrRef),
+    idFields.value,
   );
 
   const mainNewReestrContextMenuComposable = useMainNewReestrContextMenu(
@@ -130,6 +133,7 @@ export function useMainNewReestr(
     ...mainNewReestrContextMenuComposable,
     ...mainNewReestrSideMenuComposable,
 
+    idFields,
     actions,
     columns,
     data,

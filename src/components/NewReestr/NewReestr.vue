@@ -41,7 +41,8 @@ const props = defineProps<{
   isCheckboxColumnShown?: boolean;
   isExpandColumnShown?: boolean;
   commonMeta?: INewTableRowCommonMeta;
-  rowCount?: number;
+  rowCount: number;
+  idFields: string[];
 }>();
 
 const emit = defineEmits<{
@@ -184,6 +185,7 @@ defineExpose({
         :isExpandColumnShown="props.isExpandColumnShown"
         :common-meta="props.commonMeta"
         :row-count="rowCount"
+        :id-fields="props.idFields"
         v-bind="$attrs"
         @row-action="$emit('row-action', $event)"
         @change:cell-value="$emit('change:cell-value', $event)"
