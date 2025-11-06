@@ -1,34 +1,8 @@
+import { get } from "http";
 import type { INewTableRow } from "../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
+import { getComplexId } from "../components/NewTable/helpers/getComplexId";
 
 export type TFindParentRowWithChildIndexByChildRowId = { parent: INewTableRow, index: number };
-
-// export function findRowByFields(
-//   complexRowId: Record<string, unknown>,
-//   rows: INewTableRow[],
-//   fields: string[], // поля, по которым нужно искать
-// ): INewTableRow | undefined {
-//   const originalRowFieldValues = fields.map((field: string) => complexRowId[field]);
-
-//   const findedRow = rows.find(
-//     (row: INewTableRow) => {
-//       const currentRowIdValues: unknown[] = fields.map((field: string) => row.data[field]);
-//       return currentRowIdValues.toString() === originalRowFieldValues.toString();
-//     },
-//   );
-
-//   if (!findedRow) {
-//     for (const row of rows) {
-//       if (row.children?.length) {
-//         const childRow = findRowById(complexRowId, row.children);
-//         if (childRow) {
-//           return childRow;
-//         }
-//       }
-//     }
-//   } else {
-//     return findedRow;
-//   }
-// }
 
 /**
  * Поиск строки по составному ID
@@ -42,12 +16,11 @@ export function findRowById(
   rows: INewTableRow[],
   idFields: string[] = ['id'], // поля, из которых состоит составной ID
 ): INewTableRow | undefined {
-  const originalRowIdValues = idFields.map((field: string) => complexRowId[field]);
+  const originalRowId = getComplexId(complexRowId, idFields);
 
   const findedRow = rows.find(
     (row: INewTableRow) => {
-      const currentRowIdValues: unknown[] = idFields.map((field: string) => row.data[field]);
-      return currentRowIdValues.toString() === originalRowIdValues.toString();
+      return originalRowId === getComplexId(row.data, idFields);
     },
   );
 
@@ -77,12 +50,11 @@ export function findParentRowsById(
   rows: INewTableRow[],
   idFields: string[] = ['id'], // поля, из которых состоит составной ID
 ): INewTableRow[] | undefined {
-  const originalRowIdValues = idFields.map((field: string) => complexRowId[field]);
+  const originalRowId = getComplexId(complexRowId, idFields);
 
   const findedRow = rows.find(
     (row: INewTableRow) => {
-      const currentRowIdValues: unknown[] = idFields.map((field: string) => row.data[field]);
-      return currentRowIdValues.toString() === originalRowIdValues.toString();
+      return originalRowId === getComplexId(row.data, idFields);
     }
   );
 
@@ -117,12 +89,11 @@ export function findParentRowWithChildIndexByChildRowId(
       continue;
     }
 
-    const originalRowIdValues: unknown[] = idFields.map((field: string) => childComplexRowId[field]);
+    const originalRowId = getComplexId(childComplexRowId, idFields);
 
     const childIndex: number = row.children.findIndex(
       (r: INewTableRow): boolean => {
-        const currentRowIdValues: unknown[] = idFields.map((field: string) => r.data[field]);
-        return currentRowIdValues.toString() === originalRowIdValues.toString();
+        return originalRowId === getComplexId(r.data, idFields);
       },
     );
 
@@ -155,22 +126,23 @@ export function findAllParentRowsFor(
   const resArr: string[] = [];
 
   const findParent = (complexRowId: Record<string, unknown>, currentData: INewTableRow[]) => {
+    const complexRowIdString: string = getComplexId(complexRowId, idFields);
+
     for (const currentRow of currentData) {
-      const currentRowIdValues: unknown[] = idFields.map((field: string) => currentRow.data[field]);
+      const currentComplexRowIdString: string = getComplexId(currentRow.data, idFields);
 
       if (currentRow.children?.find(
         (currentChildRow: INewTableRow) => {
-          const currentChildRowIdValues: unknown[] = idFields.map((field: string) => currentChildRow.data[field]);
-          return currentChildRowIdValues.toString() === complexRowId.toString();
+          return complexRowIdString === getComplexId(currentChildRow.data, idFields);
         }
       )) {
-        resArr.push(String(currentRowIdValues.toString()));
+        resArr.push(String(currentComplexRowIdString));
         return currentRow;
       }
 
       if (!!currentRow.children?.length) {
         if (findParent(complexRowId, currentRow.children)) {
-          resArr.push(String(currentRowIdValues.toString()));
+          resArr.push(String(currentComplexRowIdString.toString()));
           return currentRow;
         }
       }
