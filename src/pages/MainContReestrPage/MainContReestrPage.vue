@@ -1,12 +1,17 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
+
 import NewSplitter from '@/components/NewSplitter/NewSplitter.vue';
+
+import { fetchContMainReestrData } from './api/MainContReestrPageApi';
 
 const splitterDiv1Height = ref<number | null>(300);
 
 function onUpdateDiv1Size(newSize: number | null) {
   splitterDiv1Height.value = newSize;
 }
+
+const conrMainReestrData = fetchContMainReestrData();
 </script>
 
 <template>
@@ -18,7 +23,14 @@ function onUpdateDiv1Size(newSize: number | null) {
       class="main-reestr-page__splitter-wrapper"
       @update:div1-size="onUpdateDiv1Size"
     >
+      <template #div1>
+        <p>Div 1 (height: {{ splitterDiv1Height }}px)</p>
+        <p>{{ conrMainReestrData }}</p>
+      </template>
 
+      <template #div2>
+        <p>Div 2</p>
+      </template>
     </NewSplitter>
   </div>
 </template>
