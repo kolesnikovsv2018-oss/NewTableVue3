@@ -1,8 +1,8 @@
-import type { Ref} from "vue";
+import type { Ref } from "vue";
 import { computed, ref, toValue, watch } from "vue";
 
-import type { INewTableRow } from "../../NewTable/components/NewTableRow/types/NewTableRowTypes";
-import type { INewTableSorts } from "../../NewTable/types/NewTableFilterTypes";
+import type { INewTableRow } from "@/components/NewTable/components/NewTableRow/types/NewTableRowTypes";
+import type { INewTableSorts } from "@/components/NewTable/types/NewTableFilterTypes";
 
 export function useNewTableWrapperSortData(
   data: Ref<INewTableRow[]> | INewTableRow[] | (() => INewTableRow[]),

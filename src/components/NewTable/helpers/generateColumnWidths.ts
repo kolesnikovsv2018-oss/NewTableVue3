@@ -1,6 +1,6 @@
-import type { INewTableColumn, INewTableColumnSetting } from "../components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableColumn, INewTableColumnSetting } from "@/components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
 
-import { NEW_TABLE_DEFAULT_COLUMN_WIDTH } from "../constants/defaults";
+import { NEW_TABLE_DEFAULT_COLUMN_WIDTH } from "@/components/NewTable/constants/defaults";
 
 /**
  * Генерирует ширины (для CSS включая px) колонок на основе видимых колонок и локальных настроек колонок

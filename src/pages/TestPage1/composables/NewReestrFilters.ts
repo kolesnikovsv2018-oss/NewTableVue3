@@ -1,8 +1,8 @@
 import type { Ref } from "vue";
 import { ref, toValue } from "vue";
 
-import type { INewTableFilter, INewTableFilters } from "../../../components/NewTable/types/NewTableFilterTypes";
-import type { IUseNewReestrFiltersApi } from "../api/types";
+import type { INewTableFilter, INewTableFilters } from "@/components/NewTable/types/NewTableFilterTypes";
+import type { IUseNewReestrFiltersApi } from "@/pages/TestPage1/api/types";
 
 export interface IUseNewReestrFilters {
   filters: Ref<INewTableFilters>;

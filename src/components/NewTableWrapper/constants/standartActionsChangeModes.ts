@@ -1,8 +1,8 @@
-import type { TNewTableActionsChangeModesStandart } from "../../NewTable/types/NewTableActionsChangeModesTypes";
+import type { TNewTableActionsChangeModesStandart } from "@/components/NewTable/types/NewTableActionsChangeModesTypes";
 
-import { NEW_TABLE_STANDART_ROW_MODES } from "../../NewTable/constants/standartRowModes";
-import { NEW_TABLE_STANDART_ROW_ACTIONS } from "./standartActions";
-import { NEW_TABLE_DEFAULT_ROW_TYPE } from "../../NewTable/constants/defaults";
+import { NEW_TABLE_STANDART_ROW_MODES } from "@/components/NewTable/constants/standartRowModes";
+import { NEW_TABLE_STANDART_ROW_ACTIONS } from "@/components/NewTableWrapper/constants/standartActions";
+import { NEW_TABLE_DEFAULT_ROW_TYPE } from "@/components/NewTable/constants/defaults";
 
 
 /**

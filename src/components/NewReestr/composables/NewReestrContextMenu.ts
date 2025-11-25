@@ -1,5 +1,5 @@
-import type { INewMenuItem } from "../../NewContextMenu/types";
-import type { INewTableRowActionEvent } from "../../NewTable/types/NewTableEventTypes";
+import type { INewMenuItem } from "@/components/NewContextMenu/types";
+import type { INewTableRowActionEvent } from "@/components/NewTable/types/NewTableEventTypes";
 
 export function useNewReestrContextMenu(
   // activeContextMenuItems: Ref<INewContexMenuItem[]> | INewContexMenuItem[] | (() => INewContexMenuItem[]),

@@ -1,9 +1,9 @@
-import type { INewTableColumns } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
-import type { INewTableRow } from "../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
-import type { INewTableActions } from "../../../components/NewTable/types/NewTableActionTypes";
+import type { INewTableColumns } from "@/components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableRow } from "@/components/NewTable/components/NewTableRow/types/NewTableRowTypes";
+import type { INewTableActions } from "@/components/NewTable/types/NewTableActionTypes";
 
-import { generateLargeTestData } from "../testdata/testNewReestrData";
-import { newTableStandartActions } from "../../../components/NewTableWrapper/constants/standartActions";
+import { generateLargeTestData } from "@/pages/TestPage1/testdata/testNewReestrData";
+import { newTableStandartActions } from "@/components/NewTableWrapper/constants/standartActions";
 
 export interface IUseNewReestrApi {
   fetchActions: () => Promise<INewTableActions>;

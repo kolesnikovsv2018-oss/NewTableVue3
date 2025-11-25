@@ -1,8 +1,8 @@
 import type { Ref } from "vue";
 import { ref } from "vue";
 
-import type { INewMenuItem } from "../../../../components/NewContextMenu/types";
-import type { IUseNewReestrFilters } from "../NewReestrFilters";
+import type { INewMenuItem } from "@/components/NewContextMenu/types";
+import type { IUseNewReestrFilters } from "@/pages/TestPage1/composables/NewReestrFilters";
 
 interface IMainNewReestrSideMenuSubmitEvent {
   name: string;

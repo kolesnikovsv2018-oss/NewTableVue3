@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue';
 
-import type { ILocalNewTableRow } from './testdata/testNewReestrData';
-import type { ITestRangeDate } from '../../components/FilterComponents/components/types';
+import type { ILocalNewTableRow } from '@/pages/TestPage1/testdata/testNewReestrData';
+import type { ITestRangeDate } from '@/components/FilterComponents/components/types';
 
-import { useMainNewReestr } from './composables/main/MainNewReestr';
-import { useTestPage1Settings } from './composables/TestPage1Settings';
-import { useSub1NewReestr } from './composables/sub1/Sub1NewReestr';
+import { useMainNewReestr } from '@/pages/TestPage1/composables/main/MainNewReestr';
+import { useTestPage1Settings } from '@/pages/TestPage1/composables/TestPage1Settings';
+import { useSub1NewReestr } from '@/pages/TestPage1/composables/sub1/Sub1NewReestr';
 
-import { integerToRoman } from '../../helpers/integerToRoman';
+import { integerToRoman } from '@/helpers/integerToRoman';
 
-import NewReestr from '../../components/NewReestr/NewReestr.vue';
-import NewReestrChangeRowParentDialog from '../../components/NewReestr/components/NewReestrChangeRowParentDialog/NewReestrChangeRowParentDialog.vue';
-import NewSplitter from '../../components/NewSplitter/NewSplitter.vue';
-import NewReestrSideMenuDateFilter from './components/NewReestrSideMenuDateFilter/NewReestrSideMenuDateFilter.vue';
-import NewReestrSideMenuSumms from './components/NewReestrSideMenuSumms/NewReestrSideMenuSumms.vue';
+import NewReestr from '@/components/NewReestr/NewReestr.vue';
+import NewReestrChangeRowParentDialog from '@/components/NewReestr/components/NewReestrChangeRowParentDialog/NewReestrChangeRowParentDialog.vue';
+import NewSplitter from '@/components/NewSplitter/NewSplitter.vue';
+import NewReestrSideMenuDateFilter from '@/pages/TestPage1/components/NewReestrSideMenuDateFilter/NewReestrSideMenuDateFilter.vue';
+import NewReestrSideMenuSumms from '@/pages/TestPage1/components/NewReestrSideMenuSumms/NewReestrSideMenuSumms.vue';
 
 const newMainReestrRef = ref<typeof NewReestr>();
 

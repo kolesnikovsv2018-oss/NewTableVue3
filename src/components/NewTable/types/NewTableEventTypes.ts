@@ -1,5 +1,5 @@
-import type { INewTableColumn } from "../components/NewTableHeader/types/INewTableHeadTypes";
-import type { INewTableRow } from "../components/NewTableRow/types/NewTableRowTypes";
+import type { INewTableColumn } from "@/components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableRow } from "@/components/NewTable/components/NewTableRow/types/NewTableRowTypes";
 
 export interface INewTableRowActionEvent {
   name: string; // action name

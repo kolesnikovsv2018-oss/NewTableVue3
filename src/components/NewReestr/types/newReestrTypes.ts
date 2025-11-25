@@ -1,4 +1,4 @@
-import type { INewMenuItem } from "../../NewContextMenu/types";
+import type { INewMenuItem } from "@/components/NewContextMenu/types";
 
 export type INewReestrContexMenuItems = Record<string, INewMenuItem[]>
 

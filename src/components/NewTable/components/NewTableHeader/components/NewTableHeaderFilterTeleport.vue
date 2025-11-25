@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import type { INewTableChangeFilterValueEvent } from '../../../types/NewTableEventTypes';
-import type { INewTableFilters } from '../../../types/NewTableFilterTypes';
+import type { INewTableChangeFilterValueEvent } from '@/components/NewTable/types/NewTableEventTypes';
+import type { INewTableFilters } from '@/components/NewTable/types/NewTableFilterTypes';
 
-import { useOutsideClickHandler } from '../../../../../composables/useOutsideClickHandler';
+import { useOutsideClickHandler } from '@/composables/useOutsideClickHandler';
 
 const props = defineProps<{
   activeHeaderFilterName: string;

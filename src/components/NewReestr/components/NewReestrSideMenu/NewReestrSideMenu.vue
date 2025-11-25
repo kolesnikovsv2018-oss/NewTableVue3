@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { INewMenuItem } from '../../../NewContextMenu/types';
+import type { INewMenuItem } from '@/components/NewContextMenu/types';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 

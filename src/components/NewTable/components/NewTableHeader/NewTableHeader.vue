@@ -3,18 +3,18 @@ import { computed, nextTick, ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faFolder, faFolderOpen, faSortUp, faSortDown, faSort } from '@fortawesome/free-solid-svg-icons';
 
-import type { INewTableColumn, INewTableColumnSettings } from './types/INewTableHeadTypes';
+import type { INewTableColumn, INewTableColumnSettings } from '@/components/NewTable/components/NewTableHeader/types/INewTableHeadTypes';
 import type {
   INewTableChangeFilterValueEvent,
   INewTableChangeColumnsOrderEvent,
   INewTableChangeColumnWidthEvent
-} from '../../types/NewTableEventTypes';
-import type { INewTableFilters, INewTableSorts } from '../../types/NewTableFilterTypes';
+} from '@/components/NewTable/types/NewTableEventTypes';
+import type { INewTableFilters, INewTableSorts } from '@/components/NewTable/types/NewTableFilterTypes';
 
-import { generateColumnWidths } from '../../helpers/generateColumnWidths';
-import { useNewTableHeaderMouseWidth } from './composables/NewTableHeaderMouseWidth';
+import { generateColumnWidths } from '@/components/NewTable/helpers/generateColumnWidths';
+import { useNewTableHeaderMouseWidth } from '@/components/NewTable/components/NewTableHeader/composables/NewTableHeaderMouseWidth';
 
-import NewTableHeaderFilterTeleport from './components/NewTableHeaderFilterTeleport.vue';
+import NewTableHeaderFilterTeleport from '@/components/NewTable/components/NewTableHeader/components/NewTableHeaderFilterTeleport.vue';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
 const props = defineProps<{

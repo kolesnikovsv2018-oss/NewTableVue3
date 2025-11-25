@@ -1,17 +1,17 @@
-import type { IUseNewReestrApi } from "./NewReestrApi";
-import type { TNewTableActionsChangeModesStandart } from "../../../components/NewTable/types/NewTableActionsChangeModesTypes";
-import type { INewTableColumns, INewTableColumnSettings } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
-import type { INewTableFilters, INewTableSorts } from "../../../components/NewTable/types/NewTableFilterTypes";
-import type { INewReestrContexMenuItems } from "../../../components/NewReestr/types/newReestrTypes";
-import type { IUseNewReestrColumnSettingsApi, IUseNewReestrFiltersApi } from "./types";
+import type { IUseNewReestrApi } from "@/pages/TestPage1/api/NewReestrApi";
+import type { TNewTableActionsChangeModesStandart } from "@/components/NewTable/types/NewTableActionsChangeModesTypes";
+import type { INewTableColumns, INewTableColumnSettings } from "@/components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableFilters, INewTableSorts } from "@/components/NewTable/types/NewTableFilterTypes";
+import type { INewReestrContexMenuItems } from "@/components/NewReestr/types/newReestrTypes";
+import type { IUseNewReestrColumnSettingsApi, IUseNewReestrFiltersApi } from "@/pages/TestPage1/api/types";
 
-import { useNewReestrApi } from "./NewReestrApi";
-import { testActionsChangeModes } from "../testdata/sub1/testSub1ActionsChangeModes";
-import { generateExtraColumns, testColumns } from "../testdata/sub1/testSub1Columns";
-import { generateExtraColumnsSettings, testColumnsSettings } from "../testdata/sub1/testSub1ColumnsSettings";
-import { testFilters } from "../testdata/sub1/testSub1Filters";
-import { testSorts } from "../testdata/sub1/testSub1Sorts";
-import { testContextMenuItems } from "../testdata/sub1/testSub1ContextMenuItems";
+import { useNewReestrApi } from "@/pages/TestPage1/api/NewReestrApi";
+import { testActionsChangeModes } from "@/pages/TestPage1/testdata/sub1/testSub1ActionsChangeModes";
+import { generateExtraColumns, testColumns } from "@/pages/TestPage1/testdata/sub1/testSub1Columns";
+import { generateExtraColumnsSettings, testColumnsSettings } from "@/pages/TestPage1/testdata/sub1/testSub1ColumnsSettings";
+import { testFilters } from "@/pages/TestPage1/testdata/sub1/testSub1Filters";
+import { testSorts } from "@/pages/TestPage1/testdata/sub1/testSub1Sorts";
+import { testContextMenuItems } from "@/pages/TestPage1/testdata/sub1/testSub1ContextMenuItems";
 
 
 export interface IUseSub1NewReestrApi extends

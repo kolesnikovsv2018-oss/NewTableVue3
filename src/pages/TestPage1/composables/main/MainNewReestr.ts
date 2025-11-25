@@ -1,29 +1,29 @@
 import type { Ref } from "vue";
 import { ref, toValue } from "vue";
 
-import type { IUseNewReestr } from "../NewReestr";
-import type { INewTableRow } from "../../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
-import type { INewTableColumns } from "../../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
-import type { INewTableActions } from "../../../../components/NewTable/types/NewTableActionTypes";
-import type { INewReestrContexMenuItems } from "../../../../components/NewReestr/types/newReestrTypes";
-import type { INewTableSorts } from "../../../../components/NewTable/types/NewTableFilterTypes";
-import type { INewMenuItem } from "../../../../components/NewContextMenu/types";
-import type { IUseNewReestrFilters } from "../NewReestrFilters";
-import type { IUseNewReestrColumnSettings } from "../NewReestrColumnSettings";
-import type { IUseMainNewReestrActionsChangeModes } from "./MainNewReestrActionsChangeModes.js";
-import type { IUseMainNewReestrOnRowActions } from "./MainNewReestrOnRowActions";
-import type { IUseMainNewReestrContextMenu } from "./MainNewReestrContextMenu";
-import type { IUseMainNewReestrSideMenu } from "./MainNewReestrSideMenu";
-import type NewReestr from "../../../../components/NewReestr/NewReestr.vue";
+import type { IUseNewReestr } from "@/pages/TestPage1/composables/NewReestr";
+import type { INewTableRow } from "@/components/NewTable/components/NewTableRow/types/NewTableRowTypes";
+import type { INewTableColumns } from "@/components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableActions } from "@/components/NewTable/types/NewTableActionTypes";
+import type { INewReestrContexMenuItems } from "@/components/NewReestr/types/newReestrTypes";
+import type { INewTableSorts } from "@/components/NewTable/types/NewTableFilterTypes";
+import type { INewMenuItem } from "@/components/NewContextMenu/types";
+import type { IUseNewReestrFilters } from "@/pages/TestPage1/composables/NewReestrFilters";
+import type { IUseNewReestrColumnSettings } from "@/pages/TestPage1/composables/NewReestrColumnSettings";
+import type { IUseMainNewReestrActionsChangeModes } from "@/pages/TestPage1/composables/main/MainNewReestrActionsChangeModes.js";
+import type { IUseMainNewReestrOnRowActions } from "@/pages/TestPage1/composables/main/MainNewReestrOnRowActions";
+import type { IUseMainNewReestrContextMenu } from "@/pages/TestPage1/composables/main/MainNewReestrContextMenu";
+import type { IUseMainNewReestrSideMenu } from "@/pages/TestPage1/composables/main/MainNewReestrSideMenu";
+import type NewReestr from "@/components/NewReestr/NewReestr.vue";
 
-import { useNewReestr } from "../NewReestr";
-import { useNewReestrColumnSettings } from "../NewReestrColumnSettings";
-import { useNewReestrFilters } from "../NewReestrFilters";
-import { useMainNewReestrApi } from "../../api/MainNewReestrApi";
-import { useMainNewReestrActionsChangeModes } from "./MainNewReestrActionsChangeModes.js";
-import { useMainNewReestrOnRowActions } from "./MainNewReestrOnRowActions";
-import { useMainNewReestrContextMenu } from "./MainNewReestrContextMenu";
-import { useMainNewReestrSideMenu } from "./MainNewReestrSideMenu";
+import { useNewReestr } from "@/pages/TestPage1/composables/NewReestr";
+import { useNewReestrColumnSettings } from "@/pages/TestPage1/composables/NewReestrColumnSettings";
+import { useNewReestrFilters } from "@/pages/TestPage1/composables/NewReestrFilters";
+import { useMainNewReestrApi } from "@/pages/TestPage1/api/MainNewReestrApi";
+import { useMainNewReestrActionsChangeModes } from "@/pages/TestPage1/composables/main/MainNewReestrActionsChangeModes.js";
+import { useMainNewReestrOnRowActions } from "@/pages/TestPage1/composables/main/MainNewReestrOnRowActions";
+import { useMainNewReestrContextMenu } from "@/pages/TestPage1/composables/main/MainNewReestrContextMenu";
+import { useMainNewReestrSideMenu } from "@/pages/TestPage1/composables/main/MainNewReestrSideMenu";
 
 export interface IUseMainNewReestr extends
   IUseNewReestr,

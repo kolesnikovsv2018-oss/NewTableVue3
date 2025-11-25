@@ -2,28 +2,28 @@
 import type { StyleValue } from 'vue';
 import { ref, watch } from 'vue';
 
-import type { INewTableRow, INewTableRowCommonMeta } from '../NewTable/components/NewTableRow/types/NewTableRowTypes';
-import type { INewTableColumns, INewTableColumnSettings } from '../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
-import type { INewTableRowActionEvent, INewTableChangeCellValueEvent } from '../NewTable/types/NewTableEventTypes';
-import type { IChangeColumnSettingEvent } from './components/NewReestrColumnSettings/types';
-import type { TNewTableActionsChangeModesStandart } from '../NewTable/types/NewTableActionsChangeModesTypes';
-import type { INewMenuItem } from '../NewContextMenu/types';
-import type { INewTableActions } from '../NewTable/types/NewTableActionTypes';
-import type { INewReestrContexMenuItems, INewReestrSettingsActionEvent } from './types/newReestrTypes';
-import type { INewTableFilters, INewTableSorts } from '../NewTable/types/NewTableFilterTypes';
+import type { INewTableRow, INewTableRowCommonMeta } from '@/components/NewTable/components/NewTableRow/types/NewTableRowTypes';
+import type { INewTableColumns, INewTableColumnSettings } from '@/components/NewTable/components/NewTableHeader/types/INewTableHeadTypes';
+import type { INewTableRowActionEvent, INewTableChangeCellValueEvent } from '@/components/NewTable/types/NewTableEventTypes';
+import type { IChangeColumnSettingEvent } from '@/components/NewReestr/components/NewReestrColumnSettings/types';
+import type { TNewTableActionsChangeModesStandart } from '@/components/NewTable/types/NewTableActionsChangeModesTypes';
+import type { INewMenuItem } from '@/components/NewContextMenu/types';
+import type { INewTableActions } from '@/components/NewTable/types/NewTableActionTypes';
+import type { INewReestrContexMenuItems, INewReestrSettingsActionEvent } from '@/components/NewReestr/types/newReestrTypes';
+import type { INewTableFilters, INewTableSorts } from '@/components/NewTable/types/NewTableFilterTypes';
 
-import { useNewReestrContextMenu } from './composables/NewReestrContextMenu';
-import { useNewTableSlots } from '../NewTable/composables/NewTableSlots';
+import { useNewReestrContextMenu } from '@/components/NewReestr/composables/NewReestrContextMenu';
+import { useNewTableSlots } from '@/components/NewTable/composables/NewTableSlots';
 
-import { NEW_TABLE_DEFAULT_ROW_TYPE } from '../NewTable/constants/defaults';
-import { NEW_TABLE_STANDART_ROW_MODES } from '../NewTable/constants/standartRowModes';
+import { NEW_TABLE_DEFAULT_ROW_TYPE } from '@/components/NewTable/constants/defaults';
+import { NEW_TABLE_STANDART_ROW_MODES } from '@/components/NewTable/constants/standartRowModes';
 
-import NewTableWrapper from '../NewTableWrapper/NewTableWrapper.vue';
-import NewContextMenu from '../NewContextMenu/NewContextMenu.vue';
+import NewTableWrapper from '@/components/NewTableWrapper/NewTableWrapper.vue';
+import NewContextMenu from '@/components/NewContextMenu/NewContextMenu.vue';
 // import NewReestrColumnSettings from './components/NewReestrColumnSettings/NewReestrColumnSettings.vue';
-import NewReestrSettings from './components/NewReestrSettings/NewReestrSettings.vue';
-import NewReestrColumnSettingsModal from './components/NewReestrColumnSettings/NewReestrColumnSettingsModal.vue';
-import NewReestrSideMenu from './components/NewReestrSideMenu/NewReestrSideMenu.vue';
+import NewReestrSettings from '@/components/NewReestr/components/NewReestrSettings/NewReestrSettings.vue';
+import NewReestrColumnSettingsModal from '@/components/NewReestr/components/NewReestrColumnSettings/NewReestrColumnSettingsModal.vue';
+import NewReestrSideMenu from '@/components/NewReestr/components/NewReestrSideMenu/NewReestrSideMenu.vue';
 
 defineOptions({ inheritAttrs: false });
 

@@ -1,6 +1,6 @@
-import type { INewTableRow } from "../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
+import type { INewTableRow } from "@/components/NewTable/components/NewTableRow/types/NewTableRowTypes";
 
-import { getComplexId } from "../components/NewTable/helpers/getComplexId";
+import { getComplexId } from "@/components/NewTable/helpers/getComplexId";
 
 export type TFindParentRowWithChildIndexByChildRowId = { parent: INewTableRow, index: number };
 

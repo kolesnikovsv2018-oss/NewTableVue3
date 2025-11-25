@@ -1,7 +1,7 @@
 import type { Ref } from "vue";
 import { computed, ref, toValue, watch } from "vue";
 
-import type { INewTableRow } from '../../NewTable/components/NewTableRow/types/NewTableRowTypes';
+import type { INewTableRow } from '@/components/NewTable/components/NewTableRow/types/NewTableRowTypes';
 
 const NEW_TABLE_STEP = 3;
 

@@ -1,26 +1,26 @@
 import type { Ref } from "vue";
 import { ref, toValue } from "vue";
 
-import type { INewTableRow } from "../../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
+import type { INewTableRow } from "@/components/NewTable/components/NewTableRow/types/NewTableRowTypes";
 import type {
   INewTableCellActionData,
   INewTableChangeCellValueEvent,
   INewTableRowActionEvent
-} from "../../../../components/NewTable/types/NewTableEventTypes";
-import type { ILocalNewTableRow } from "../../testdata/testNewReestrData";
-import type { IUseNewReestrChangeRowParent } from "../NewReestrChangeRowParent";
-import type NewReestr from "../../../../components/NewReestr/NewReestr.vue";
+} from "@/components/NewTable/types/NewTableEventTypes";
+import type { ILocalNewTableRow } from "@/pages/TestPage1/testdata/testNewReestrData";
+import type { IUseNewReestrChangeRowParent } from "@/pages/TestPage1/composables/NewReestrChangeRowParent";
+import type NewReestr from "@/components/NewReestr/NewReestr.vue";
 
-import { useNewReestrChangeRowParent } from "../NewReestrChangeRowParent";
+import { useNewReestrChangeRowParent } from "@/pages/TestPage1/composables/NewReestrChangeRowParent";
 
-import { TEST_DATA_ROW_TYPES } from "../../testdata/testNewReestrData";
-import { NEW_TABLE_STANDART_CELL_ACTIONS, NEW_TABLE_STANDART_ROW_ACTIONS } from "../../../../components/NewTableWrapper/constants/standartActions";
-import { NEW_TABLE_STANDART_ROW_MODES } from "../../../../components/NewTable/constants/standartRowModes";
+import { TEST_DATA_ROW_TYPES } from "@/pages/TestPage1/testdata/testNewReestrData";
+import { NEW_TABLE_STANDART_CELL_ACTIONS, NEW_TABLE_STANDART_ROW_ACTIONS } from "@/components/NewTableWrapper/constants/standartActions";
+import { NEW_TABLE_STANDART_ROW_MODES } from "@/components/NewTable/constants/standartRowModes";
 
-import { findParentRowsById, findParentRowWithChildIndexByChildRowId, findRowById } from "../../../../helpers/finders";
-import { calcOwnSums, calcParentSums, calcTotalOwnSums } from "../../../../helpers/calacSums";
-import { columnsToCalc, totalColumnsToCalc } from "../../testdata/constants/calcs";
-import { getComplexId } from "../../../../components/NewTable/helpers/getComplexId";
+import { findParentRowsById, findParentRowWithChildIndexByChildRowId, findRowById } from "@/helpers/finders";
+import { calcOwnSums, calcParentSums, calcTotalOwnSums } from "@/helpers/calacSums";
+import { columnsToCalc, totalColumnsToCalc } from "@/pages/TestPage1/testdata/constants/calcs";
+import { getComplexId } from "@/components/NewTable/helpers/getComplexId";
 
 export interface IUseMainNewReestrOnRowActions extends IUseNewReestrChangeRowParent {
   selectedRow: Ref<INewTableRow | null>;

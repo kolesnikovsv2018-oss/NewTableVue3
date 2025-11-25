@@ -4,8 +4,8 @@ import { computed, ref } from 'vue';
 import type {
   INewMenuItem,
   INewContextMenuXY,
-} from './types';
-import { useOutsideClickHandler } from '../../composables/useOutsideClickHandler';
+} from '@/components/NewContextMenu/types';
+import { useOutsideClickHandler } from '@/composables/useOutsideClickHandler';
 
 const props = defineProps<{
   menuItems: INewMenuItem[];

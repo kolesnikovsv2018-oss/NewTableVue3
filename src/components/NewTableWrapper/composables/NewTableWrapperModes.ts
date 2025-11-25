@@ -1,9 +1,9 @@
 import { computed, ref } from "vue";
 
-import type { INewTableRow } from "../../NewTable/components/NewTableRow/types/NewTableRowTypes";
+import type { INewTableRow } from "@/components/NewTable/components/NewTableRow/types/NewTableRowTypes";
 
-import { NEW_TABLE_STANDART_ROW_MODES } from "../../NewTable/constants/standartRowModes";
-import { getComplexId } from "../../NewTable/helpers/getComplexId";
+import { NEW_TABLE_STANDART_ROW_MODES } from "@/components/NewTable/constants/standartRowModes";
+import { getComplexId } from "@/components/NewTable/helpers/getComplexId";
 
 export function useNewTableWrapperModes(
   idFields: string[] = ['id'],

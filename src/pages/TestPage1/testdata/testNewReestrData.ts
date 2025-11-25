@@ -1,6 +1,6 @@
-import type { INewTableRow, INewTableRowTemplate } from "../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
-import type { INewTableColumns } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
-import { columnsToCalc, totalColumnsToCalc } from "./constants/calcs";
+import type { INewTableRow, INewTableRowTemplate } from "@/components/NewTable/components/NewTableRow/types/NewTableRowTypes";
+import type { INewTableColumns } from "@/components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import { columnsToCalc, totalColumnsToCalc } from "@/pages/TestPage1/testdata/constants/calcs";
 
 type TTestDataType = string | number | [] | object | null | undefined;
 

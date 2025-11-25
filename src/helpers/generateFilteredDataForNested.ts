@@ -1,6 +1,6 @@
-import type { INewTableFilter } from "../components/NewTable/types/NewTableFilterTypes";
-import type { INewTableRow } from "../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
-import { compareFilterAsString } from "./compareFilterAsString";
+import type { INewTableFilter } from "@/components/NewTable/types/NewTableFilterTypes";
+import type { INewTableRow } from "@/components/NewTable/components/NewTableRow/types/NewTableRowTypes";
+import { compareFilterAsString } from "@/helpers/compareFilterAsString";
 
 /**
  * Генерирует отфлиотрованные данные,

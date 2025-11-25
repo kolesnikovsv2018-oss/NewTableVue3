@@ -4,12 +4,12 @@ import { ref } from 'vue';
 import type {
   INewTableColumns,
   INewTableColumnSettings,
-} from '../../../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
-import type { IChangeColumnSettingEvent } from './types';
+} from '@/components/NewTable/components/NewTableHeader/types/INewTableHeadTypes';
+import type { IChangeColumnSettingEvent } from '@/components/NewReestr/components/NewReestrColumnSettings/types';
 
-import { useOutsideClickHandler } from '../../../../composables/useOutsideClickHandler';
+import { useOutsideClickHandler } from '@/composables/useOutsideClickHandler';
 
-import NewReestrColumnSettings from './NewReestrColumnSettings.vue';
+import NewReestrColumnSettings from '@/components/NewReestr/components/NewReestrColumnSettings/NewReestrColumnSettings.vue';
 
 defineProps<{
   columns: INewTableColumns;

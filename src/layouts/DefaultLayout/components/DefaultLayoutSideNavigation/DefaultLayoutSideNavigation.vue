@@ -6,9 +6,7 @@ import { faHome } from '@fortawesome/free-solid-svg-icons';
 const navItems = [
   { name: 'Home', icon: faHome },
   { name: 'TestPage1', icon: faFile },
-  // { name: 'Settings', icon: faCog },
-  // { name: 'Messages', icon: faEnvelope },
-  // { name: 'Notifications', icon: faBell },
+  { name: 'MainReestrPage', icon: faFile },
 ];
 </script>
 

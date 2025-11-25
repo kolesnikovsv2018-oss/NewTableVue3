@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 
-import { useOutsideClickHandler } from '../../../../composables/useOutsideClickHandler';
+import { useOutsideClickHandler } from '@/composables/useOutsideClickHandler';
 
-import NewReestrSideMenuWrapper from '../NewReestrSideMenuWrapper/NewReestrSideMenuWrapper.vue';
+import NewReestrSideMenuWrapper from '@/pages/TestPage1/components/NewReestrSideMenuWrapper/NewReestrSideMenuWrapper.vue';
 
 const el = ref<typeof NewReestrSideMenuWrapper>();
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import DefaultLayoutHeader from './components/DefaultLayoutHeader/DefaultLayoutHeader.vue';
-import DefaultLayoutSideNavigation from './components/DefaultLayoutSideNavigation/DefaultLayoutSideNavigation.vue'
+import DefaultLayoutHeader from '@/layouts/DefaultLayout/components/DefaultLayoutHeader/DefaultLayoutHeader.vue';
+import DefaultLayoutSideNavigation from '@/layouts/DefaultLayout/components/DefaultLayoutSideNavigation/DefaultLayoutSideNavigation.vue'
 </script>
 
 <template>

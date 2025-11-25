@@ -2,24 +2,24 @@
 import type { StyleValue } from 'vue';
 import { computed } from 'vue';
 
-import type { INewTableRow, INewTableRowCommonMeta } from './components/NewTableRow/types/NewTableRowTypes';
-import type { INewTableColumn, INewTableColumnSetting } from './components/NewTableHeader/types/INewTableHeadTypes';
+import type { INewTableRow, INewTableRowCommonMeta } from '@/components/NewTable/components/NewTableRow/types/NewTableRowTypes';
+import type { INewTableColumn, INewTableColumnSetting } from '@/components/NewTable/components/NewTableHeader/types/INewTableHeadTypes';
 import type {
   INewTableChangeFilterValueEvent,
   INewTableChangeColumnsOrderEvent,
   INewTableChangeColumnWidthEvent,
   INewTableRowActionEvent,
   INewTableChangeCellValueEvent,
-} from './types/NewTableEventTypes';
-import type { INewTableFilters, INewTableSorts } from './types/NewTableFilterTypes';
-import type { INewTableActions } from './types/NewTableActionTypes';
+} from '@/components/NewTable/types/NewTableEventTypes';
+import type { INewTableFilters, INewTableSorts } from '@/components/NewTable/types/NewTableFilterTypes';
+import type { INewTableActions } from '@/components/NewTable/types/NewTableActionTypes';
 
-import { NEW_TABLE_STANDART_ROW_MODES } from './constants/standartRowModes';
-import { useNewTableSlots } from './composables/NewTableSlots';
-import { getComplexId } from './helpers/getComplexId';
+import { NEW_TABLE_STANDART_ROW_MODES } from '@/components/NewTable/constants/standartRowModes';
+import { useNewTableSlots } from '@/components/NewTable/composables/NewTableSlots';
+import { getComplexId } from '@/components/NewTable/helpers/getComplexId';
 
-import NewTableHeader from './components/NewTableHeader/NewTableHeader.vue';
-import NewTableRow from './components/NewTableRow/NewTableRow.vue';
+import NewTableHeader from '@/components/NewTable/components/NewTableHeader/NewTableHeader.vue';
+import NewTableRow from '@/components/NewTable/components/NewTableRow/NewTableRow.vue';
 
 defineOptions({
   inheritAttrs: false,

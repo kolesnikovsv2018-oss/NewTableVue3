@@ -1,10 +1,10 @@
 import type { Ref } from "vue";
 import { ref, toValue } from "vue";
 
-import type { INewTableColumns, INewTableColumnSettings } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
-import type { IUseNewReestrColumnSettingsApi } from "../api/types";
+import type { INewTableColumns, INewTableColumnSettings } from "@/components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { IUseNewReestrColumnSettingsApi } from "@/pages/TestPage1/api/types";
 
-import { NEW_TABLE_DEFAULT_COLUMN_WIDTH } from "../../../components/NewTable/constants/defaults";
+import { NEW_TABLE_DEFAULT_COLUMN_WIDTH } from "@/components/NewTable/constants/defaults";
 
 export interface IUseNewReestrColumnSettings {
   columnSettings: Ref<INewTableColumnSettings>;

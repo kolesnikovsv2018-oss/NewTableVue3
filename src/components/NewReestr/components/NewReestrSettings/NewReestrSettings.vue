@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { INewReestrSettingsActionEvent } from '../../types/newReestrTypes';
+import type { INewReestrSettingsActionEvent } from '@/components/NewReestr/types/newReestrTypes';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';

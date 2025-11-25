@@ -1,10 +1,10 @@
 import type { Ref } from "vue";
 import { computed, ref, toValue, watch } from "vue";
 
-import type { INewTableRow } from "../../NewTable/components/NewTableRow/types/NewTableRowTypes";
-import type { INewTableFilter, INewTableFilters } from "../../NewTable/types/NewTableFilterTypes";
+import type { INewTableRow } from "@/components/NewTable/components/NewTableRow/types/NewTableRowTypes";
+import type { INewTableFilter, INewTableFilters } from "@/components/NewTable/types/NewTableFilterTypes";
 
-import { generateFilteredDataForNested } from "../../../helpers/generateFilteredDataForNested";
+import { generateFilteredDataForNested } from "@/helpers/generateFilteredDataForNested";
 
 export function useNewTableWrapperFilteredData(
   initialData: Ref<INewTableRow[]> | INewTableRow[] | (() => INewTableRow[]),

@@ -1,26 +1,26 @@
 import type { Ref } from "vue";
 import { ref, toValue } from "vue";
 
-import type { IUseNewReestr } from "../NewReestr";
-import type { INewTableRow } from "../../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
-import type { INewTableColumns } from "../../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
-import type { INewTableActions } from "../../../../components/NewTable/types/NewTableActionTypes";
-import type { INewReestrContexMenuItems } from "../../../../components/NewReestr/types/newReestrTypes";
-import type { INewTableSorts } from "../../../../components/NewTable/types/NewTableFilterTypes";
-import type { IUseNewReestrFilters } from "../NewReestrFilters";
-import type { IUseNewReestrColumnSettings } from "../NewReestrColumnSettings";
-import type { IUseSub1NewReestrActionsChangeModes } from "./Sub1NewReestrActionsChangeModes.js";
-import type { IUseSub1NewReestrOnRowActions } from "./Sub1NewReestrOnRowActions";
-import type { IUseSub1NewReestrContextMenu } from "./Sub1NewReestrContextMenu";
-import type NewReestr from "../../../../components/NewReestr/NewReestr.vue";
+import type { IUseNewReestr } from "@/pages/TestPage1/composables/NewReestr";
+import type { INewTableRow } from "@/components/NewTable/components/NewTableRow/types/NewTableRowTypes";
+import type { INewTableColumns } from "@/components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableActions } from "@/components/NewTable/types/NewTableActionTypes";
+import type { INewReestrContexMenuItems } from "@/components/NewReestr/types/newReestrTypes";
+import type { INewTableSorts } from "@/components/NewTable/types/NewTableFilterTypes";
+import type { IUseNewReestrFilters } from "@/pages/TestPage1/composables/NewReestrFilters";
+import type { IUseNewReestrColumnSettings } from "@/pages/TestPage1/composables/NewReestrColumnSettings";
+import type { IUseSub1NewReestrActionsChangeModes } from "@/pages/TestPage1/composables/sub1/Sub1NewReestrActionsChangeModes.js";
+import type { IUseSub1NewReestrOnRowActions } from "@/pages/TestPage1/composables/sub1/Sub1NewReestrOnRowActions";
+import type { IUseSub1NewReestrContextMenu } from "@/pages/TestPage1/composables/sub1/Sub1NewReestrContextMenu";
+import type NewReestr from "@/components/NewReestr/NewReestr.vue";
 
-import { useNewReestr } from "../NewReestr";
-import { useNewReestrColumnSettings } from "../NewReestrColumnSettings";
-import { useNewReestrFilters } from "../NewReestrFilters";
-import { useSub1NewReestrActionsChangeModes } from "./Sub1NewReestrActionsChangeModes.js";
-import { useSub1NewReestrApi } from "../../api/Sub1NewReestrApi";
-import { useSub1NewReestrOnRowActions } from "./Sub1NewReestrOnRowActions";
-import { useSub1NewReestrContextMenu } from "./Sub1NewReestrContextMenu";
+import { useNewReestr } from "@/pages/TestPage1/composables/NewReestr";
+import { useNewReestrColumnSettings } from "@/pages/TestPage1/composables/NewReestrColumnSettings";
+import { useNewReestrFilters } from "@/pages/TestPage1/composables/NewReestrFilters";
+import { useSub1NewReestrActionsChangeModes } from "@/pages/TestPage1/composables/sub1/Sub1NewReestrActionsChangeModes.js";
+import { useSub1NewReestrApi } from "@/pages/TestPage1/api/Sub1NewReestrApi";
+import { useSub1NewReestrOnRowActions } from "@/pages/TestPage1/composables/sub1/Sub1NewReestrOnRowActions";
+import { useSub1NewReestrContextMenu } from "@/pages/TestPage1/composables/sub1/Sub1NewReestrContextMenu";
 
 export interface IUseSub1NewReestr extends
   IUseNewReestr,

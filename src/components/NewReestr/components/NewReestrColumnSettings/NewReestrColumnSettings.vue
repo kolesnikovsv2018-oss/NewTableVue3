@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import type { INewTableColumn, INewTableColumns, INewTableColumnSetting } from '../../../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
-import type { IChangeColumnSettingEvent } from './types';
+import type { INewTableColumn, INewTableColumns, INewTableColumnSetting } from '@/components/NewTable/components/NewTableHeader/types/INewTableHeadTypes';
+import type { IChangeColumnSettingEvent } from '@/components/NewReestr/components/NewReestrColumnSettings/types';
 
 type TListOfColumnSettings = Record<string, Partial<INewTableColumnSetting & INewTableColumn>>
 

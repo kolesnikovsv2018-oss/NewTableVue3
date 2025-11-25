@@ -1,12 +1,12 @@
 import type { Ref } from "vue";
 import { toValue } from "vue";
 
-import type { IUseSub1NewReestrOnRowActions } from "./Sub1NewReestrOnRowActions";
-import type { INewMenuItem } from "../../../../components/NewContextMenu/types";
-import type { INewTableRowActionEvent } from "../../../../components/NewTable/types/NewTableEventTypes";
-import type NewReestr from "../../../../components/NewReestr/NewReestr.vue";
+import type { IUseSub1NewReestrOnRowActions } from "@/pages/TestPage1/composables/sub1/Sub1NewReestrOnRowActions";
+import type { INewMenuItem } from "@/components/NewContextMenu/types";
+import type { INewTableRowActionEvent } from "@/components/NewTable/types/NewTableEventTypes";
+import type NewReestr from "@/components/NewReestr/NewReestr.vue";
 
-import { NEW_TABLE_STANDART_ROW_MODES } from "../../../../components/NewTable/constants/standartRowModes";
+import { NEW_TABLE_STANDART_ROW_MODES } from "@/components/NewTable/constants/standartRowModes";
 
 export interface IUseSub1NewReestrContextMenu {
   onSelectContextMenuItem: (menuItem: INewMenuItem) => void;

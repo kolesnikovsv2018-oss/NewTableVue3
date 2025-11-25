@@ -1,8 +1,8 @@
 
-import type { INewTableActions } from '../../NewTable/types/NewTableActionTypes';
+import type { INewTableActions } from '@/components/NewTable/types/NewTableActionTypes';
 
-import { NEW_TABLE_DEFAULT_ROW_TYPE } from '../../NewTable/constants/defaults';
-import { NEW_TABLE_STANDART_ROW_MODES } from '../../NewTable/constants/standartRowModes';
+import { NEW_TABLE_DEFAULT_ROW_TYPE } from '@/components/NewTable/constants/defaults';
+import { NEW_TABLE_STANDART_ROW_MODES } from '@/components/NewTable/constants/standartRowModes';
 import {
   faPenToSquare,
   faFloppyDisk,

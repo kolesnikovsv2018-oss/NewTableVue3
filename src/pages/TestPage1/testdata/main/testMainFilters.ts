@@ -1,10 +1,10 @@
-import type { INewTableRow } from "../../../../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
-import type { INewTableFilter, INewTableFilters } from "../../../../components/NewTable/types/NewTableFilterTypes";
-import type { ITestRangeDate } from "../../../../components/FilterComponents/components/types";
+import type { INewTableRow } from "@/components/NewTable/components/NewTableRow/types/NewTableRowTypes";
+import type { INewTableFilter, INewTableFilters } from "@/components/NewTable/types/NewTableFilterTypes";
+import type { ITestRangeDate } from "@/components/FilterComponents/components/types";
 
-import { NEW_TABLE_STANDART_ROW_MODES } from "../../../../components/NewTable/constants/standartRowModes";
-import { compareFilterAsString } from "../../../../helpers/compareFilterAsString";
-import { statusOptions } from "./testMainColumns";
+import { NEW_TABLE_STANDART_ROW_MODES } from "@/components/NewTable/constants/standartRowModes";
+import { compareFilterAsString } from "@/helpers/compareFilterAsString";
+import { statusOptions } from "@/pages/TestPage1/testdata/main/testMainColumns";
 
 function generateEmptyTextFilter(): INewTableFilter {
   return {

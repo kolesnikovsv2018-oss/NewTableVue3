@@ -5,40 +5,40 @@ import { onBeforeUnmount, onMounted, ref } from 'vue';
 import type {
   INewTableRow,
   INewTableRowCommonMeta
-} from '../NewTable/components/NewTableRow/types/NewTableRowTypes';
+} from '@/components/NewTable/components/NewTableRow/types/NewTableRowTypes';
 import type {
   INewTableColumns,
   INewTableColumnSetting,
   INewTableColumnSettings,
-} from '../NewTable/components/NewTableHeader/types/INewTableHeadTypes';
+} from '@/components/NewTable/components/NewTableHeader/types/INewTableHeadTypes';
 import type {
   INewTableChangeFilterValueEvent,
   INewTableChangeColumnsOrderEvent,
   INewTableChangeColumnWidthEvent,
   INewTableRowActionEvent,
   INewTableChangeCellValueEvent,
-} from '../NewTable/types/NewTableEventTypes';
-import type { INewTableFilters, INewTableSorts } from '../NewTable/types/NewTableFilterTypes';
-import type { INewTableActions } from '../NewTable/types/NewTableActionTypes';
-import type { TNewTableActionsChangeModesStandart } from '../NewTable/types/NewTableActionsChangeModesTypes';
+} from '@/components/NewTable/types/NewTableEventTypes';
+import type { INewTableFilters, INewTableSorts } from '@/components/NewTable/types/NewTableFilterTypes';
+import type { INewTableActions } from '@/components/NewTable/types/NewTableActionTypes';
+import type { TNewTableActionsChangeModesStandart } from '@/components/NewTable/types/NewTableActionsChangeModesTypes';
 
-import { useNewTableWrapperModes } from './composables/NewTableWrapperModes';
-import { useNewTableWrapperFlatData } from './composables/NewTableWrapperFlatData';
-import { useNewTablePagination } from './composables/NewTableWrapperPagination';
-import { useWheelEvent } from '../../composables/useWheelEvent';
-import { useNewTableWrapperColumns } from './composables/NewTableWrapperColumns';
-import { useNewTableWrapperFilteredData } from './composables/NewTableWrapperFilteredData';
-import { useNewTableWrapperSortData } from './composables/NewTableWrapperSortData';
+import { useNewTableWrapperModes } from '@/components/NewTableWrapper/composables/NewTableWrapperModes';
+import { useNewTableWrapperFlatData } from '@/components/NewTableWrapper/composables/NewTableWrapperFlatData';
+import { useNewTablePagination } from '@/components/NewTableWrapper/composables/NewTableWrapperPagination';
+import { useWheelEvent } from '@/composables/useWheelEvent';
+import { useNewTableWrapperColumns } from '@/components/NewTableWrapper/composables/NewTableWrapperColumns';
+import { useNewTableWrapperFilteredData } from '@/components/NewTableWrapper/composables/NewTableWrapperFilteredData';
+import { useNewTableWrapperSortData } from '@/components/NewTableWrapper/composables/NewTableWrapperSortData';
 import { useDebounceFn } from '@vueuse/core';
-import { useNewTableSlots } from '../NewTable/composables/NewTableSlots';
-import { useNewTableWrapperExpanded } from './composables/NewTableWrapperExpanded';
-import { useNewTableWrapperChecked } from './composables/NewTableWrapperChecked';
+import { useNewTableSlots } from '@/components/NewTable/composables/NewTableSlots';
+import { useNewTableWrapperExpanded } from '@/components/NewTableWrapper/composables/NewTableWrapperExpanded';
+import { useNewTableWrapperChecked } from '@/components/NewTableWrapper/composables/NewTableWrapperChecked';
 
-import { NEW_TABLE_DEFAULT_ROW_TYPE } from '../NewTable/constants/defaults';
-import { getComplexId } from '../NewTable/helpers/getComplexId';
+import { NEW_TABLE_DEFAULT_ROW_TYPE } from '@/components/NewTable/constants/defaults';
+import { getComplexId } from '@/components/NewTable/helpers/getComplexId';
 
-import NewTable from '../NewTable/NewTable.vue';
-import NewScroller from '../NewScroller/NewScroller.vue';
+import NewTable from '@/components/NewTable/NewTable.vue';
+import NewScroller from '@/components/NewScroller/NewScroller.vue';
 
 defineOptions({ inheritAttrs: false });
 

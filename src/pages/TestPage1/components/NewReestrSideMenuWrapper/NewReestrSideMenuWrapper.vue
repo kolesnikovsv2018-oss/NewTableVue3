@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { useOutsideClickHandler } from '../../../../composables/useOutsideClickHandler';
+import { useOutsideClickHandler } from '@/composables/useOutsideClickHandler';
 
 const el = ref();
 

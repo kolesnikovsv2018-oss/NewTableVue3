@@ -6,12 +6,17 @@ export const routes = [
   {
     path: `${baseUrl}/`,
     name: 'Home',
-    component: () => import('../pages/HomePage/HomePage.vue'),
+    component: () => import('@/pages/HomePage/HomePage.vue'),
   },
   {
     path: `${baseUrl}/test-page-1`,
     name: 'TestPage1',
-    component: () => import('../pages/TestPage1/TestPage1.vue'),
+    component: () => import('@/pages/TestPage1/TestPage1.vue'),
+  },
+  {
+    path: `${baseUrl}/main-reestr-page`,
+    name: 'MainReestrPage',
+    component: () => import('@/pages/MainReestrPage/MainReestrPage.vue'),
   },
 ];
 

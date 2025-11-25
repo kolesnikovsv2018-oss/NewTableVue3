@@ -1,5 +1,5 @@
-import type { INewTableFilterComponent } from "../components/NewTableHeader/types/INewTableHeadTypes";
-import type { INewTableRow } from "../components/NewTableRow/types/NewTableRowTypes";
+import type { INewTableFilterComponent } from "@/components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableRow } from "@/components/NewTable/components/NewTableRow/types/NewTableRowTypes";
 
 export interface INewTableFilter {
   // для моделей фильтров и текщих значений вводимых пользователем

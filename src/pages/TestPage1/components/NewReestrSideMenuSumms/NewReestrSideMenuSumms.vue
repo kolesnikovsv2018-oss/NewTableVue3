@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import type { ILocalNewTableRow } from '../../testdata/testNewReestrData';
+import type { ILocalNewTableRow } from '@/pages/TestPage1/testdata/testNewReestrData';
 
-import { useOutsideClickHandler } from '../../../../composables/useOutsideClickHandler';
+import { useOutsideClickHandler } from '@/composables/useOutsideClickHandler';
 
-import NewReestrSideMenuWrapper from '../NewReestrSideMenuWrapper/NewReestrSideMenuWrapper.vue';
+import NewReestrSideMenuWrapper from '@/pages/TestPage1/components/NewReestrSideMenuWrapper/NewReestrSideMenuWrapper.vue';
 
 const el = ref<typeof NewReestrSideMenuWrapper>();
 

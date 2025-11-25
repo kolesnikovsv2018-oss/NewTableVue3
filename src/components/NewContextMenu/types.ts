@@ -1,4 +1,4 @@
-import type { INewTableRowActionEvent } from "../NewTable/types/NewTableEventTypes";
+import type { INewTableRowActionEvent } from "@/components/NewTable/types/NewTableEventTypes";
 
 export interface INewMenuItem {
   label: string;

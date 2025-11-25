@@ -1,5 +1,5 @@
-import type { INewTableColumnSettings } from "../../../components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
-import type { INewTableFilters } from "../../../components/NewTable/types/NewTableFilterTypes";
+import type { INewTableColumnSettings } from "@/components/NewTable/components/NewTableHeader/types/INewTableHeadTypes";
+import type { INewTableFilters } from "@/components/NewTable/types/NewTableFilterTypes";
 
 export interface IUseNewReestrFiltersApi {
   fetchFilters: () => Promise<INewTableFilters>;

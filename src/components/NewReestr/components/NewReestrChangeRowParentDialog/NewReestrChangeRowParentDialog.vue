@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import type { INewTableRow } from '../../../NewTable/components/NewTableRow/types/NewTableRowTypes';
+import type { INewTableRow } from '@/components/NewTable/components/NewTableRow/types/NewTableRowTypes';
 
 defineProps<{
   activeSourceRow: INewTableRow;

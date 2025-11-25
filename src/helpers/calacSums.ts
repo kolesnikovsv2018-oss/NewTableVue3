@@ -1,9 +1,9 @@
-import type { INewTableRow } from "../components/NewTable/components/NewTableRow/types/NewTableRowTypes";
-import type { ILocalNewTableRow } from "../pages/TestPage1/testdata/testNewReestrData";
-import type { TFindParentRowWithChildIndexByChildRowId } from "./finders";
+import type { INewTableRow } from "@/components/NewTable/components/NewTableRow/types/NewTableRowTypes";
+import type { ILocalNewTableRow } from "@/pages/TestPage1/testdata/testNewReestrData";
+import type { TFindParentRowWithChildIndexByChildRowId } from "@/helpers/finders";
 
-import { totalColumnsToCalc } from "../pages/TestPage1/testdata/constants/calcs";
-import { findParentRowWithChildIndexByChildRowId } from "./finders";
+import { totalColumnsToCalc } from "@/pages/TestPage1/testdata/constants/calcs";
+import { findParentRowWithChildIndexByChildRowId } from "@/helpers/finders";
 
 export function calcTotalOwnSums(row: ILocalNewTableRow) {
   Object.keys(totalColumnsToCalc).forEach(

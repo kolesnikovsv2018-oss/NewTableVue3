@@ -8,23 +8,23 @@ import type {
   INewTableRow,
   INewTableRowCommonMeta
 } from './types/NewTableRowTypes';
-import type { INewTableColumn, INewTableColumnSetting } from '../NewTableHeader/types/INewTableHeadTypes';
+import type { INewTableColumn, INewTableColumnSetting } from '@/components/NewTable/components/NewTableHeader/types/INewTableHeadTypes';
 import type {
   INewTableCellActionData,
   INewTableRowActionEvent,
   INewTableChangeCellValueEvent,
-} from '../../types/NewTableEventTypes';
-import type { INewTableActions, INewTableRowAction, INewTableRowActions } from '../../types/NewTableActionTypes';
+} from '@/components/NewTable/types/NewTableEventTypes';
+import type { INewTableActions, INewTableRowAction, INewTableRowActions } from '@/components/NewTable/types/NewTableActionTypes';
 
-import { generateColumnWidths } from '../../helpers/generateColumnWidths';
-import { NEW_TABLE_STANDART_ROW_MODES } from '../../constants/standartRowModes';
+import { generateColumnWidths } from '@/components/NewTable/helpers/generateColumnWidths';
+import { NEW_TABLE_STANDART_ROW_MODES } from '@/components/NewTable/constants/standartRowModes';
 import {
   NEW_TABLE_STANDART_ROW_ACTIONS
-} from '../../../NewTableWrapper/constants/standartActions';
+} from '@/components/NewTableWrapper/constants/standartActions';
 import {
   NEW_TABLE_DEFAULT_CELL_COMPONENT_NAME,
   NEW_TABLE_DEFAULT_ROW_TYPE
-} from '../../constants/defaults';
+} from '@/components/NewTable/constants/defaults';
 
 type TParentCellListener = (payload: INewTableRowActionEvent) => void;
 
