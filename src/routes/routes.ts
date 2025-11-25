@@ -14,9 +14,9 @@ export const routes = [
     component: () => import('@/pages/TestPage1/TestPage1.vue'),
   },
   {
-    path: `${baseUrl}/main-reestr-page`,
-    name: 'MainReestrPage',
-    component: () => import('@/pages/MainReestrPage/MainReestrPage.vue'),
+    path: `${baseUrl}/main-cont-reestr-page`,
+    name: 'MainContReestrPage',
+    component: () => import('@/pages/MainContReestrPage/MainContReestrPage.vue'),
   },
 ];
 
